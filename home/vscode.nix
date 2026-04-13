@@ -38,7 +38,7 @@
         usernamehw.errorlens         # Affiche les erreurs inline
         gruntfuggly.todo-tree        # Trouve les TODO/FIXME
 
-        # ← ADAPTER : ajouter vos extensions ici
+        # Optionnel : ajouter vos extensions ici
       ];
 
       # ── Paramètres utilisateur ───────────────────────────────────
@@ -70,7 +70,7 @@
           };
         };
 
-        # ← ADAPTER : paramètres supplémentaires
+        # Optionnel : paramètres supplémentaires
       };
     };
   };

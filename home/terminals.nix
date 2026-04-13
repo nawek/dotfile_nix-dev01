@@ -58,7 +58,7 @@
 
   # ── Ghostty — Terminal ultra-performant (Zig) ───────────────────
   # Nouveau terminal minimaliste et rapide. Config simple via fichier texte.
-  # ← ADAPTER : décommenter quand le paquet sera stable dans nixpkgs
+  # Optionnel : décommenter quand le paquet sera stable dans nixpkgs
   # home.packages = [ pkgs.ghostty ];
   # xdg.configFile."ghostty/config".text = ''
   #   font-family = JetBrainsMono Nerd Font

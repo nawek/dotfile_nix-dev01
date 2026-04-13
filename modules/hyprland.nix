@@ -18,7 +18,7 @@
     enable = true;
     xwayland.enable = true; # Support des applications X11
 
-    # ← ADAPTER : décommenter pour utiliser la version du flake Hyprland
+    # Optionnel : décommenter pour utiliser la version du flake Hyprland
     # (plus récente que celle de nixpkgs, mais peut être moins stable)
     # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
   };
@@ -94,7 +94,7 @@
     blueman                 # Bluetooth
 
     # Notifications push depuis le homelab
-    ntfy-sh                 # Client ntfy (notifications serveurs → laptop) # ← ADAPTER : retirer si pas d'instance ntfy
+    ntfy-sh                 # Client ntfy (notifications serveurs → laptop) # Optionnel : retirer si pas d'instance ntfy
 
     # Contrôle multimédia
     playerctl               # Lecture/pause/suivant

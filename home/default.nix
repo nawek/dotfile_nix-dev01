@@ -21,7 +21,7 @@
     ./helix.nix       # Helix éditeur modal (alternative à Neovim)
     ./neovim.nix      # Neovim avec LSP, Treesitter, Telescope
     ./tmux.nix        # Tmux multiplexeur terminal + Catppuccin
-    ./terminals.nix   # Wezterm, Ghostty, Zellij (alternatives)
+    # ./terminals.nix # Décommenté : Wezterm, Zellij (alternatives à Kitty+Tmux)
     ./spotify.nix     # Spotify thémé via Spicetify (Catppuccin + extensions)
     ./dev-tools.nix   # Outils de développement CLI
 
@@ -62,7 +62,7 @@
     neofetch            # Infos système stylisées
     # ventoy-full       # USB multi-boot — décommenter si nécessaire (marqué insecure)
     # Ajouter permittedInsecurePackages dans configuration.nix si activé
-    solaar              # Gestion périphériques Logitech (clavier, souris) # ← ADAPTER : retirer si pas de Logitech
+    solaar              # Gestion périphériques Logitech (clavier, souris) # Optionnel : retirer si pas de Logitech
 
     # ── Remote Desktop — gestion du parc informatique ───────────
     remmina               # RDP, VNC, SSH, SFTP, SPICE (comme RDM)
@@ -192,7 +192,7 @@
   programs.newsboat = {
     enable = true;
     urls = [
-      # ← ADAPTER : ajouter vos flux RSS
+      # Optionnel : ajouter vos flux RSS
       { url = "https://nixos.org/blog/announcements-rss.xml"; title = "NixOS Announcements"; }
       { url = "https://weekly.nixos.org/feeds/all.rss.xml"; title = "NixOS Weekly"; }
       { url = "https://www.reddit.com/r/NixOS/.rss"; title = "r/NixOS"; }
@@ -224,7 +224,7 @@
       { id = "nngceckbapebfimnlniiiahkandclblb"; }
       # uBlock Origin
       { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
-      # ← ADAPTER : ajouter vos extensions
+      # Optionnel : ajouter vos extensions
     ];
   };
 
@@ -295,7 +295,7 @@
         { trigger = ":sig"; replace = "Cordialement,\nKuro"; }
         # Code snippets
         { trigger = ":shebang"; replace = "#!/usr/bin/env bash\nset -euo pipefail\n"; }
-        # ← ADAPTER : ajouter vos propres snippets
+        # Optionnel : ajouter vos propres snippets
       ];
     };
   };
@@ -330,7 +330,7 @@
         show-hidden-files = true;
       };
 
-      # ← ADAPTER : ajouter les paramètres dconf de vos applications GTK
+      # Optionnel : ajouter les paramètres dconf de vos applications GTK
       # Pour découvrir les clés : dconf watch /
     };
   };

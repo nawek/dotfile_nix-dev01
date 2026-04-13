@@ -39,13 +39,13 @@ in
       fullAppDisplay       # Mode plein écran avec artwork
       playlistIcons        # Icônes personnalisées pour les playlists
 
-      # ← ADAPTER : autres extensions disponibles
+      # Optionnel : autres extensions disponibles
       # betterGenres       # Genres améliorés
       # lastfm             # Scrobbling Last.fm
       # songStats          # Statistiques de la chanson en cours
     ];
 
-    # ← ADAPTER : custom apps disponibles
+    # Optionnel : custom apps disponibles
     # enabledCustomApps = with spicePkgs.apps; [
     #   lyricsPlus         # Paroles synchronisées
     #   marketplace        # Marketplace d'extensions dans Spotify

@@ -343,7 +343,7 @@ in
         "float, class:^(cheatsheet)$"
         "size 60% 70%, class:^(cheatsheet)$"
         "center, class:^(cheatsheet)$"
-        # ← ADAPTER : ajouter vos règles ici
+        # Optionnel : ajouter vos règles ici
       ];
 
       # ── Autostart ───────────────────────────────────────────────

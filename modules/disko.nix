@@ -65,7 +65,7 @@
                   "--perf-no_write_workqueue"
                 ];
 
-                # ← ADAPTER : décommenter pour utiliser un fichier clé en plus du mot de passe
+                # Optionnel : décommenter pour utiliser un fichier clé en plus du mot de passe
                 # (utile pour éviter de taper le mot de passe à chaque boot)
                 # settings.keyFile = "/path/to/keyfile";
 

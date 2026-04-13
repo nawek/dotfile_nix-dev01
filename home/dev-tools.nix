@@ -32,7 +32,7 @@
     nushell
 
     # TUI pour bases de données SQL (comme lazygit mais pour les BDD)
-    # ← ADAPTER : décommenter quand le paquet sera dans nixpkgs
+    # Optionnel : décommenter quand le paquet sera dans nixpkgs
     # lazysql
 
     # Client HTTP TUI — décommenter quand disponible dans nixpkgs
@@ -42,7 +42,7 @@
     ansible           # Gestion de config serveurs non-NixOS
     ansible-lint      # Linter pour les playbooks Ansible
 
-    # ← ADAPTER : ajouter vos outils de développement ici
+    # Optionnel : ajouter vos outils de développement ici
   ];
 
   # ── Mise (ex-rtx) — Gestionnaire de runtimes polyglotte ─────────

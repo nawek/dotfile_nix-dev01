@@ -41,7 +41,7 @@
         neededForUsers = true;
       };
 
-      # ← ADAPTER : ajouter vos secrets ici
+      # Optionnel : ajouter vos secrets ici
       # Exemples :
       #
       # "github-token" = {

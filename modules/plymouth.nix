@@ -13,7 +13,7 @@
 
 { config, pkgs, lib, ... }:
 let
-  plymouthTheme = "rings"; # ← ADAPTER : rings, loader, spin, hexa_retro, etc.
+  plymouthTheme = "rings"; # Thèmes dispos : rings, loader, spin, hexa_retro, etc.
 in
 {
   boot.plymouth = {

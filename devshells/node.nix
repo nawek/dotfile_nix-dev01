@@ -13,7 +13,7 @@
     nodejs_22         # ← ADAPTER : version Node.js (nodejs_20, nodejs_22)
 
     # Gestionnaire de paquets
-    nodePackages.pnpm # ← ADAPTER : ou yarn, npm suffit via nodejs
+    nodePackages.pnpm # ou yarn, npm suffit via nodejs
 
     # TypeScript
     nodePackages.typescript

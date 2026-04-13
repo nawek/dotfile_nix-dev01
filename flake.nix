@@ -15,7 +15,7 @@
   # ──────────────────────────────────────────────────────────────────
   inputs = {
     # Nixpkgs — branche stable pour la fiabilité
-    # ← ADAPTER : passer à nixos-unstable si vous voulez les derniers paquets
+    # Optionnel : passer à nixos-unstable si vous voulez les derniers paquets
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     # Home Manager — gestion déclarative de l'environnement utilisateur
@@ -84,6 +84,7 @@
   let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
+    lib = nixpkgs.lib;
   in
   {
     # ── Configuration NixOS principale ──────────────────────────────
@@ -117,6 +118,10 @@
         ./hosts/kuro/configuration.nix
       ];
     };
+
+    # ── Checks — Tests automatisés ───────────────────────────────────
+    # Exécutés par : nix flake check
+    checks.${system} = import ./tests { inherit pkgs lib; };
 
     # ── Dev Shells — environnements de développement isolés ────────
     # Usage : nix develop .#python | .#node | .#rust | .#go | .#cc

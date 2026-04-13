@@ -25,7 +25,7 @@
     powerManagement.finegrained = false; # ← ADAPTER : true pour NVIDIA Optimus (hybrid GPU)
 
     # Pilotes open-source NVIDIA (kernel module)
-    # ← ADAPTER : passer à true si GPU >= RTX 20xx (Turing+)
+    # Optionnel : passer à true si GPU >= RTX 20xx (Turing+)
     # Les pilotes open sont plus stables pour suspend/resume sur les GPU récents
     open = false; # ⚠️ true recommandé pour RTX 20xx+
 
@@ -33,7 +33,7 @@
     nvidiaSettings = true;
 
     # Version du driver — stable est le choix le plus sûr
-    # ← ADAPTER : .beta pour la dernière version, .production pour LTS
+    # .beta pour la dernière version, .production pour LTS
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 

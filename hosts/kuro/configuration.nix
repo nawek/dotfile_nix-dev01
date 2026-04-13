@@ -42,7 +42,7 @@
         "https://cache.nixos.org"
         "https://hyprland.cachix.org"
         "https://nix-community.cachix.org"
-        # ← ADAPTER : décommenter et remplacer par votre cache Cachix privé
+        # Optionnel : décommenter et remplacer par votre cache Cachix privé
         # "https://kuro.cachix.org"
       ];
       trusted-public-keys = [
@@ -79,7 +79,7 @@
     dates = "Sun *-*-* 04:00:00";             # Chaque dimanche à 4h du matin
     operation = "boot";                        # Appliqué au prochain boot (pas de switch brutal)
     allowReboot = false;                       # Ne PAS redémarrer automatiquement
-    # ← ADAPTER : passer à true si vous voulez un reboot automatique la nuit
+    # Optionnel : passer à true si vous voulez un reboot automatique la nuit
   };
 
   # ── Système ──────────────────────────────────────────────────────
@@ -145,7 +145,7 @@
     alsa.enable = true;
     alsa.support32Bit = true; # Support 32 bits (Wine, Steam)
     pulse.enable = true;      # Compatibilité PulseAudio
-    # jack.enable = true;     # ← ADAPTER : décommenter pour la production audio
+    # jack.enable = true;     # Optionnel : décommenter pour la production audio
   };
 
   # ── SSH ──────────────────────────────────────────────────────────
@@ -167,7 +167,7 @@
       enable = true;
       dates = "weekly";
     };
-    # ← ADAPTER : décommenter pour changer l'emplacement des données Docker
+    # Optionnel : décommenter pour changer l'emplacement des données Docker
     # daemon.settings = {
     #   data-root = "/persist/var/lib/docker";
     # };

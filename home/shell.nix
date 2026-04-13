@@ -210,7 +210,7 @@
       ];
 
       # Synchronisation désactivée pour l'instant
-      # ← ADAPTER : activer et configurer le serveur Atuin (CITADEL) plus tard
+      # Optionnel : activer et configurer le serveur Atuin (CITADEL) plus tard
       sync.records = false;
       # sync_address = "https://atuin.votre-serveur.com";
 

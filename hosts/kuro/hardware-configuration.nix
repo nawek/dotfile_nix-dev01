@@ -37,10 +37,10 @@
     "kvm-intel"    # ← ADAPTER : "kvm-amd" pour processeur AMD
   ];
 
-  # ← ADAPTER : décommenter pour firmware propriétaire (WiFi, etc.)
+  # Optionnel : décommenter pour firmware propriétaire (WiFi, etc.)
   # hardware.enableRedistributableFirmware = true;
 
-  # ← ADAPTER : décommenter pour le microcode CPU
+  # Optionnel : décommenter pour le microcode CPU
   # hardware.cpu.intel.updateMicrocode = true;   # Pour Intel
   # hardware.cpu.amd.updateMicrocode = true;     # Pour AMD
 }

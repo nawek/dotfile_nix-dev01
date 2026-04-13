@@ -29,7 +29,7 @@
 
     notifications = {
       wall.enable = true;   # Alerte sur tous les terminaux
-      # ← ADAPTER : configurer les notifications par email si besoin
+      # Optionnel : configurer les notifications par email si besoin
       # mail.enable = true;
       # mail.recipient = "votre@email.com";
     };

@@ -40,7 +40,7 @@ pkgs.mkShell {
     pkgs.pkg-config    # Détection des bibliothèques système
     pkgs.openssl       # TLS (reqwest, actix, etc.)
 
-    # ← ADAPTER : ajouter d'autres dépendances système ici
+    # Optionnel : ajouter d'autres dépendances système ici
     # pkgs.sqlite        # Pour rusqlite
     # pkgs.protobuf      # Pour tonic/prost (gRPC)
   ];

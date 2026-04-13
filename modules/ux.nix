@@ -30,7 +30,7 @@
     enable = true;
     drivers = with pkgs; [
       gutenprint          # Drivers génériques
-      # hplip             # ← ADAPTER : décommenter pour imprimantes HP
+      # hplip             # Optionnel : décommenter pour imprimantes HP
     ];
   };
   # Interface web : http://localhost:631
@@ -57,7 +57,7 @@
   # ══════════════════════════════════════════════════════════════════
   # Suppression du bruit de fond du micro pour les visioconférences
   # Activé automatiquement pour toutes les applications
-  # ← ADAPTER : décommenter si le paquet est dispo dans votre nixpkgs
+  # Optionnel : décommenter si le paquet est dispo dans votre nixpkgs
   # environment.systemPackages = [ pkgs.noise-suppression-for-voice ];
 
   # ══════════════════════════════════════════════════════════════════

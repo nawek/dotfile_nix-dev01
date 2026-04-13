@@ -71,7 +71,7 @@
         };
       };
 
-      # ← ADAPTER : ajouter des jails pour d'autres services
+      # Optionnel : ajouter des jails pour d'autres services
       # sshd-aggressive = {
       #   settings = {
       #     enabled = true;
@@ -165,7 +165,7 @@
       # Surveiller les changements de la configuration NixOS
       "-w /etc/nixos -p wa -k nixos_config"
 
-      # ← ADAPTER : ajouter vos propres règles d'audit
+      # Optionnel : ajouter vos propres règles d'audit
       # Voir : man auditctl
     ];
   };
