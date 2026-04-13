@@ -21,8 +21,8 @@
     # Ne PAS mettre defaultEditor = true (Neovim reste par défaut)
 
     settings = {
-      # Thème Catppuccin Mocha
-      theme = "catppuccin_mocha";
+      # Thème géré par Stylix (injecte automatiquement le thème Catppuccin)
+      # Ne PAS définir theme ici — conflit avec Stylix
 
       editor = {
         # Numéros de ligne relatifs (comme vim)

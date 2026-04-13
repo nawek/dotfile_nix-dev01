@@ -15,6 +15,8 @@
     userName = "Kuro";                      # ← ADAPTER
     userEmail = "votre@email.com";          # ← ADAPTER
 
+    signing.format = null; # Nouveau défaut 25.05 (était openpgp)
+
     # Branche par défaut
     extraConfig = {
       init.defaultBranch = "main";

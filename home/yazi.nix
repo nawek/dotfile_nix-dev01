@@ -19,7 +19,8 @@
 
   programs.yazi = {
     enable = true;
-    enableZshIntegration = true; # Alias 'y' avec cd-on-exit
+    enableZshIntegration = true;
+    shellWrapperName = "y"; # Nouveau défaut 26.05 (était "yy")
 
     settings = {
       manager = {

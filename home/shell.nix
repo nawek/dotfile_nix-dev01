@@ -82,7 +82,7 @@
     };
 
     # Configuration supplémentaire ZSH
-    initExtra = ''
+    initContent = ''
       # Charger les complétions personnalisées si elles existent
       if [ -d "$HOME/.zsh/completions" ]; then
         fpath=("$HOME/.zsh/completions" $fpath)
