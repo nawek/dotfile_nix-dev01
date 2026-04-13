@@ -44,10 +44,17 @@
     # Communication
     vesktop           # Discord client Wayland-natif
 
+    # Notes / Second brain
+    obsidian          # Notes Markdown interconnectées (vault dans ~/Documents/Obsidian)
+
     # Utilitaires
     p7zip             # Compression/décompression 7z
     file              # Identification de type de fichier
     neofetch          # Infos système stylisées
+
+    # Calendrier TUI — décommenter quand serveur CalDAV configuré
+    # khal              # Calendrier TUI
+    # vdirsyncer        # Sync CalDAV (Google Calendar, Nextcloud)
 
     # Monitoring GPU
     nvtopPackages.nvidia # Monitoring NVIDIA (htop pour GPU)
@@ -115,6 +122,12 @@
       # Rofi — cache des applications récentes
       ".cache/rofi3.druncache"
 
+      # Obsidian — vault et configuration
+      ".config/obsidian"
+
+      # Espanso — snippets text expander
+      ".config/espanso"
+
       # Données utilisateur
       "Documents"
       "Projects"
@@ -125,6 +138,31 @@
       # Historique ZSH
       ".zsh_history"
     ];
+  };
+
+  # ── Espanso — Text expander ────────────────────────────────────────
+  # Remplace des abréviations par du texte complet en tapant.
+  # Config dans ~/.config/espanso/match/base.yml
+  services.espanso = {
+    enable = true;
+    configs.default = {
+      toggle_key = "ALT";
+      search_shortcut = "ALT+SHIFT+SPACE";
+    };
+    matches.base = {
+      matches = [
+        # Date du jour
+        { trigger = ":date"; replace = "{{date}}"; vars = [{ name = "date"; type = "date"; params.format = "%d/%m/%Y"; }]; }
+        { trigger = ":now"; replace = "{{time}}"; vars = [{ name = "time"; type = "date"; params.format = "%d/%m/%Y %H:%M"; }]; }
+        # Email — ← ADAPTER
+        { trigger = ":mail"; replace = "votre@email.com"; }
+        # Signatures
+        { trigger = ":sig"; replace = "Cordialement,\nKuro"; }
+        # Code snippets
+        { trigger = ":shebang"; replace = "#!/usr/bin/env bash\nset -euo pipefail\n"; }
+        # ← ADAPTER : ajouter vos propres snippets
+      ];
+    };
   };
 
   # ── GTK — Thème Catppuccin explicite ───────────────────────────────
