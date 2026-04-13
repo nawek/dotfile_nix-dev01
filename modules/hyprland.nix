@@ -54,8 +54,8 @@
     waybar
 
     # Lanceur d'applications (Wayland-natif, ultra-customisable)
-    rofi
-    rofimoji                # Emoji picker via rofi
+    rofi-wayland
+    rofi-waylandmoji                # Emoji picker via rofi
 
     # Centre de notifications (remplace Dunst — panneau, historique, DND)
     swaynotificationcenter

@@ -20,7 +20,6 @@
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
-    shellWrapperName = "y"; # Nouveau défaut 26.05 (était "yy")
 
     settings = {
       manager = {

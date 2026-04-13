@@ -18,8 +18,9 @@
     defaultEditor = true;    # $EDITOR = nvim
     viAlias = true;          # vi → nvim
     vimAlias = true;         # vim → nvim
-    withRuby = false;        # Pas besoin de Ruby provider
+    withRuby = false;        # Pas besoin de Ruby provider (économise de l'espace)
     withPython3 = false;     # Pas besoin de Python provider (LSP via plugins Nix)
+    withNodeJs = false;      # Pas besoin de Node provider
 
     # ── Plugins Nix ────────────────────────────────────────────────
     plugins = with pkgs.vimPlugins; [

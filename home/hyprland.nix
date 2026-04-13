@@ -892,7 +892,7 @@ in
   # Remplace Wofi — beaucoup plus customisable (thèmes RASI)
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi; # rofi-wayland a été fusionné dans rofi
+    package = pkgs.rofi-wayland; # Version Wayland-native de Rofi
     terminal = "kitty";
 
     extraConfig = {

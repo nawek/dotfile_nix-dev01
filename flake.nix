@@ -14,14 +14,15 @@
   # INPUTS — Toutes les dépendances externes
   # ──────────────────────────────────────────────────────────────────
   inputs = {
-    # Nixpkgs — branche unstable pour les paquets les plus récents
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Nixpkgs — branche stable pour la fiabilité
+    # ← ADAPTER : passer à nixos-unstable si vous voulez les derniers paquets
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     # Home Manager — gestion déclarative de l'environnement utilisateur
-    # Intégré comme module NixOS (pas standalone)
+    # Doit suivre la même branche que nixpkgs
     home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs"; # Évite de dupliquer nixpkgs
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Disko — partitionnement déclaratif des disques
@@ -51,7 +52,7 @@
 
     # Stylix — thème global cohérent (GTK, QT, terminal, waybar, etc.)
     stylix = {
-      url = "github:danth/stylix";
+      url = "github:danth/stylix/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

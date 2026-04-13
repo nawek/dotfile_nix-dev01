@@ -59,8 +59,8 @@
     # ── Utilitaires ───────────────────────────────────────────────
     p7zip               # Compression/décompression 7z
     file                # Identification de type de fichier
-    fastfetch           # Infos système stylisées (remplace neofetch, archivé)
-    ventoy              # USB multi-boot (NixOS, Proxmox, etc.)
+    neofetch            # Infos système stylisées
+    ventoy-full         # USB multi-boot (NixOS, Proxmox, etc.)
     solaar              # Gestion périphériques Logitech (clavier, souris) # ← ADAPTER : retirer si pas de Logitech
 
     # ── Monitoring GPU ────────────────────────────────────────────
@@ -232,7 +232,6 @@
   # Les icônes Papirus sont le seul ajout manuel nécessaire.
   gtk = {
     enable = true;
-    gtk4.theme = null; # Utiliser le nouveau comportement (Stylix gère)
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;

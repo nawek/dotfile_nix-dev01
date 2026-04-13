@@ -217,7 +217,9 @@
   services.logind = {
     lidSwitch = "suspend";              # Fermer le couvercle → suspend (batterie)
     lidSwitchExternalPower = "ignore";  # Fermer le couvercle → rien (secteur)
-    powerKey = "suspend";               # Bouton power → suspend
+    extraConfig = ''
+      HandlePowerKey=suspend
+    '';
   };
 
   # ── D-Bus ────────────────────────────────────────────────────────

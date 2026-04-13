@@ -62,7 +62,7 @@
 
       # Emoji
       emoji = {
-        package = pkgs.noto-fonts-color-emoji;
+        package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
       };
 
@@ -84,6 +84,6 @@
   # ── Polices supplémentaires ──────────────────────────────────────
   # Noto CJK pour le support des caractères asiatiques
   fonts.packages = with pkgs; [
-    noto-fonts-cjk-sans-serif # Caractères CJK (chinois, japonais, coréen)
+    noto-fonts-cjk-sans # Caractères CJK (chinois, japonais, coréen)
   ];
 }
