@@ -458,11 +458,12 @@ in
       };
 
       # ── Fond — blur du wallpaper actuel ──────────────────────────
-      background = [{
+      # mkForce car Stylix injecte ses propres définitions (wallpaper + couleur)
+      background = mkForce [{
         monitor = "";
         blur_passes = 4;
         blur_size = 10;
-        brightness = 0.5;        # Assombrir le fond
+        brightness = 0.5;
         vibrancy = 0.2;
         vibrancy_darkness = 0.0;
       }];
