@@ -62,7 +62,7 @@
 
   # Ajouter les domaines de dev dans resolved
   # ← ADAPTER : ajouter vos domaines internes
-  services.resolved.settings = {
+  services.resolved.settings.Resolve = {
     Domains = [ "~local" "~test" ];
   };
 

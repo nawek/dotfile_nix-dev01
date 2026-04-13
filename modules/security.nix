@@ -129,7 +129,7 @@
     #   Cloudflare : 1.1.1.1#cloudflare-dns.com  (rapide)
     #   Mullvad :    194.242.2.2#dns.mullvad.net  (pas de logs, suédois)
     #   AdGuard :    94.140.14.14#dns.adguard.com (bloque pubs + trackers)
-    settings = {
+    settings.Resolve = {
       DNS = [ "9.9.9.9#dns.quad9.net" "149.112.112.112#dns.quad9.net" ];
       FallbackDNS = [ "1.1.1.1#cloudflare-dns.com" "8.8.8.8#dns.google" ];
       DNSOverTLS = "yes";
