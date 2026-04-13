@@ -10,7 +10,7 @@
 #    le ciblage Stylix pour VSCode :
 #    stylix.targets.vscode.enable = false;
 
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
 
   programs.vscode = {
     enable = true;
@@ -54,8 +54,8 @@
     # ── Paramètres utilisateur ─────────────────────────────────────
     userSettings = {
       # Police — gérée par Stylix, on ajoute seulement les fallbacks et la taille
-      # "editor.fontFamily" est injecté par Stylix — ne PAS le redéfinir
-      "editor.fontSize" = 14;
+      # fontFamily et fontSize sont injectés par Stylix — on override la taille
+      "editor.fontSize" = lib.mkForce 14;
       "editor.fontLigatures" = true;  # Ligatures (=> → ≠ etc.)
       "editor.minimap.enabled" = false; # Désactiver la minimap
 
