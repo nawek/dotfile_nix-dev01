@@ -337,6 +337,9 @@
         "swaync"                    # Centre de notifications
         "kanshi"                    # Auto-configuration des moniteurs
         "sway-audio-idle-inhibit"   # Empêcher la veille pendant l'audio
+        # ntfy — notifications push depuis le homelab (alertes, backups, etc.)
+        # ← ADAPTER : remplacer l'URL par votre instance ntfy
+        # "ntfy subscribe --from-config"
         # Fond d'écran — swww avec transition animée
         "swww-daemon"
         "sleep 1 && swww img ~/Pictures/wallpaper.jpg --transition-type grow --transition-pos center --transition-duration 1" # ← ADAPTER : chemin wallpaper
@@ -551,6 +554,7 @@
       ];
 
       modules-right = [
+        "custom/uptime-kuma"
         "custom/weather"
         "tray"
         "network"
@@ -647,6 +651,28 @@
         max-length = 30;
         on-click = "playerctl play-pause";
         tooltip = false;
+      };
+
+      # ── Module Uptime Kuma — État des services homelab ──────────
+      # ← ADAPTER : remplacer l'URL par votre instance Uptime Kuma
+      "custom/uptime-kuma" = {
+        format = "{}";
+        interval = 60; # Vérifier toutes les minutes
+        exec = ''
+          STATUS=$(curl -s --max-time 5 "https://status.example.com/api/status-page/homelab" 2>/dev/null)
+          if [ -z "$STATUS" ]; then
+            echo "  ?"
+          else
+            UP=$(echo "$STATUS" | jq -r '.uptime // 0' 2>/dev/null)
+            if [ "$UP" = "100" ]; then
+              echo "  OK"
+            else
+              echo "  $UP%%"
+            fi
+          fi
+        '';
+        tooltip-format = "Uptime Kuma — état des services homelab";
+        on-click = "xdg-open https://status.example.com"; # ← ADAPTER
       };
     };
 
@@ -815,6 +841,10 @@
 
       #backlight {
         color: @yellow;
+      }
+
+      #custom-uptime-kuma {
+        color: @green;
       }
 
       #custom-weather {

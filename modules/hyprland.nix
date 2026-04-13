@@ -93,6 +93,9 @@
     networkmanagerapplet    # Réseau
     blueman                 # Bluetooth
 
+    # Notifications push depuis le homelab
+    ntfy-sh                 # Client ntfy (notifications serveurs → laptop)
+
     # Contrôle multimédia
     playerctl               # Lecture/pause/suivant
     light                   # Luminosité écran (nécessite programs.light)
