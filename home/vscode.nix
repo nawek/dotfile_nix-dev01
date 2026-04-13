@@ -53,8 +53,8 @@
 
     # ── Paramètres utilisateur ─────────────────────────────────────
     userSettings = {
-      # Police et apparence
-      "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'Droid Sans Mono', monospace";
+      # Police — gérée par Stylix, on ajoute seulement les fallbacks et la taille
+      # "editor.fontFamily" est injecté par Stylix — ne PAS le redéfinir
       "editor.fontSize" = 14;
       "editor.fontLigatures" = true;  # Ligatures (=> → ≠ etc.)
       "editor.minimap.enabled" = false; # Désactiver la minimap
@@ -69,7 +69,6 @@
 
       # Terminal intégré
       "terminal.integrated.defaultProfile.linux" = "zsh";
-      "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font'";
 
       # ── Nix — LSP via nil ─────────────────────────────────────
       "nix.enableLanguageServer" = true;
