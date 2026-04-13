@@ -34,7 +34,9 @@
 
       # ── Workspaces ──────────────────────────────────────────────
       # Workspaces 1-5 sur le laptop, 6-9 sur l'écran externe
+      # Workspace spécial "scratchpad" pour le terminal dropdown
       workspace = [
+        "special:scratchpad, on-created-empty:kitty --class scratchpad"
         "1, monitor:eDP-1, default:true"
         "2, monitor:eDP-1"
         "3, monitor:eDP-1"
@@ -139,6 +141,18 @@
         preserve_split = true; # Garder l'orientation du split
       };
 
+      # Onglets groupés — barre de titre quand des fenêtres sont groupées
+      group = {
+        "col.border_active" = "rgba(89b4faee)";
+        "col.border_inactive" = "rgba(585b70aa)";
+        groupbar = {
+          font_size = 11;
+          gradients = false;
+          "col.active" = "rgba(89b4faee)";
+          "col.inactive" = "rgba(313244aa)";
+        };
+      };
+
       # ── Keybinds ────────────────────────────────────────────────
       bind = [
         # Applications
@@ -196,6 +210,29 @@
         # Notification center — toggle le panneau SwayNC
         "$mod, N, exec, swaync-client -t -sw"
 
+        # ── Scratchpad — Terminal dropdown (style Quake) ──────────
+        "$mod, grave, togglespecialworkspace, scratchpad"
+        "$mod SHIFT, grave, movetoworkspace, special:scratchpad"
+
+        # ── Window grouping — onglets ─────────────────────────────
+        "$mod, T, togglegroup,"              # Créer/dissoudre un groupe
+        "$mod, Tab, changegroupactive, f"    # Onglet suivant dans le groupe
+        "$mod SHIFT, Tab, changegroupactive, b" # Onglet précédent
+
+        # ── Submaps — Modes spéciaux (comme i3 modes) ────────────
+        # Mode resize : $mod+R puis h/j/k/l, Escape pour sortir
+        "$mod, R, submap, resize"
+        # Mode move : $mod+M puis h/j/k/l, Escape pour sortir
+        # (Le submap indicator Waybar affiche le mode actif)
+
+        # ── Zen mode — Focus coding ──────────────────────────────
+        # Toggle : masque waybar, augmente les gaps, désactive les notifs
+        "$mod, Z, exec, pkill waybar || waybar &"
+        "$mod SHIFT, Z, exec, swaync-client -d"
+
+        # ── Keybind cheatsheet — Affiche les raccourcis ───────────
+        "$mod, F1, exec, kitty --class cheatsheet -e sh -c 'cat ~/.config/hypr/cheatsheet.md 2>/dev/null || echo \"Créer ~/.config/hypr/cheatsheet.md avec vos raccourcis\" ; read'"
+
         # Presse-papier — historique via cliphist + rofi
         "$mod, C, exec, cliphist list | rofi -dmenu -p Clipboard | cliphist decode | wl-copy"
 
@@ -246,6 +283,28 @@
         "$mod, mouse:273, resizewindow"  # $mod + clic droit = redimensionner
       ];
 
+      # ── Submaps — Modes resize et move ──────────────────────────
+      # Le nom du submap s'affiche dans Waybar via le module hyprland/submap
+    };
+
+    # Les submaps doivent être définis via extraConfig (pas settings)
+    extraConfig = ''
+      # ── Submap : Resize ──────────────────────────────────────────
+      submap = resize
+      binde = , h, resizeactive, -30 0
+      binde = , j, resizeactive, 0 30
+      binde = , k, resizeactive, 0 -30
+      binde = , l, resizeactive, 30 0
+      binde = , left, resizeactive, -30 0
+      binde = , down, resizeactive, 0 30
+      binde = , up, resizeactive, 0 -30
+      binde = , right, resizeactive, 30 0
+      bind = , escape, submap, reset
+      bind = , Return, submap, reset
+      submap = reset
+    '';
+
+    settings = {
       # ── Règles de fenêtres ──────────────────────────────────────
       # Certaines fenêtres doivent être flottantes par défaut
       windowrulev2 = [
@@ -261,6 +320,14 @@
         "float, class:^(org.gnome.Nautilus)$"       # Nautilus (optionnel)
         "float, class:^(wlogout)$"                # wlogout flottant
         "fullscreen, class:^(wlogout)$"           # wlogout plein écran
+        # Scratchpad — flottant centré 80%x70%
+        "float, class:^(scratchpad)$"
+        "size 80% 70%, class:^(scratchpad)$"
+        "center, class:^(scratchpad)$"
+        # Cheatsheet — flottant centré
+        "float, class:^(cheatsheet)$"
+        "size 60% 70%, class:^(cheatsheet)$"
+        "center, class:^(cheatsheet)$"
         # ← ADAPTER : ajouter vos règles ici
       ];
 
