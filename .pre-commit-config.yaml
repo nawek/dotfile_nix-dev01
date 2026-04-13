@@ -47,3 +47,13 @@ repos:
     hooks:
       - id: yamllint
         args: ["-d", "{extends: relaxed, rules: {line-length: {max: 120}}}"]
+
+  # ── Nix — Vérification du flake avant commit ───────────────────
+  - repo: local
+    hooks:
+      - id: nix-flake-check
+        name: nix flake check
+        entry: nix flake check --no-build
+        language: system
+        pass_filenames: false
+        files: '\.nix$'

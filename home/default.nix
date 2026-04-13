@@ -18,6 +18,7 @@
     ./hyprland.nix    # Config Hyprland utilisateur (waybar, wofi, dunst, etc.)
     ./vscode.nix      # VSCode + extensions
     ./yazi.nix        # Yazi file manager TUI
+    ./helix.nix       # Helix éditeur modal (alternative à Neovim)
     ./neovim.nix      # Neovim avec LSP, Treesitter, Telescope
     ./tmux.nix        # Tmux multiplexeur terminal + Catppuccin
     ./terminals.nix   # Wezterm, Ghostty, Zellij (alternatives)

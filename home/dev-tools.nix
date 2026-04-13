@@ -31,6 +31,13 @@
     # Usage : nushell (pas shell par défaut, juste disponible comme outil)
     nushell
 
+    # TUI pour bases de données SQL (comme lazygit mais pour les BDD)
+    # ← ADAPTER : décommenter quand le paquet sera dans nixpkgs
+    # lazysql
+
+    # Client HTTP TUI (alternative à httpie avec UI interactive)
+    posting
+
     # ← ADAPTER : ajouter vos outils de développement ici
   ];
 
