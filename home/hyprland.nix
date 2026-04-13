@@ -13,7 +13,11 @@
 # ⚠️ Les couleurs sont gérées par Stylix — ne PAS hardcoder de hex ici
 #    sauf mention explicite (ex: gradient de bordure)
 
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, ... }:
+let
+  inherit (lib) mkForce;
+in
+{
 
   # ── Hyprland — Compositeur Wayland ───────────────────────────────
   wayland.windowManager.hyprland = {
@@ -76,10 +80,9 @@
         gaps_in = 4;       # Espace entre les fenêtres
         gaps_out = 8;      # Espace entre fenêtres et bord d'écran
         border_size = 2;
-        # Gradient bleu-violet Catppuccin pour la bordure active
-        # ← ADAPTER : couleurs Catppuccin Mocha (blue → mauve)
-        "col.active_border" = "rgba(89b4faee) rgba(cba6f7ee) 45deg";
-        "col.inactive_border" = "rgba(585b70aa)";
+        # Gradient bleu-violet Catppuccin (override Stylix qui ne fait que du solid)
+        "col.active_border" = mkForce "rgba(89b4faee) rgba(cba6f7ee) 45deg";
+        "col.inactive_border" = mkForce "rgba(585b70aa)";
         layout = "dwindle";
       };
 
