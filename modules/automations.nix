@@ -69,12 +69,22 @@
   };
 
   # ══════════════════════════════════════════════════════════════════
-  # 3. LOG ROTATION — Limiter la taille des logs
+  # 3. TMPFILES — Nettoyage automatique /tmp et ~/Downloads
+  # ══════════════════════════════════════════════════════════════════
+  systemd.tmpfiles.rules = [
+    "d /tmp 1777 root root 7d"          # Nettoyer /tmp après 7 jours
+    # ~/Downloads nettoyé par le timer user dans home/default.nix
+  ];
+
+  # ══════════════════════════════════════════════════════════════════
+  # 4. LOG ROTATION — Limiter la taille des logs
   # ══════════════════════════════════════════════════════════════════
   services.journald.extraConfig = ''
+    Storage=persistent
     SystemMaxUse=500M
     SystemMaxFileSize=50M
     MaxRetentionSec=1month
+    Compress=yes
   '';
 
   # ══════════════════════════════════════════════════════════════════

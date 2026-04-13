@@ -103,6 +103,12 @@
 
       # ClamAV — signatures antivirus (évite de re-télécharger à chaque boot)
       "/var/lib/clamav"
+
+      # Systemd timers — état des timers persistants (OnCalendar)
+      "/var/lib/systemd/timers"
+
+      # NetworkManager — état complet (en plus des connexions)
+      "/var/lib/NetworkManager"
     ];
 
     files = [

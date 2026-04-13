@@ -97,6 +97,16 @@
       impermanence-diff = "sudo find / -xdev -not -path '/nix/*' -not -path '/persist/*' -not -path '/proc/*' -not -path '/sys/*' -not -path '/dev/*' -not -path '/run/*' -not -path '/tmp/*' -not -path '/boot/*' -newer /etc/machine-id -type f 2>/dev/null | head -50";
       rss = "newsboat";               # Lecteur RSS
 
+      # ── Safety net ─────────────────────────────────────────────
+      rm  = "rm -i";                  # Confirmation avant suppression
+      mv  = "mv -i";                  # Confirmation avant écrasement
+      cp  = "cp -i";                  # Confirmation avant écrasement
+
+      # ── Utilitaires ─────────────────────────────────────────────
+      mkcd = "f() { mkdir -p \"$1\" && cd \"$1\"; }; f"; # mkdir + cd
+      extract = "f() { case \"$1\" in *.tar.gz|*.tgz) tar xzf \"$1\";; *.tar.bz2|*.tbz2) tar xjf \"$1\";; *.tar.xz|*.txz) tar xJf \"$1\";; *.zip) unzip \"$1\";; *.7z) 7z x \"$1\";; *.rar) unrar x \"$1\";; *.gz) gunzip \"$1\";; *.xz) unxz \"$1\";; *) echo \"Format inconnu: $1\";; esac; }; f";
+      login-history = "last -20 && echo '--- Échecs ---' && sudo lastb -10 2>/dev/null";
+
       # ── Remplacements modernes ──────────────────────────────────
       ll  = "eza -la --icons --git";  # ls amélioré
       lt  = "eza --tree --level=2 --icons"; # Arborescence
@@ -114,6 +124,9 @@
       # Raccourcis clavier
       bindkey '^[[A' history-search-backward  # Flèche haut : recherche historique
       bindkey '^[[B' history-search-forward   # Flèche bas : recherche historique
+
+      # PATH — scripts personnels
+      export PATH="$HOME/.local/bin:$PATH"
 
       # Fortune — citation aléatoire au login (fun)
       if command -v fortune &>/dev/null && command -v cowsay &>/dev/null; then

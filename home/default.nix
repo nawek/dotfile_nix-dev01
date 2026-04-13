@@ -171,6 +171,24 @@
     ];
   };
 
+  # ── XDG — Dossiers utilisateur standard ───────────────────────────
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+    documents = "$HOME/Documents";
+    download = "$HOME/Downloads";
+    music = "$HOME/Music";
+    pictures = "$HOME/Pictures";
+    videos = "$HOME/Videos";
+    desktop = "$HOME/Desktop";
+    publicShare = "$HOME/Public";
+    templates = "$HOME/Templates";
+    extraConfig = {
+      XDG_PROJECTS_DIR = "$HOME/Projects";
+      XDG_SCREENSHOTS_DIR = "$HOME/Pictures/screenshots";
+    };
+  };
+
   # ── XDG — Applications par défaut ──────────────────────────────────
   # Associe chaque type de fichier à la bonne application
   xdg.mimeApps = {
@@ -300,6 +318,10 @@
         { trigger = ":dc"; replace = "services:\n  app:\n    image: IMAGE\n    ports:\n      - \"8080:80\"\n    volumes:\n      - ./data:/data\n    restart: unless-stopped\n"; }
         { trigger = ":nix-shell"; replace = "nix-shell -p PKG --run 'CMD'"; }
         { trigger = ":ip"; replace = "{{output}}"; vars = [{ name = "output"; type = "shell"; params.cmd = "curl -s ifconfig.me"; }]; }
+        # Générateurs
+        { trigger = ":uuid"; replace = "{{output}}"; vars = [{ name = "output"; type = "shell"; params.cmd = "cat /proc/sys/kernel/random/uuid"; }]; }
+        { trigger = ":timestamp"; replace = "{{output}}"; vars = [{ name = "output"; type = "shell"; params.cmd = "date +%s"; }]; }
+        { trigger = ":lorem"; replace = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."; }
         # Optionnel : ajouter vos propres snippets
       ];
     };
@@ -373,6 +395,28 @@
   # ── Fortune — Message du jour au login ──────────────────────────
   # Affiche une citation aléatoire à chaque ouverture de terminal
   # (ajouté dans initExtra/initContent de shell.nix)
+
+  # ── Downloads auto-cleanup — Fichiers > 30 jours ──────────────────
+  systemd.user.services.downloads-cleanup = {
+    Unit.Description = "Nettoyer les vieux fichiers de ~/Downloads";
+    Service = {
+      Type = "oneshot";
+      ExecStart = toString (pkgs.writeShellScript "downloads-cleanup" ''
+        find "$HOME/Downloads" -maxdepth 1 -type f -mtime +30 -delete 2>/dev/null
+        echo "Downloads nettoyé."
+      '');
+    };
+  };
+
+  systemd.user.timers.downloads-cleanup = {
+    Unit.Description = "Timer nettoyage Downloads (quotidien)";
+    Timer = {
+      OnCalendar = "daily";
+      Persistent = true;
+      Unit = "downloads-cleanup.service";
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
 
   # ── Home Manager ─────────────────────────────────────────────────
   programs.home-manager.enable = true;

@@ -63,6 +63,9 @@
       nvim-autopairs      # Fermer automatiquement les parenthèses
       comment-nvim        # gcc pour commenter/décommenter
       nvim-surround       # Manipulation des paires (quotes, brackets)
+      undotree            # Visualiser l'historique d'undo en arbre
+      todo-comments-nvim  # Highlight TODO/FIXME/HACK/NOTE dans le code
+      trouble-nvim        # Panel listant toutes les erreurs/warnings LSP
     ];
 
     # ── Configuration Lua ──────────────────────────────────────────
@@ -206,6 +209,13 @@
       require("nvim-autopairs").setup()
       require("Comment").setup()
       require("nvim-surround").setup()
+      require("todo-comments").setup()
+      require("trouble").setup()
+
+      -- Undotree toggle
+      vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Undo tree" })
+      -- Trouble toggle
+      vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics" })
     '';
   };
 }

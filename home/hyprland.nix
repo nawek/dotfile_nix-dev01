@@ -235,6 +235,18 @@ in
         # Mode move : $mod+M puis h/j/k/l, Escape pour sortir
         # (Le submap indicator Waybar affiche le mode actif)
 
+        # Workspace previous — revenir au dernier workspace
+        "$mod, BackSpace, workspace, previous"
+
+        # Envoyer fenêtre vers le premier workspace vide
+        "$mod SHIFT, 0, movetoworkspace, empty"
+
+        # Keybind passthrough — passer tous les keybinds à l'app (VMs, RDP)
+        "$mod, Escape, submap, passthrough"
+
+        # Rofi calculator
+        "$mod SHIFT, C, exec, rofi -show calc -modi calc -no-show-match -no-sort"
+
         # ── Zen mode — Focus coding ──────────────────────────────
         # Toggle : masque waybar, augmente les gaps, désactive les notifs
         "$mod, Z, exec, pkill waybar || waybar &"
@@ -324,6 +336,11 @@ in
       bind = , escape, submap, reset
       bind = , Return, submap, reset
       submap = reset
+
+      # ── Submap : Passthrough (tous les keybinds passent à l'app) ──
+      submap = passthrough
+      bind = SUPER, Escape, submap, reset
+      submap = reset
     '';
 
     settings = {
@@ -353,6 +370,13 @@ in
 
         # XWayland — légère transparence pour identifier les apps X11
         "opacity 0.95, xwayland:1"
+
+        # Opacity par application (Kitty géré par Stylix, les autres ici)
+        "opacity 1.0 override, class:^(chromium-browser)$"
+        "opacity 1.0 override, class:^(code|Code)$"
+
+        # Auto-float les petites fenêtres (dialogues, popups)
+        "float, maxsize 500 400"
 
         # Workspace rules — apps forcées sur des workspaces spécifiques
         "workspace 1, class:^(chromium-browser)$"
@@ -632,6 +656,7 @@ in
         format-charging = "  {capacity}%";
         format-plugged = "  {capacity}%";
         format-missing = ""; # Pas de batterie (desktop/VM)
+        tooltip-format = "{capacity}% — {timeTo}";
         format-icons = [ "" "" "" "" "" ];
       };
 
@@ -656,7 +681,9 @@ in
         format-muted = "  Muet";
         format-icons = { default = [ "" "" "" ]; };
         on-click = "pavucontrol";
+        on-click-right = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         scroll-step = 5;
+        tooltip-format = "{desc} — {volume}%";
       };
 
       backlight = {
@@ -1274,6 +1301,20 @@ in
       enable_audio_bell = false;  # Pas de son de cloche
       copy_on_select = "clipboard"; # Copier automatiquement la sélection
       scrollback_lines = 10000;
+
+      # Onglets — barre de style powerline
+      tab_bar_style = "powerline";
+      tab_powerline_style = "round";
+      active_tab_font_style = "bold";
+
+      # Remote control — permet le contrôle via scripts
+      allow_remote_control = "socket-only";
+      listen_on = "unix:/tmp/kitty-socket";
+
+      # URLs — cliquer pour ouvrir dans le navigateur
+      url_style = "curly";
+      open_url_with = "xdg-open";
+      detect_urls = true;
     };
   };
 }

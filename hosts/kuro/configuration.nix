@@ -107,6 +107,8 @@
       LC_PAPER = "fr_FR.UTF-8";
       LC_TELEPHONE = "fr_FR.UTF-8";
       LC_TIME = "fr_FR.UTF-8";
+      # Messages système en anglais (plus facile à googler les erreurs)
+      LC_MESSAGES = "en_US.UTF-8";
     };
   };
 
@@ -160,6 +162,7 @@
     settings = {
       PasswordAuthentication = false; # Clés SSH uniquement
       PermitRootLogin = "no";
+      Banner = "/etc/ssh/banner.txt";
     };
   };
 
@@ -223,6 +226,18 @@
     };
   };
   services.blueman.enable = true; # Interface graphique Bluetooth
+
+  # ── Sudo — Timeout plus long ──────────────────────────────────────
+  security.sudo.extraConfig = ''
+    Defaults timestamp_timeout=15
+  '';
+
+  # ── Suspend-then-hibernate — Économiser la batterie ──────────────
+  # Après 60min de suspend, hiberner automatiquement
+  systemd.sleep.extraConfig = ''
+    HibernateDelaySec=60min
+  '';
+  services.logind.lidSwitch = "suspend-then-hibernate";
 
   # ── Logind — Comportement du couvercle / bouton power ────────────
   services.logind = {
