@@ -67,6 +67,9 @@
     slurp                   # Sélection de zone
     wl-clipboard            # Presse-papier Wayland
 
+    # Historique presse-papier (texte + images)
+    cliphist
+
     # Verrouillage d'écran et inactivité
     hyprlock
     hypridle

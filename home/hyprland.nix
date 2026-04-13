@@ -260,6 +260,9 @@
         "sleep 1 && swww img ~/Pictures/wallpaper.jpg --transition-type grow --transition-pos center --transition-duration 1" # ← ADAPTER : chemin wallpaper
         "hypridle"                  # Gestion de l'inactivité
         "swayosd-server"            # Serveur OSD (volume, brightness, caps)
+        # Historique presse-papier (cliphist écoute wl-paste)
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
         "nm-applet --indicator"     # Applet réseau (tray)
         "blueman-applet"            # Applet Bluetooth (tray)
         # Agent polkit (pop-up mot de passe pour les actions admin)
