@@ -246,10 +246,10 @@
   dconf = {
     enable = true;
     settings = {
-      # Thème sombre pour toutes les applications GTK
+      # Thème sombre géré par Stylix (polarity = "dark")
+      # Ne PAS redéfinir gtk-theme ici — Stylix l'injecte automatiquement
       "org/gnome/desktop/interface" = {
         color-scheme = "prefer-dark";
-        gtk-theme = "adw-gtk3-dark";
       };
 
       # Nautilus — paramètres du gestionnaire de fichiers
@@ -260,7 +260,6 @@
 
       # ← ADAPTER : ajouter les paramètres dconf de vos applications GTK
       # Pour découvrir les clés : dconf watch /
-      # Puis modifier le paramètre dans l'application et noter la clé
     };
   };
 
