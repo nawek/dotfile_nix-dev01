@@ -14,6 +14,8 @@
   # ══════════════════════════════════════════════════════════════════
   # 1. FIREWALL — Filtrage réseau minimal
   # ══════════════════════════════════════════════════════════════════
+  # ⚠️ Ce module est la SOURCE UNIQUE de vérité pour le firewall.
+  #    Ne PAS déclarer networking.firewall dans d'autres modules.
   networking.firewall = {
     enable = true;
 
@@ -28,11 +30,15 @@
 
     # Ports UDP ouverts en entrée
     allowedUDPPorts = [
-      # 51820 # WireGuard — décommenter si VPN utilisé
+      41641  # Tailscale (VPN mesh)
+      # 51820 # WireGuard — décommenter si VPN site-to-site utilisé
     ];
 
-    # Plages de ports pour les applications qui en ont besoin
+    # Plages de ports (Mosh ouvre 60000-61000 automatiquement via programs.mosh)
     # allowedTCPPortRanges = [{ from = 3000; to = 3100; }]; # Dev servers
+
+    # Tailscale utilise son propre firewall interne
+    trustedInterfaces = [ "tailscale0" ];
 
     # Autoriser le ping (ICMP) — utile pour le diagnostic réseau
     allowPing = true;
@@ -144,8 +150,8 @@
     domains = [ "~." ]; # Tous les domaines via resolved
   };
 
-  # Désactiver le DNS de NetworkManager (resolved s'en charge)
-  networking.networkmanager.dns = "systemd-resolved";
+  # Note : networking.networkmanager.dns est défini dans networking.nix
+  # pour éviter les doublons.
 
   # ══════════════════════════════════════════════════════════════════
   # 5. AUDIT — Journalisation des accès système
@@ -207,16 +213,8 @@
     IPCAllowedUsers = [ "root" "kuro" ]; # ← ADAPTER : utilisateurs autorisés
   };
 
-  # ══════════════════════════════════════════════════════════════════
-  # Persistance des données de sécurité (impermanence)
-  # ══════════════════════════════════════════════════════════════════
-  # Les données Fail2ban, ClamAV et audit doivent survivre aux reboots
-  environment.persistence."/persist/system" = {
-    directories = [
-      "/var/lib/fail2ban"    # Base de données des bans
-      "/var/lib/clamav"      # Signatures antivirus
-    ];
-  };
+  # ⚠️ La persistence (fail2ban, clamav) est centralisée dans
+  #    modules/impermanence.nix — ne PAS la déclarer ici.
 
   # ══════════════════════════════════════════════════════════════════
   # Paquets de sécurité

@@ -70,12 +70,9 @@
     # ── Git ───────────────────────────────────────────────────────
     lazygit             # Interface TUI pour Git
 
-    # ── Thème GTK/QT ──────────────────────────────────────────────
-    adw-gtk3                                # Thème GTK3 Adwaita dark
-    papirus-icon-theme                      # Icônes Papirus
-    catppuccin-kvantum                      # Thème QT Kvantum Catppuccin
-    libsForQt5.qtstyleplugin-kvantum       # Plugin Kvantum QT5
-    qt6Packages.qtstyleplugin-kvantum      # Plugin Kvantum QT6
+    # ── Thème icônes ──────────────────────────────────────────────
+    papirus-icon-theme                      # Icônes Papirus-Dark
+    # GTK/QT themes sont gérés par Stylix — pas de paquets manuels
   ];
 
   # ── Persistance utilisateur ──────────────────────────────────────
@@ -230,29 +227,16 @@
     };
   };
 
-  # ── GTK — Thème Catppuccin explicite ───────────────────────────────
-  # Pour les applications qui ne respectent pas Stylix
+  # ── GTK/QT — Thèmes gérés par Stylix ──────────────────────────────
+  # Stylix applique automatiquement Catppuccin Mocha à GTK et QT.
+  # Les icônes Papirus sont le seul ajout manuel nécessaire.
   gtk = {
     enable = true;
-    theme = {
-      name = "adw-gtk3-dark";
-      package = pkgs.adw-gtk3;
-    };
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-  };
-
-  # ── QT — Cohérence avec le thème GTK ────────────────────────────
-  # Force QT à utiliser le même thème sombre que GTK
-  qt = {
-    enable = true;
-    platformTheme.name = "kvantum";
-    style = {
-      name = "kvantum";
-      package = pkgs.catppuccin-kvantum;
-    };
+    # Le thème GTK est injecté par Stylix — ne PAS le définir ici
   };
 
   # ── Dconf — Persistance des paramètres GTK/GNOME ──────────────────

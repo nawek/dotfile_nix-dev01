@@ -15,6 +15,13 @@
   # Exécuté dans l'initrd, avant le montage final du système
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     mkdir -p /btrfs_tmp
+
+    # Vérifier que le device LUKS est disponible
+    if [ ! -e /dev/mapper/cryptroot ]; then
+      echo "ERREUR : /dev/mapper/cryptroot introuvable. Abandon du wipe root."
+      echo "Le système va démarrer avec l'ancienne racine."
+    else
+
     # Monter la partition BTRFS (déchiffrée via LUKS) pour accéder aux subvolumes
     # Le nom "cryptroot" correspond au champ "name" dans disko.nix
     mount -o subvol=/ /dev/mapper/cryptroot /btrfs_tmp
@@ -45,6 +52,8 @@
     echo "Création d'un nouveau subvolume @ vierge"
     btrfs subvolume create /btrfs_tmp/@
     umount /btrfs_tmp
+
+    fi # fin du check /dev/mapper/cryptroot
   '';
 
   # ── Persistance système ──────────────────────────────────────────
@@ -83,6 +92,17 @@
 
       # Secure Boot PKI (lanzaboote)
       "/etc/secureboot"
+
+      # ── Services réseau ──────────────────────────────────────────
+      # Tailscale — clés VPN, état des peers
+      "/var/lib/tailscale"
+
+      # ── Services sécurité ────────────────────────────────────────
+      # Fail2ban — base de données des bans
+      "/var/lib/fail2ban"
+
+      # ClamAV — signatures antivirus (évite de re-télécharger à chaque boot)
+      "/var/lib/clamav"
     ];
 
     files = [

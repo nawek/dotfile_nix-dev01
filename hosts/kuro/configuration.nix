@@ -250,7 +250,8 @@
 
   # ── Variable d'environnement pour nh ─────────────────────────────
   # nh utilise $FLAKE pour savoir où trouver la config
-  environment.variables.FLAKE = "/home/kuro/nixos-config"; # ← ADAPTER : chemin vers votre config
+  # ← ADAPTER : doit correspondre au chemin réel de ce dépôt sur votre machine
+  environment.variables.FLAKE = "/home/kuro/dotfile_nix-dev01";
 
   # ── Paquets système ──────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
