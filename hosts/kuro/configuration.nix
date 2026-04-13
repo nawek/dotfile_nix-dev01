@@ -237,12 +237,11 @@
   systemd.sleep.extraConfig = ''
     HibernateDelaySec=60min
   '';
-  services.logind.lidSwitch = "suspend-then-hibernate";
 
   # ── Logind — Comportement du couvercle / bouton power ────────────
   services.logind = {
-    lidSwitch = "suspend";              # Fermer le couvercle → suspend (batterie)
-    lidSwitchExternalPower = "ignore";  # Fermer le couvercle → rien (secteur)
+    lidSwitch = "suspend-then-hibernate"; # Suspend puis hibernate après 60min
+    lidSwitchExternalPower = "ignore";    # Couvercle fermé sur secteur → rien
     extraConfig = ''
       HandlePowerKey=suspend
     '';
