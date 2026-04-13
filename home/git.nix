@@ -81,14 +81,42 @@
         identityFile = "~/.ssh/id_ed25519"; # ← ADAPTER : chemin de votre clé
       };
 
-      # ← ADAPTER : ajouter vos serveurs ici
-      # "mon-serveur" = {
-      #   hostname = "192.168.1.100";
-      #   user = "admin";
-      #   identityFile = "~/.ssh/id_ed25519";
-      #   # Port forwarding local :
-      #   # localForwards = [{ bind.port = 8080; host.address = "localhost"; host.port = 80; }];
-      # };
+      # ── Serveurs Homelab ─────────────────────────────────────────
+      # ← ADAPTER : remplacer les IPs et hostnames par les vôtres
+      # Accès : ssh proxmox, ssh nas, ssh docker01, etc.
+
+      "proxmox" = {
+        hostname = "192.168.1.10"; # ← ADAPTER
+        user = "root";
+        identityFile = "~/.ssh/id_ed25519";
+      };
+
+      "nas" = {
+        hostname = "192.168.1.20"; # ← ADAPTER
+        user = "admin";            # ← ADAPTER
+        identityFile = "~/.ssh/id_ed25519";
+      };
+
+      "docker01" = {
+        hostname = "192.168.1.30"; # ← ADAPTER
+        user = "kuro";             # ← ADAPTER
+        identityFile = "~/.ssh/id_ed25519";
+        # Port forwarding Grafana local :
+        # localForwards = [{ bind.port = 3000; host.address = "localhost"; host.port = 3000; }];
+      };
+
+      # Wildcard : tous les serveurs du homelab (même clé, même user)
+      "*.home" = {
+        user = "kuro";             # ← ADAPTER
+        identityFile = "~/.ssh/id_ed25519";
+      };
+
+      # Via Tailscale : accès par nom machine
+      "*.tail" = {
+        user = "kuro";             # ← ADAPTER
+        identityFile = "~/.ssh/id_ed25519";
+        # ProxyCommand = "tailscale ssh %h"; # ← décommenter si Tailscale SSH
+      };
     };
   };
 

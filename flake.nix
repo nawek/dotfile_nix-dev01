@@ -119,6 +119,7 @@
       rust   = import ./devshells/rust.nix { inherit pkgs; fenix = inputs.fenix; };
       go     = import ./devshells/go.nix { inherit pkgs; };
       cc     = import ./devshells/cc.nix { inherit pkgs; };
+      infra  = import ./devshells/infra.nix { inherit pkgs; };
     };
 
     # ── Templates — Bootstrapper un nouveau projet ─────────────────

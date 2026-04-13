@@ -38,6 +38,10 @@
     # Client HTTP TUI (alternative à httpie avec UI interactive)
     posting
 
+    # ── Homelab / IaC ───────────────────────────────────────────────
+    ansible           # Gestion de config serveurs non-NixOS
+    ansible-lint      # Linter pour les playbooks Ansible
+
     # ← ADAPTER : ajouter vos outils de développement ici
   ];
 
