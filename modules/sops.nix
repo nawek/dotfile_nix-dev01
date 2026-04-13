@@ -41,6 +41,11 @@
         neededForUsers = true;
       };
 
+      # Mot de passe WiFi — utilisé par NetworkManager
+      # ← ADAPTER : ajouter dans secrets/secrets.yaml :
+      #   wifi-password: "votre_mot_de_passe_wifi"
+      "wifi-password" = { };
+
       # Optionnel : ajouter vos secrets ici
       # Exemples :
       #

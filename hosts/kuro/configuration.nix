@@ -142,7 +142,41 @@
   programs.firejail.enable = true;
 
   # ── Réseau ───────────────────────────────────────────────────────
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    # ── WiFi pré-configuré ─────────────────────────────────────────
+    # La connexion est prête au premier boot — pas besoin de nmcli.
+    # Le mot de passe est chiffré via sops-nix (secrets/secrets.yaml).
+    ensureProfiles.profiles = {
+      "home-wifi" = {
+        connection = {
+          id = "Home WiFi";           # ← ADAPTER : nom affiché
+          type = "wifi";
+          autoconnect = true;
+          autoconnect-priority = 100; # Priorité haute (se connecte en premier)
+        };
+        wifi = {
+          ssid = "MonWiFi";           # ← ADAPTER : nom du réseau WiFi
+          mode = "infrastructure";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$HOME_WIFI_PASSWORD"; # Injecté via sops
+        };
+      };
+      # ← ADAPTER : ajouter d'autres réseaux WiFi ici
+      # "bureau-wifi" = {
+      #   connection = { id = "Bureau"; type = "wifi"; autoconnect = true; };
+      #   wifi = { ssid = "Bureau-5G"; mode = "infrastructure"; };
+      #   wifi-security = { key-mgmt = "wpa-psk"; psk = "mot_de_passe"; };
+      # };
+    };
+
+    # Injecter le mot de passe WiFi depuis sops
+    ensureProfiles.environmentFiles = [
+      config.sops.secrets."wifi-password".path
+    ];
+  };
 
   # ── Audio — PipeWire ─────────────────────────────────────────────
   # Remplace PulseAudio avec une meilleure latence et compatibilité
