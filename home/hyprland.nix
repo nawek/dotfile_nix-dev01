@@ -101,13 +101,36 @@
 
       animations = {
         enabled = true;
-        # Animations fluides
+
+        # Courbes bezier custom pour des animations fluides et naturelles
+        bezier = [
+          "smoothOut, 0.36, 0, 0.66, -0.56"   # Sortie avec léger rebond inversé
+          "smoothIn, 0.25, 1, 0.5, 1"          # Entrée douce et progressive
+          "overshot, 0.05, 0.9, 0.1, 1.05"     # Dépassement léger (bounce)
+        ];
+
         animation = [
-          "windows, 1, 4, default, slide"
-          "windowsOut, 1, 4, default, slide"
-          "border, 1, 5, default"
-          "fade, 1, 4, default"
-          "workspaces, 1, 3, default"
+          # Fenêtres — effet popin (zoom depuis le centre)
+          "windows, 1, 5, overshot, popin 80%"
+          "windowsOut, 1, 5, smoothOut, popin 80%"
+
+          # Bordures — transition lente et douce
+          "border, 1, 10, default"
+
+          # Fondu — apparition/disparition progressive
+          "fade, 1, 5, smoothIn"
+          "fadeDim, 1, 5, smoothIn"
+
+          # Layers (waybar, rofi, notifications) — fondu
+          "layers, 1, 5, smoothIn, fade"
+          "layersIn, 1, 5, smoothIn, fade"
+          "layersOut, 1, 5, smoothOut, fade"
+
+          # Workspaces — slide avec léger dépassement
+          "workspaces, 1, 5, overshot, slide"
+
+          # Workspace spécial (scratchpad) — fondu
+          "specialWorkspace, 1, 5, smoothIn, fade"
         ];
       };
 
