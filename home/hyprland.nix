@@ -606,6 +606,46 @@
     '';
   };
 
+  # ── Cava — Visualiseur audio dans le terminal ─────────────────────
+  # Affiche des barres audio réactives à la musique (pur esthétique)
+  # Lancer avec : cava
+  programs.cava = {
+    enable = true;
+    settings = {
+      general = {
+        framerate = 60;
+        bars = 12;
+        bar_width = 2;
+        bar_spacing = 1;
+      };
+
+      input = {
+        method = "pipewire";
+        source = "auto";
+      };
+
+      output = {
+        method = "ncurses";
+      };
+
+      # Gradient Catppuccin Mocha (rosewater → mauve)
+      color = {
+        gradient = 1;
+        gradient_count = 6;
+        gradient_color_1 = "'#f5e0dc'"; # rosewater
+        gradient_color_2 = "'#f2cdcd'"; # flamingo
+        gradient_color_3 = "'#f5c2e7'"; # pink
+        gradient_color_4 = "'#cba6f7'"; # mauve
+        gradient_color_5 = "'#89b4fa'"; # blue
+        gradient_color_6 = "'#94e2d5'"; # teal
+      };
+
+      smoothing = {
+        noise_reduction = 77;
+      };
+    };
+  };
+
   # ── Kitty — Terminal ─────────────────────────────────────────────
   # Le thème de couleurs est géré par Stylix
   programs.kitty = {
