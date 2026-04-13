@@ -60,14 +60,11 @@
     # Les domaines .local et .test sont gérés via resolved
   };
 
-  # Ajouter les domaines de dev dans resolved (pas de conflit avec DoT)
-  services.resolved.extraConfig = ''
-    # Résoudre les domaines de développement localement
-    # ← ADAPTER : ajouter vos domaines internes
-    [Resolve]
-    DNS=127.0.0.1
-    Domains=~local ~test
-  '';
+  # Ajouter les domaines de dev dans resolved
+  # ← ADAPTER : ajouter vos domaines internes
+  services.resolved.settings = {
+    Domains = [ "~local" "~test" ];
+  };
 
   # ══════════════════════════════════════════════════════════════════
   # 4. WIREGUARD — VPN site-to-site vers le homelab

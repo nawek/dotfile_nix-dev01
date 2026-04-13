@@ -370,8 +370,8 @@
         # Après 2.5 minutes — réduire la luminosité
         {
           timeout = 150;
-          on-timeout = "light -S 10";    # Baisser à 10%
-          on-resume = "light -I";         # Restaurer la luminosité précédente
+          on-timeout = "brightnessctl -s set 10%"; # Baisser à 10%, sauver l'état
+          on-resume = "brightnessctl -r";          # Restaurer la luminosité
         }
         # Après 5 minutes — verrouiller l'écran
         {

@@ -119,8 +119,10 @@
 
   # ── Options critiques pour l'impermanence ────────────────────────
 
-  # /persist doit être monté tôt dans le boot (avant les services)
+  # /persist et /home doivent être montés tôt dans le boot (avant les services)
+  # Sans ceci, impermanence ne peut pas bind-mount les données persistantes
   fileSystems."/persist".neededForBoot = true;
+  fileSystems."/home".neededForBoot = true;
 
   # Nécessaire pour les bind mounts de Home Manager impermanence
   programs.fuse.userAllowOther = true;

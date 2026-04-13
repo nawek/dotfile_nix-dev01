@@ -79,7 +79,6 @@
   # Données qui survivent à l'effacement de /home entre les boots
   # (bind-mount depuis /persist/home/kuro vers /home/kuro)
   home.persistence."/persist/home/kuro" = { # ← ADAPTER : nom d'utilisateur
-    allowOther = true; # Nécessaire pour les bind mounts (fuse.userAllowOther)
 
     directories = [
       # Navigateur — profils, marque-pages, extensions, cookies
