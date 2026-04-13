@@ -239,6 +239,18 @@ in
         # Presse-papier — historique via cliphist + rofi
         "$mod, C, exec, cliphist list | rofi -dmenu -p Clipboard | cliphist decode | wl-copy"
 
+        # Quick capture Obsidian — note rapide dans l'inbox
+        "$mod SHIFT, N, exec, echo \"$(rofi -dmenu -p 'Note rapide')\" >> ~/Documents/Obsidian/Inbox/$(date +%Y-%m-%d).md"
+
+        # OCR screenshot — extrait le texte d'une zone et le copie
+        "$mod SHIFT, O, exec, grim -g \"$(slurp)\" - | tesseract stdin stdout 2>/dev/null | wl-copy && notify-send 'OCR' 'Texte copié dans le clipboard'"
+
+        # Screen recording toggle (wf-recorder)
+        "$mod SHIFT, R, exec, pkill wf-recorder || wf-recorder -g \"$(slurp)\" -f ~/Videos/recording-$(date +%Y%m%d-%H%M%S).mp4 & notify-send 'Enregistrement' 'Démarré'"
+
+        # QR code du clipboard
+        "$mod SHIFT, Q, exec, wl-paste | qrencode -t PNG -o /tmp/qr.png && imv /tmp/qr.png"
+
         # Changer de wallpaper aléatoirement (depuis ~/Pictures/wallpapers/)
         "$mod, W, exec, swww img $(find ~/Pictures/wallpapers/ -type f | shuf -n 1) --transition-type random --transition-duration 1"
 
@@ -351,6 +363,7 @@ in
         # Historique presse-papier (cliphist écoute wl-paste)
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
+        "udiskie --automount --notify --tray" # Auto-mount USB
         "nm-applet --indicator"     # Applet réseau (tray)
         "blueman-applet"            # Applet Bluetooth (tray)
         # Agent polkit (pop-up mot de passe pour les actions admin)

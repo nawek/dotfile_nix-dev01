@@ -56,6 +56,7 @@
     bitwarden-desktop   # Gestionnaire de mots de passe (client Vaultwarden)
 
     # ── Utilitaires ───────────────────────────────────────────────
+    imv                 # Viewer d'images minimaliste (Wayland-natif)
     p7zip               # Compression/décompression 7z
     file                # Identification de type de fichier
     neofetch            # Infos système stylisées
@@ -147,16 +148,62 @@
       # Espanso — snippets text expander
       ".config/espanso"
 
+      # Newsboat — articles lus, cache
+      ".local/share/newsboat"
+
       # Données utilisateur
       "Documents"
       "Projects"
       "Pictures"
+      "Downloads"
     ];
 
     files = [
       # Historique ZSH
       ".zsh_history"
     ];
+  };
+
+  # ── XDG — Applications par défaut ──────────────────────────────────
+  # Associe chaque type de fichier à la bonne application
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "application/pdf" = "org.pwmt.zathura.desktop";
+      "video/*" = "mpv.desktop";
+      "audio/*" = "mpv.desktop";
+      "image/*" = "imv.desktop";
+      "text/html" = "chromium-browser.desktop";
+      "x-scheme-handler/http" = "chromium-browser.desktop";
+      "x-scheme-handler/https" = "chromium-browser.desktop";
+      "x-scheme-handler/mailto" = "thunderbird.desktop";
+      "inode/directory" = "org.gnome.Nautilus.desktop";
+    };
+  };
+
+  # ── Newsboat — Lecteur RSS TUI ───────────────────────────────────
+  programs.newsboat = {
+    enable = true;
+    urls = [
+      # ← ADAPTER : ajouter vos flux RSS
+      { url = "https://nixos.org/blog/announcements-rss.xml"; title = "NixOS Announcements"; }
+      { url = "https://weekly.nixos.org/feeds/all.rss.xml"; title = "NixOS Weekly"; }
+      { url = "https://www.reddit.com/r/NixOS/.rss"; title = "r/NixOS"; }
+      { url = "https://www.reddit.com/r/hyprland/.rss"; title = "r/Hyprland"; }
+      # { url = "https://selfhosted.show/rss"; title = "Self-Hosted Show"; }
+    ];
+    extraConfig = ''
+      color background default default
+      color listnormal default default
+      color listnormal_unread blue default bold
+      color listfocus white blue bold
+      color listfocus_unread white blue bold
+      color info blue default bold
+      color article default default
+      browser "xdg-open %u"
+      auto-reload yes
+      reload-time 30
+    '';
   };
 
   # ── Chromium — Bookmarks Homelab ───────────────────────────────────
@@ -281,7 +328,40 @@
     };
   };
 
+  # ── Obsidian auto-commit — Sauvegarde automatique du vault ────────
+  # Commit et push le vault Obsidian toutes les heures
+  # ← ADAPTER : chemin vers votre vault Obsidian
+  systemd.user.services.obsidian-sync = {
+    Unit.Description = "Auto-commit du vault Obsidian";
+    Service = {
+      Type = "oneshot";
+      ExecStart = toString (pkgs.writeShellScript "obsidian-sync" ''
+        VAULT="$HOME/Documents/Obsidian"
+        if [ -d "$VAULT/.git" ]; then
+          cd "$VAULT"
+          ${pkgs.git}/bin/git add -A
+          ${pkgs.git}/bin/git diff --cached --quiet || \
+            ${pkgs.git}/bin/git commit -m "auto: $(date '+%Y-%m-%d %H:%M')"
+          ${pkgs.git}/bin/git push 2>/dev/null || true
+        fi
+      '');
+    };
+  };
+
+  systemd.user.timers.obsidian-sync = {
+    Unit.Description = "Timer auto-commit Obsidian (1h)";
+    Timer = {
+      OnActiveSec = "1h";
+      OnUnitActiveSec = "1h";
+      Unit = "obsidian-sync.service";
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
+
+  # ── Fortune — Message du jour au login ──────────────────────────
+  # Affiche une citation aléatoire à chaque ouverture de terminal
+  # (ajouté dans initExtra/initContent de shell.nix)
+
   # ── Home Manager ─────────────────────────────────────────────────
-  # Laisser Home Manager gérer sa propre installation
   programs.home-manager.enable = true;
 }

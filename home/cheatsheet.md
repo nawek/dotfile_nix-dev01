@@ -77,6 +77,24 @@
 | `Super + clic gauche` | Déplacer fenêtre |
 | `Super + clic droit` | Redimensionner fenêtre |
 
+## Capture avancée
+| Raccourci | Action |
+|---|---|
+| `Super + Shift + N` | Quick capture note Obsidian |
+| `Super + Shift + O` | OCR screenshot → clipboard |
+| `Super + Shift + R` | Screen recording toggle |
+| `Super + Shift + Q` | QR code du clipboard |
+
+## Homelab
+| Alias | Action |
+|---|---|
+| `wol-nas` | Wake-on-LAN du NAS |
+| `tunnel-grafana` | Tunnel SSH → Grafana local |
+| `dlogs <container>` | Logs Docker distant |
+| `trad "texte"` | Traduction → français |
+| `rss` | Lecteur RSS (newsboat) |
+| `boot-time` | Temps de boot + blame |
+
 ## Aliases shell utiles
 | Alias | Commande |
 |---|---|

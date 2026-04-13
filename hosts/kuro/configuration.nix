@@ -23,6 +23,8 @@
     ../../modules/security.nix    # Firewall, fail2ban, ClamAV, DNS-over-TLS, audit
     ../../modules/networking.nix  # Tailscale, Mosh, dnsmasq
     ../../modules/monitoring.nix  # S.M.A.R.T., thermald, earlyoom
+    ../../modules/ux.nix          # UX confort (USB, CUPS, Flatpak, Wine, fwupd)
+    ../../modules/automations.nix # Timers systemd (GC, Docker, BTRFS, alertes)
     ../../modules/sops.nix        # Secrets chiffrés
   ];
 
@@ -127,6 +129,11 @@
 
   # ZSH doit être activé au niveau système pour être un shell de login valide
   programs.zsh.enable = true;
+
+  # ── Firejail — Sandbox pour les applications sensibles ──────────
+  # Usage : firejail chromium, firejail vesktop
+  # Limite l'accès au filesystem et au réseau des applications
+  programs.firejail.enable = true;
 
   # ── Réseau ───────────────────────────────────────────────────────
   networking.networkmanager.enable = true;

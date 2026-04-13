@@ -74,6 +74,21 @@
       jfollow = "journalctl -f --priority=info";
       temps   = "sensors 2>/dev/null || echo 'lm_sensors non configuré'";
 
+      # ── Homelab ────────────────────────────────────────────────
+      wol-nas     = "wakeonlan AA:BB:CC:DD:EE:FF"; # ← ADAPTER : MAC address du NAS
+      wol-proxmox = "wakeonlan AA:BB:CC:DD:EE:FF"; # ← ADAPTER : MAC address Proxmox
+      tunnel-grafana  = "ssh -fNL 3000:localhost:3000 docker01"; # ← ADAPTER
+      tunnel-portainer = "ssh -fNL 9443:localhost:9443 docker01"; # ← ADAPTER
+      dlogs = "ssh docker01 docker logs -f"; # Usage: dlogs <container>
+
+      # ── Outils ──────────────────────────────────────────────────
+      trad = "trans -brief :fr";      # Traduction vers français (translate-shell)
+      trad-en = "trans -brief :en";   # Traduction vers anglais
+      qr = "qrencode -t UTF8";        # Générer un QR code dans le terminal
+      ocr = "tesseract stdin stdout";  # OCR (pipe une image)
+      boot-time = "systemd-analyze && systemd-analyze blame | head -10";
+      rss = "newsboat";               # Lecteur RSS
+
       # ── Remplacements modernes ──────────────────────────────────
       ll  = "eza -la --icons --git";  # ls amélioré
       lt  = "eza --tree --level=2 --icons"; # Arborescence
@@ -91,6 +106,11 @@
       # Raccourcis clavier
       bindkey '^[[A' history-search-backward  # Flèche haut : recherche historique
       bindkey '^[[B' history-search-forward   # Flèche bas : recherche historique
+
+      # Fortune — citation aléatoire au login (fun)
+      if command -v fortune &>/dev/null && command -v cowsay &>/dev/null; then
+        fortune -s | cowsay -f tux 2>/dev/null
+      fi
     '';
   };
 
