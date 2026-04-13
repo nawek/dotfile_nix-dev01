@@ -21,6 +21,7 @@
     ../../modules/stylix.nix      # Thème Catppuccin Mocha
     ../../modules/plymouth.nix    # Boot splash screen
     ../../modules/security.nix    # Firewall, fail2ban, ClamAV, DNS-over-TLS, audit
+    ../../modules/networking.nix  # Tailscale, Mosh, dnsmasq
     ../../modules/sops.nix        # Secrets chiffrés
   ];
 

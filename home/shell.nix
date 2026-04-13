@@ -60,6 +60,20 @@
       dps = "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'";
       ld  = "lazydocker";
 
+      # ── Réseau / Tailscale ──────────────────────────────────────
+      ts   = "tailscale status";           # État du VPN mesh
+      tsup = "sudo tailscale up";          # Connecter Tailscale
+      tsdn = "sudo tailscale down";        # Déconnecter Tailscale
+      tsip = "tailscale ip -4";            # IP Tailscale
+      hotspot-on  = "nmcli dev wifi hotspot ifname wlan0 ssid KuroHotspot password KuroWifi"; # ← ADAPTER
+      hotspot-off = "nmcli con down Hotspot";
+
+      # ── Monitoring système ──────────────────────────────────────
+      jdash   = "journalctl --priority=err --since yesterday --no-pager | head -50";
+      jboot   = "journalctl -b --priority=warning --no-pager | head -30";
+      jfollow = "journalctl -f --priority=info";
+      temps   = "sensors 2>/dev/null || echo 'lm_sensors non configuré'";
+
       # ── Remplacements modernes ──────────────────────────────────
       ll  = "eza -la --icons --git";  # ls amélioré
       lt  = "eza --tree --level=2 --icons"; # Arborescence
