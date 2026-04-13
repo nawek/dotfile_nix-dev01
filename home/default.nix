@@ -33,7 +33,7 @@
   home = {
     username = "kuro";            # ← ADAPTER
     homeDirectory = "/home/kuro"; # ← ADAPTER
-    stateVersion = "24.11";       # ← ADAPTER : ne pas modifier après installation
+    stateVersion = "25.05";
   };
 
   # ── Paquets utilisateur ──────────────────────────────────────────
@@ -295,6 +295,11 @@
         { trigger = ":sig"; replace = "Cordialement,\nKuro"; }
         # Code snippets
         { trigger = ":shebang"; replace = "#!/usr/bin/env bash\nset -euo pipefail\n"; }
+        # Sysadmin snippets
+        { trigger = ":ssh-config"; replace = "Host NAME\n  HostName IP\n  User USER\n  IdentityFile ~/.ssh/id_ed25519\n"; }
+        { trigger = ":dc"; replace = "services:\n  app:\n    image: IMAGE\n    ports:\n      - \"8080:80\"\n    volumes:\n      - ./data:/data\n    restart: unless-stopped\n"; }
+        { trigger = ":nix-shell"; replace = "nix-shell -p PKG --run 'CMD'"; }
+        { trigger = ":ip"; replace = "{{output}}"; vars = [{ name = "output"; type = "shell"; params.cmd = "curl -s ifconfig.me"; }]; }
         # Optionnel : ajouter vos propres snippets
       ];
     };

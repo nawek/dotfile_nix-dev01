@@ -31,7 +31,7 @@
     # Aliases — organisés par catégorie
     shellAliases = {
       # ── NixOS via nh ────────────────────────────────────────────
-      nrs = "nh os switch";     # Rebuild et switch
+      nrs = "nh os switch";     # Rebuild et switch (nh affiche le diff automatiquement)
       nrt = "nh os test";       # Rebuild et test (sans switch)
       nrb = "nh os boot";       # Rebuild pour le prochain boot
       ngc = "nh clean all";     # Nettoyage complet (GC)
@@ -49,7 +49,13 @@
       gc  = "git commit";
       gca = "git commit --amend";
       gd  = "git diff";
+      gds = "git diff --staged";
       gl  = "git log --oneline --graph --decorate -20";
+      glog = "git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all";
+      gst = "git stash";
+      gstp = "git stash pop";
+      grb = "git rebase";
+      gcp = "git cherry-pick";
       lg  = "lazygit";
 
       # ── Docker ──────────────────────────────────────────────────
@@ -87,6 +93,8 @@
       qr = "qrencode -t UTF8";        # Générer un QR code dans le terminal
       ocr = "tesseract stdin stdout";  # OCR (pipe une image)
       boot-time = "systemd-analyze && systemd-analyze blame | head -10";
+      # Impermanence debug — lister les fichiers non-persistés dans /
+      impermanence-diff = "sudo find / -xdev -not -path '/nix/*' -not -path '/persist/*' -not -path '/proc/*' -not -path '/sys/*' -not -path '/dev/*' -not -path '/run/*' -not -path '/tmp/*' -not -path '/boot/*' -newer /etc/machine-id -type f 2>/dev/null | head -50";
       rss = "newsboat";               # Lecteur RSS
 
       # ── Remplacements modernes ──────────────────────────────────

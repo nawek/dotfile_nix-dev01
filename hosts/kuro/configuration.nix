@@ -37,6 +37,10 @@
       # Optimiser le store automatiquement (déduplique les fichiers)
       auto-optimise-store = true;
 
+      # Garder les outputs et dérivations pour accélérer les rebuilds dev
+      keep-outputs = true;
+      keep-derivations = true;
+
       # Caches binaires — évite de recompiler les paquets
       substituters = [
         "https://cache.nixos.org"
@@ -110,7 +114,7 @@
   console.keyMap = "fr";
 
   # Version NixOS — NE PAS MODIFIER après l'installation initiale
-  system.stateVersion = "24.11"; # ← ADAPTER : version de votre installation
+  system.stateVersion = "25.05";
 
   # ── Utilisateur ──────────────────────────────────────────────────
   users.users.kuro = { # ← ADAPTER : nom d'utilisateur
@@ -227,6 +231,15 @@
     extraConfig = ''
       HandlePowerKey=suspend
     '';
+  };
+
+  # ── ZRAM — Swap compressé en RAM ──────────────────────────────────
+  # Complète le swapfile BTRFS : utilise la RAM inutilisée comme swap
+  # compressé (zstd). Plus rapide que le swap disque.
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 50; # Utilise jusqu'à 50% de la RAM pour le ZRAM
   };
 
   # ── D-Bus ────────────────────────────────────────────────────────

@@ -55,16 +55,16 @@ in
       # ── Input ───────────────────────────────────────────────────
       input = {
         kb_layout = "fr"; # ← ADAPTER : disposition clavier
-        follow_mouse = 1;
+        follow_mouse = 2;  # 2 = focus suit la souris mais ne change pas de workspace
 
         touchpad = {
           natural_scroll = true;     # Scroll naturel (comme macOS)
-          tap-to-click = true;       # Tap = clic
+          tap-to-click = true;       # 1 doigt = clic gauche
           drag_lock = true;          # Maintenir le drag après relâchement
           disable_while_typing = true; # Désactiver le touchpad en tapant
+          clickfinger_behavior = true; # 2 doigts = clic droit, 3 doigts = clic milieu
         };
 
-        # Sensibilité (-1.0 à 1.0)
         sensitivity = 0;
       };
 
@@ -142,6 +142,13 @@ in
       dwindle = {
         pseudotile = true;   # Permet le pseudo-tiling
         preserve_split = true; # Garder l'orientation du split
+        smart_split = true;  # Split intelligent selon l'espace disponible
+      };
+
+      # Smart gaps — pas de gaps/bordures quand une seule fenêtre
+      misc = {
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
       };
 
       # Onglets groupés — barre de titre quand des fenêtres sont groupées
@@ -343,6 +350,14 @@ in
         "float, class:^(cheatsheet)$"
         "size 60% 70%, class:^(cheatsheet)$"
         "center, class:^(cheatsheet)$"
+
+        # XWayland — légère transparence pour identifier les apps X11
+        "opacity 0.95, xwayland:1"
+
+        # Workspace rules — apps forcées sur des workspaces spécifiques
+        "workspace 1, class:^(chromium-browser)$"
+        "workspace 3, class:^(code|Code)$"
+        "workspace 9, class:^(vesktop|discord)$"
         # Optionnel : ajouter vos règles ici
       ];
 
@@ -616,6 +631,7 @@ in
         format = "{icon}  {capacity}%";
         format-charging = "  {capacity}%";
         format-plugged = "  {capacity}%";
+        format-missing = ""; # Pas de batterie (desktop/VM)
         format-icons = [ "" "" "" "" "" ];
       };
 
