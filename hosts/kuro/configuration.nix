@@ -22,6 +22,7 @@
     ../../modules/plymouth.nix    # Boot splash screen
     ../../modules/security.nix    # Firewall, fail2ban, ClamAV, DNS-over-TLS, audit
     ../../modules/networking.nix  # Tailscale, Mosh, dnsmasq
+    ../../modules/monitoring.nix  # S.M.A.R.T., thermald, earlyoom
     ../../modules/sops.nix        # Secrets chiffrés
   ];
 
