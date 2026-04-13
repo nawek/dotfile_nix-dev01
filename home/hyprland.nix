@@ -311,28 +311,91 @@
     };
   };
 
-  # ── Hyprlock — Écran de verrouillage ─────────────────────────────
+  # ── Hyprlock — Écran de verrouillage thémé ────────────────────────
+  # Écran de verrouillage élégant avec horloge, date, greeting et blur
   programs.hyprlock = {
     enable = true;
     settings = {
       general = {
         hide_cursor = true;
-        grace = 5; # 5 secondes de grâce après verrouillage
+        grace = 5;               # Secondes de grâce après verrouillage
+        no_fade_in = false;
+        no_fade_out = false;
       };
 
-      # ← ADAPTER : personnaliser l'apparence de l'écran de verrouillage
+      # ── Fond — blur du wallpaper actuel ──────────────────────────
       background = [{
         monitor = "";
-        blur_passes = 3;
-        blur_size = 8;
+        blur_passes = 4;
+        blur_size = 10;
+        brightness = 0.5;        # Assombrir le fond
+        vibrancy = 0.2;
+        vibrancy_darkness = 0.0;
       }];
 
+      # ── Horloge — grande heure centrée ───────────────────────────
+      label = [
+        {
+          monitor = "";
+          text = "$TIME";        # Heure dynamique (HH:MM)
+          font_size = 120;
+          font_family = "JetBrainsMono Nerd Font";
+          color = "rgba(205, 214, 244, 1.0)"; # Catppuccin text
+          position = "0, 200";
+          halign = "center";
+          valign = "center";
+          shadow_passes = 2;
+          shadow_size = 3;
+        }
+
+        # ── Date — sous l'horloge ──────────────────────────────────
+        {
+          monitor = "";
+          text = ''cmd[update:1000] date "+%A %d %B %Y"'';
+          font_size = 22;
+          font_family = "Inter";
+          color = "rgba(186, 194, 222, 0.8)"; # Catppuccin subtext0
+          position = "0, 100";
+          halign = "center";
+          valign = "center";
+        }
+
+        # ── Message d'accueil ──────────────────────────────────────
+        {
+          monitor = "";
+          text = "Bienvenue, Kuro"; # ← ADAPTER : votre nom
+          font_size = 16;
+          font_family = "Inter";
+          color = "rgba(137, 180, 250, 0.9)"; # Catppuccin blue
+          position = "0, -80";
+          halign = "center";
+          valign = "center";
+        }
+      ];
+
+      # ── Champ de saisie du mot de passe ──────────────────────────
       input-field = [{
         monitor = "";
-        size = "200, 50";
+        size = "300, 55";
         outline_thickness = 2;
+        dots_size = 0.25;
+        dots_spacing = 0.2;
+        dots_center = true;
+        dots_rounding = -1;      # Cercles parfaits
+        outer_color = "rgba(137, 180, 250, 0.7)";  # Catppuccin blue
+        inner_color = "rgba(30, 30, 46, 0.8)";     # Catppuccin base
+        font_color = "rgba(205, 214, 244, 1.0)";   # Catppuccin text
         fade_on_empty = false;
-        placeholder_text = "Mot de passe...";
+        placeholder_text = "<i>  Mot de passe...</i>";
+        hide_input = false;
+        rounding = 15;
+        check_color = "rgba(166, 227, 161, 0.7)";  # Catppuccin green (succès)
+        fail_color = "rgba(243, 139, 168, 0.7)";   # Catppuccin red (échec)
+        fail_text = "<i>$FAIL <b>($ATTEMPTS)</b></i>";
+        capslock_color = "rgba(250, 179, 135, 0.7)"; # Catppuccin peach (caps lock)
+        position = "0, -30";
+        halign = "center";
+        valign = "center";
       }];
     };
   };
