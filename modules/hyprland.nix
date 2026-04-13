@@ -99,6 +99,15 @@
 
     # OSD — indicateurs visuels natifs Wayland (volume, brightness, caps lock)
     swayosd
+
+    # Auto-configuration des moniteurs (détecte et applique les profils)
+    kanshi
+
+    # Night light — filtre lumière bleue automatique
+    gammastep
+
+    # Empêcher la veille quand de l'audio joue (vidéo, musique, visio)
+    sway-audio-idle-inhibit
   ];
 
   # Permettre le contrôle de la luminosité sans sudo

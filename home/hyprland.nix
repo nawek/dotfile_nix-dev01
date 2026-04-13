@@ -335,6 +335,8 @@
       exec-once = [
         "waybar"                    # Barre de statut
         "swaync"                    # Centre de notifications
+        "kanshi"                    # Auto-configuration des moniteurs
+        "sway-audio-idle-inhibit"   # Empêcher la veille pendant l'audio
         # Fond d'écran — swww avec transition animée
         "swww-daemon"
         "sleep 1 && swww img ~/Pictures/wallpaper.jpg --transition-type grow --transition-pos center --transition-duration 1" # ← ADAPTER : chemin wallpaper
@@ -386,6 +388,55 @@
         }
       ];
     };
+  };
+
+  # ── Kanshi — Auto-configuration des moniteurs ─────────────────────
+  # Détecte les écrans branchés et applique le profil correspondant.
+  # Plus besoin de reconfigurer manuellement les moniteurs.
+  services.kanshi = {
+    enable = true;
+    settings = [
+      # Profil : laptop seul
+      {
+        profile.name = "mobile";
+        profile.outputs = [
+          { criteria = "eDP-1"; status = "enable"; position = "0,0"; }
+        ];
+      }
+      # Profil : laptop + écran externe (à droite)
+      # ← ADAPTER : remplacer le criteria par l'identifiant de votre écran
+      # (obtenu avec : hyprctl monitors | grep -E "^Monitor")
+      {
+        profile.name = "docked";
+        profile.outputs = [
+          { criteria = "eDP-1"; status = "enable"; position = "0,0"; }
+          { criteria = "*"; status = "enable"; position = "1920,0"; } # ← ADAPTER : résolution
+        ];
+      }
+      # Profil : écran externe seul (couvercle fermé)
+      # {
+      #   profile.name = "external-only";
+      #   profile.outputs = [
+      #     { criteria = "eDP-1"; status = "disable"; }
+      #     { criteria = "HDMI-A-1"; status = "enable"; position = "0,0"; }
+      #   ];
+      # }
+    ];
+  };
+
+  # ── Gammastep — Night light (filtre lumière bleue) ───────────────
+  # Réduit la lumière bleue le soir pour protéger les yeux.
+  # Basé sur l'heure et la localisation (pas besoin de géolocalisation).
+  services.gammastep = {
+    enable = true;
+    provider = "manual";
+    latitude = 48.86;   # ← ADAPTER : votre latitude (Paris par défaut)
+    longitude = 2.35;   # ← ADAPTER : votre longitude
+    temperature = {
+      day = 6500;       # Température couleur jour (neutre)
+      night = 4000;     # Température couleur nuit (chaud, moins de bleu)
+    };
+    tray = true;        # Icône dans le tray de Waybar
   };
 
   # ── Hyprlock — Écran de verrouillage thémé ────────────────────────
