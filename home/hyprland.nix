@@ -468,8 +468,8 @@ in
         vibrancy_darkness = 0.0;
       }];
 
-      # ── Horloge — grande heure centrée ───────────────────────────
-      label = [
+      # ── Labels — mkForce car Stylix injecte ses propres définitions
+      label = mkForce [
         {
           monitor = "";
           text = "$TIME";        # Heure dynamique (HH:MM)
@@ -508,8 +508,8 @@ in
         }
       ];
 
-      # ── Champ de saisie du mot de passe ──────────────────────────
-      input-field = [{
+      # ── Champ de saisie — mkForce car Stylix injecte ses couleurs
+      input-field = mkForce [{
         monitor = "";
         size = "300, 55";
         outline_thickness = 2;
