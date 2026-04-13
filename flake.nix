@@ -112,17 +112,17 @@
     };
 
     # ── Dev Shells — environnements de développement isolés ────────
-    # Usage : nix develop .#python | nix develop .#node | nix develop .#rust
+    # Usage : nix develop .#python | .#node | .#rust | .#go | .#cc
     devShells.${system} = {
       python = import ./devshells/python.nix { inherit pkgs; };
       node   = import ./devshells/node.nix { inherit pkgs; };
       rust   = import ./devshells/rust.nix { inherit pkgs; fenix = inputs.fenix; };
+      go     = import ./devshells/go.nix { inherit pkgs; };
+      cc     = import ./devshells/cc.nix { inherit pkgs; };
     };
 
     # ── Templates — Bootstrapper un nouveau projet ─────────────────
-    # Usage : nix flake init -t /home/kuro/nixos-config#python
-    #         nix flake init -t /home/kuro/nixos-config#node
-    #         nix flake init -t /home/kuro/nixos-config#rust
+    # Usage : nix flake init -t /home/kuro/nixos-config#<lang>
     # Crée un flake.nix + .envrc + .gitignore prêts à l'emploi
     templates = {
       python = {
@@ -136,6 +136,14 @@
       rust = {
         description = "Projet Rust stable avec fenix, rust-analyzer et cargo-watch";
         path = ./templates/rust;
+      };
+      go = {
+        description = "Projet Go avec gopls, delve et golangci-lint";
+        path = ./templates/go;
+      };
+      cc = {
+        description = "Projet C/C++ avec GCC, Clang, CMake, GDB et Valgrind";
+        path = ./templates/cc;
       };
     };
   };
