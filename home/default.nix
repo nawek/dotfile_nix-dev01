@@ -64,6 +64,9 @@
     # Ajouter permittedInsecurePackages dans configuration.nix si activé
     solaar              # Gestion périphériques Logitech (clavier, souris) # ← ADAPTER : retirer si pas de Logitech
 
+    # ── Remote Desktop — gestion du parc informatique ───────────
+    remmina               # RDP, VNC, SSH, SFTP, SPICE (comme RDM)
+
     # ── Monitoring GPU ────────────────────────────────────────────
     nvtopPackages.nvidia # Monitoring NVIDIA (htop pour GPU)
 
@@ -147,6 +150,10 @@
 
       # Espanso — snippets text expander
       ".config/espanso"
+
+      # Remmina — connexions sauvegardées (RDP, VNC, SSH)
+      ".local/share/remmina"
+      ".config/remmina"
 
       # Newsboat — articles lus, cache
       ".local/share/newsboat"
