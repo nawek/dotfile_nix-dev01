@@ -458,8 +458,8 @@ in
       };
 
       # ── Fond — blur du wallpaper actuel ──────────────────────────
-      # Stylix hyprlock target désactivé dans stylix.nix → pas de conflit
-      background = [{
+      # mkForce car Stylix injecte background/label/input-field via son module
+      background = mkForce [{
         monitor = "";
         blur_passes = 4;
         blur_size = 10;
@@ -468,8 +468,7 @@ in
         vibrancy_darkness = 0.0;
       }];
 
-      # ── Horloge — grande heure centrée ───────────────────────────
-      label = [
+      label = mkForce [
         {
           monitor = "";
           text = "$TIME";        # Heure dynamique (HH:MM)
@@ -508,8 +507,7 @@ in
         }
       ];
 
-      # ── Champ de saisie du mot de passe ──────────────────────────
-      input-field = [{
+      input-field = mkForce [{
         monitor = "";
         size = "300, 55";
         outline_thickness = 2;
