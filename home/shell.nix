@@ -245,6 +245,14 @@
     enableZshIntegration = true;
   };
 
+  # ── Navi — Cheatsheet interactive dans le terminal ────────────────
+  # Ctrl+G → recherche fuzzy dans vos snippets de commandes
+  # Pré-configure des cheats pour NixOS, Docker, Git, systemd
+  programs.navi = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   # ── Bat — cat avec coloration syntaxique ─────────────────────────
   # Le thème est géré par Stylix (via BAT_THEME)
   programs.bat = {

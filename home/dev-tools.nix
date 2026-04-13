@@ -27,6 +27,10 @@
     # Diff — outil de diff structurel (comprend la syntaxe)
     difftastic
 
+    # Shell structuré pour la manipulation de données (JSON, CSV, tables)
+    # Usage : nushell (pas shell par défaut, juste disponible comme outil)
+    nushell
+
     # ← ADAPTER : ajouter vos outils de développement ici
   ];
 
