@@ -25,9 +25,8 @@
     ./spotify.nix     # Spotify thémé via Spicetify (Catppuccin + extensions)
     ./dev-tools.nix   # Outils de développement CLI
 
-    # Module impermanence côté Home Manager
-    # ⚠️ C'est homeManagerModules.default, PAS nixosModules !
-    inputs.impermanence.homeManagerModules.default
+    # Note : le module impermanence Home Manager est importé automatiquement
+    # par le module NixOS impermanence — pas besoin d'import manuel.
   ];
 
   # ── Identité utilisateur ─────────────────────────────────────────
@@ -78,7 +77,9 @@
   # ── Persistance utilisateur ──────────────────────────────────────
   # Données qui survivent à l'effacement de /home entre les boots
   # (bind-mount depuis /persist/home/kuro vers /home/kuro)
-  home.persistence."/persist/home/kuro" = { # ← ADAPTER : nom d'utilisateur
+  # Le chemin ne contient PAS le home directory — il est ajouté automatiquement
+  # /persist → /persist/home/kuro (ajouté par impermanence)
+  home.persistence."/persist" = { # ← ADAPTER : chemin du subvolume persistant
 
     directories = [
       # Navigateur — profils, marque-pages, extensions, cookies
@@ -231,6 +232,7 @@
   # Les icônes Papirus sont le seul ajout manuel nécessaire.
   gtk = {
     enable = true;
+    gtk4.theme = null; # Utiliser le nouveau comportement (Stylix gère)
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
