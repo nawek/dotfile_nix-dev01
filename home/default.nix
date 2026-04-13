@@ -60,7 +60,8 @@
     p7zip               # Compression/décompression 7z
     file                # Identification de type de fichier
     neofetch            # Infos système stylisées
-    ventoy-full         # USB multi-boot (NixOS, Proxmox, etc.)
+    # ventoy-full       # USB multi-boot — décommenter si nécessaire (marqué insecure)
+    # Ajouter permittedInsecurePackages dans configuration.nix si activé
     solaar              # Gestion périphériques Logitech (clavier, souris) # ← ADAPTER : retirer si pas de Logitech
 
     # ── Monitoring GPU ────────────────────────────────────────────
