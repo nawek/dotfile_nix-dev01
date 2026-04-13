@@ -15,9 +15,9 @@
   # Exécuté dans l'initrd, avant le montage final du système
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     mkdir -p /btrfs_tmp
-    # Monter la partition BTRFS pour accéder aux subvolumes
-    # ← ADAPTER : remplacer par /dev/mapper/<nom> si LUKS est utilisé
-    mount -o subvol=/ /dev/disk/by-partlabel/disk-main-root /btrfs_tmp
+    # Monter la partition BTRFS (déchiffrée via LUKS) pour accéder aux subvolumes
+    # Le nom "cryptroot" correspond au champ "name" dans disko.nix
+    mount -o subvol=/ /dev/mapper/cryptroot /btrfs_tmp
 
     # Si le subvolume @ existe, le sauvegarder avant suppression
     if [[ -e /btrfs_tmp/@ ]]; then

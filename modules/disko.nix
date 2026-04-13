@@ -1,5 +1,5 @@
 # ╔══════════════════════════════════════════════════════════════════╗
-# ║  Disko — Partitionnement déclaratif BTRFS                     ║
+# ║  Disko — Partitionnement déclaratif BTRFS + LUKS               ║
 # ╚══════════════════════════════════════════════════════════════════╝
 #
 # Ce module déclare le schéma de partitionnement du disque.
@@ -9,13 +9,25 @@
 # Structure :
 #   /dev/nvme0n1
 #   ├── p1 : ESP (512M, vfat) → /boot
-#   └── p2 : BTRFS (reste du disque)
-#       ├── @          → /          (racine, effacée à chaque boot)
-#       ├── @home      → /home
-#       ├── @nix       → /nix
-#       ├── @persist   → /persist   (données persistantes)
-#       ├── @snapshots → /.snapshots
-#       └── @swap      → /swap      (swapfile 8G)
+#   └── p2 : LUKS (chiffré) → cryptroot
+#       └── BTRFS
+#           ├── @          → /          (racine, effacée à chaque boot)
+#           ├── @home      → /home
+#           ├── @nix       → /nix
+#           ├── @persist   → /persist   (données persistantes)
+#           ├── @snapshots → /.snapshots
+#           └── @swap      → /swap      (swapfile 8G)
+#
+# ── Chiffrement LUKS ──────────────────────────────────────────────
+# Le disque entier (sauf /boot) est chiffré avec LUKS2.
+# Un mot de passe est demandé au démarrage pour déverrouiller.
+#
+# Pour ajouter une clé de déchiffrement supplémentaire :
+#   sudo cryptsetup luksAddKey /dev/nvme0n1p2
+#
+# ⚠️ Si vous ne voulez PAS de chiffrement, remplacez le contenu
+#    de la partition "root" par le type "btrfs" directement
+#    (voir l'historique Git pour l'ancienne version sans LUKS).
 
 { ... }: {
   disko.devices = {
@@ -27,7 +39,7 @@
           type = "gpt";
           partitions = {
 
-            # ── Partition EFI (boot) ──────────────────────────────
+            # ── Partition EFI (boot) — NON chiffrée ───────────────
             ESP = {
               size = "512M";
               type = "EF00"; # Type EFI System Partition
@@ -39,50 +51,66 @@
               };
             };
 
-            # ── Partition BTRFS principale ────────────────────────
+            # ── Partition chiffrée LUKS ───────────────────────────
             root = {
               size = "100%"; # Tout l'espace restant
               content = {
-                type = "btrfs";
-                extraArgs = [ "-f" ]; # Forcer le formatage
+                type = "luks";
+                name = "cryptroot"; # Nom du device mapper → /dev/mapper/cryptroot
 
-                subvolumes = {
-                  # Racine — effacée à chaque boot par impermanence
-                  "@" = {
-                    mountpoint = "/";
-                    mountOptions = [ "compress=zstd:1" "noatime" ];
-                  };
+                # Options LUKS
+                extraOpenArgs = [
+                  "--allow-discards"   # Nécessaire pour TRIM sur SSD
+                  "--perf-no_read_workqueue"
+                  "--perf-no_write_workqueue"
+                ];
 
-                  # Home — données utilisateur
-                  "@home" = {
-                    mountpoint = "/home";
-                    mountOptions = [ "compress=zstd:1" "noatime" ];
-                  };
+                # ← ADAPTER : décommenter pour utiliser un fichier clé en plus du mot de passe
+                # (utile pour éviter de taper le mot de passe à chaque boot)
+                # settings.keyFile = "/path/to/keyfile";
 
-                  # Nix store — paquets et dérivations
-                  "@nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [ "compress=zstd:1" "noatime" ];
-                  };
+                content = {
+                  type = "btrfs";
+                  extraArgs = [ "-f" ]; # Forcer le formatage
 
-                  # Persist — données qui survivent au wipe root
-                  "@persist" = {
-                    mountpoint = "/persist";
-                    mountOptions = [ "compress=zstd:1" "noatime" ];
-                  };
+                  subvolumes = {
+                    # Racine — effacée à chaque boot par impermanence
+                    "@" = {
+                      mountpoint = "/";
+                      mountOptions = [ "compress=zstd:1" "noatime" ];
+                    };
 
-                  # Snapshots — stockage des snapshots btrbk
-                  "@snapshots" = {
-                    mountpoint = "/.snapshots";
-                    mountOptions = [ "compress=zstd:1" "noatime" ];
-                  };
+                    # Home — données utilisateur
+                    "@home" = {
+                      mountpoint = "/home";
+                      mountOptions = [ "compress=zstd:1" "noatime" ];
+                    };
 
-                  # Swap — fichier de swap
-                  "@swap" = {
-                    mountpoint = "/swap";
-                    mountOptions = [ "noatime" ];
-                    swap = {
-                      swapfile.size = "8G";
+                    # Nix store — paquets et dérivations
+                    "@nix" = {
+                      mountpoint = "/nix";
+                      mountOptions = [ "compress=zstd:1" "noatime" ];
+                    };
+
+                    # Persist — données qui survivent au wipe root
+                    "@persist" = {
+                      mountpoint = "/persist";
+                      mountOptions = [ "compress=zstd:1" "noatime" ];
+                    };
+
+                    # Snapshots — stockage des snapshots btrbk
+                    "@snapshots" = {
+                      mountpoint = "/.snapshots";
+                      mountOptions = [ "compress=zstd:1" "noatime" ];
+                    };
+
+                    # Swap — fichier de swap
+                    "@swap" = {
+                      mountpoint = "/swap";
+                      mountOptions = [ "noatime" ];
+                      swap = {
+                        swapfile.size = "8G";
+                      };
                     };
                   };
                 };
