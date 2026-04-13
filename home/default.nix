@@ -51,6 +51,13 @@
 
     # Git
     lazygit           # Interface TUI pour Git
+
+    # Thème GTK/QT
+    adw-gtk3                                # Thème GTK3 Adwaita dark
+    papirus-icon-theme                      # Icônes Papirus
+    catppuccin-kvantum                      # Thème QT Kvantum Catppuccin
+    libsForQt5.qtstyleplugin-kvantum       # Plugin Kvantum QT5
+    qt6Packages.qtstyleplugin-kvantum      # Plugin Kvantum QT6
   ];
 
   # ── Persistance utilisateur ──────────────────────────────────────
@@ -99,6 +106,12 @@
       ".local/share/mise"
       ".config/mise"
 
+      # Cliphist — historique du presse-papier (survit au reboot)
+      ".cache/cliphist"
+
+      # Rofi — cache des applications récentes
+      ".cache/rofi3.druncache"
+
       # Données utilisateur
       "Documents"
       "Projects"
@@ -109,6 +122,31 @@
       # Historique ZSH
       ".zsh_history"
     ];
+  };
+
+  # ── GTK — Thème Catppuccin explicite ───────────────────────────────
+  # Pour les applications qui ne respectent pas Stylix
+  gtk = {
+    enable = true;
+    theme = {
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+  };
+
+  # ── QT — Cohérence avec le thème GTK ────────────────────────────
+  # Force QT à utiliser le même thème sombre que GTK
+  qt = {
+    enable = true;
+    platformTheme.name = "kvantum";
+    style = {
+      name = "kvantum";
+      package = pkgs.catppuccin-kvantum;
+    };
   };
 
   # ── Dconf — Persistance des paramètres GTK/GNOME ──────────────────
