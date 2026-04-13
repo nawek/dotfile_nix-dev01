@@ -84,6 +84,6 @@
   # ── Polices supplémentaires ──────────────────────────────────────
   # Noto CJK pour le support des caractères asiatiques
   fonts.packages = with pkgs; [
-    noto-fonts-cjk-sans
+    noto-fonts-cjk-sans-serif # Caractères CJK (chinois, japonais, coréen)
   ];
 }

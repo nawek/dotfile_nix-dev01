@@ -59,9 +59,9 @@
     # ── Utilitaires ───────────────────────────────────────────────
     p7zip               # Compression/décompression 7z
     file                # Identification de type de fichier
-    neofetch            # Infos système stylisées
-    ventoy-full         # USB multi-boot (NixOS, Proxmox, etc.)
-    solaar              # Gestion périphériques Logitech (clavier, souris)
+    fastfetch           # Infos système stylisées (remplace neofetch, archivé)
+    ventoy              # USB multi-boot (NixOS, Proxmox, etc.)
+    solaar              # Gestion périphériques Logitech (clavier, souris) # ← ADAPTER : retirer si pas de Logitech
 
     # ── Monitoring GPU ────────────────────────────────────────────
     nvtopPackages.nvidia # Monitoring NVIDIA (htop pour GPU)

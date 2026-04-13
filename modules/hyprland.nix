@@ -54,7 +54,7 @@
     waybar
 
     # Lanceur d'applications (Wayland-natif, ultra-customisable)
-    rofi-wayland
+    rofi
     rofimoji                # Emoji picker via rofi
 
     # Centre de notifications (remplace Dunst — panneau, historique, DND)
@@ -94,7 +94,7 @@
     blueman                 # Bluetooth
 
     # Notifications push depuis le homelab
-    ntfy-sh                 # Client ntfy (notifications serveurs → laptop)
+    ntfy-sh                 # Client ntfy (notifications serveurs → laptop) # ← ADAPTER : retirer si pas d'instance ntfy
 
     # Contrôle multimédia
     playerctl               # Lecture/pause/suivant

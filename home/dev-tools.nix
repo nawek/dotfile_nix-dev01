@@ -35,8 +35,8 @@
     # ← ADAPTER : décommenter quand le paquet sera dans nixpkgs
     # lazysql
 
-    # Client HTTP TUI (alternative à httpie avec UI interactive)
-    posting
+    # Client HTTP TUI — décommenter quand disponible dans nixpkgs
+    # posting
 
     # ── Homelab / IaC ───────────────────────────────────────────────
     ansible           # Gestion de config serveurs non-NixOS
