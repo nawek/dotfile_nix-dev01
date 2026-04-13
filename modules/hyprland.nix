@@ -59,8 +59,8 @@
     # Notifications
     dunst
 
-    # Fond d'écran
-    hyprpaper
+    # Fond d'écran — swww (transitions animées, support GIF)
+    swww
 
     # Captures d'écran
     grim                    # Capture d'écran

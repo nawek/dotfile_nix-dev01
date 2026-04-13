@@ -4,8 +4,8 @@
 #
 # Ce fichier configure Hyprland côté utilisateur :
 # - Keybinds, moniteurs, workspaces, input, apparence
-# - Waybar, Wofi, Dunst, Hyprlock, Hypridle
-# - Kitty (terminal)
+# - Waybar, Rofi, Dunst, Hyprlock, Hypridle
+# - Kitty (terminal), swww (wallpaper animé)
 #
 # ⚠️ La config SYSTÈME de Hyprland est dans modules/hyprland.nix
 #    (SDDM, polkit, portails XDG, paquets système)
@@ -162,6 +162,9 @@
         "$mod, Print, exec, grim -g \"$(slurp)\" - | wl-copy"               # Zone → clipboard
         "$mod SHIFT, Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png" # Zone → fichier
 
+        # Changer de wallpaper aléatoirement (depuis ~/Pictures/wallpapers/)
+        "$mod, W, exec, swww img $(find ~/Pictures/wallpapers/ -type f | shuf -n 1) --transition-type random --transition-duration 1"
+
         # Scroll à travers les workspaces
         "$mod, mouse_down, workspace, e+1"
         "$mod, mouse_up, workspace, e-1"
@@ -225,7 +228,9 @@
       exec-once = [
         "waybar"                    # Barre de statut
         "dunst"                     # Notifications
-        "hyprpaper"                 # Fond d'écran
+        # Fond d'écran — swww avec transition animée
+        "swww-daemon"
+        "sleep 1 && swww img ~/Pictures/wallpaper.jpg --transition-type grow --transition-pos center --transition-duration 1" # ← ADAPTER : chemin wallpaper
         "hypridle"                  # Gestion de l'inactivité
         "nm-applet --indicator"     # Applet réseau (tray)
         "blueman-applet"            # Applet Bluetooth (tray)
