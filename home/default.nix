@@ -38,31 +38,38 @@
 
   # ── Paquets utilisateur ──────────────────────────────────────────
   home.packages = with pkgs; [
-    # Navigateur
-    firefox
+    # ── Navigateur — Chromium dégoogleisé ─────────────────────────
+    ungoogled-chromium  # Chromium sans télémétrie Google, Wayland natif
 
-    # Communication
-    vesktop           # Discord client Wayland-natif
+    # ── Communication ─────────────────────────────────────────────
+    vesktop             # Discord client Wayland-natif (Vencord intégré)
 
-    # Notes / Second brain
-    obsidian          # Notes Markdown interconnectées (vault dans ~/Documents/Obsidian)
+    # ── Email ─────────────────────────────────────────────────────
+    thunderbird         # Client email complet (IMAP, calendrier, contacts)
 
-    # Utilitaires
-    p7zip             # Compression/décompression 7z
-    file              # Identification de type de fichier
-    neofetch          # Infos système stylisées
+    # ── Notes / Second brain ──────────────────────────────────────
+    obsidian            # Notes Markdown interconnectées
 
-    # Calendrier TUI — décommenter quand serveur CalDAV configuré
-    # khal              # Calendrier TUI
-    # vdirsyncer        # Sync CalDAV (Google Calendar, Nextcloud)
+    # ── Bureautique ───────────────────────────────────────────────
+    libreoffice-fresh   # Suite office (docs, tableurs, présentations)
 
-    # Monitoring GPU
+    # ── Multimédia ────────────────────────────────────────────────
+    bitwarden-desktop   # Gestionnaire de mots de passe (client Vaultwarden)
+
+    # ── Utilitaires ───────────────────────────────────────────────
+    p7zip               # Compression/décompression 7z
+    file                # Identification de type de fichier
+    neofetch            # Infos système stylisées
+    ventoy-full         # USB multi-boot (NixOS, Proxmox, etc.)
+    solaar              # Gestion périphériques Logitech (clavier, souris)
+
+    # ── Monitoring GPU ────────────────────────────────────────────
     nvtopPackages.nvidia # Monitoring NVIDIA (htop pour GPU)
 
-    # Git
-    lazygit           # Interface TUI pour Git
+    # ── Git ───────────────────────────────────────────────────────
+    lazygit             # Interface TUI pour Git
 
-    # Thème GTK/QT
+    # ── Thème GTK/QT ──────────────────────────────────────────────
     adw-gtk3                                # Thème GTK3 Adwaita dark
     papirus-icon-theme                      # Icônes Papirus
     catppuccin-kvantum                      # Thème QT Kvantum Catppuccin
@@ -78,7 +85,13 @@
 
     directories = [
       # Navigateur — profils, marque-pages, extensions, cookies
-      ".mozilla/firefox"
+      ".config/chromium"
+
+      # Thunderbird — profils email, comptes, calendriers
+      ".thunderbird"
+
+      # Bitwarden — cache et session
+      ".config/Bitwarden"
 
       # SSH — clés et known_hosts
       ".ssh"
@@ -138,6 +151,32 @@
       # Historique ZSH
       ".zsh_history"
     ];
+  };
+
+  # ── MPV — Lecteur vidéo/audio minimaliste ──────────────────────────
+  # Supporte tout, hardware decode NVIDIA, keybinds vim-like
+  programs.mpv = {
+    enable = true;
+    config = {
+      hwdec = "auto-safe";       # Décodage matériel GPU
+      vo = "gpu-next";           # Rendu GPU moderne
+      profile = "gpu-hq";        # Qualité maximale
+      sub-auto = "fuzzy";        # Auto-détection des sous-titres
+      save-position-on-quit = true; # Reprendre la lecture
+      osd-font = "Inter";
+      osd-font-size = 24;
+    };
+  };
+
+  # ── Zathura — Lecteur PDF minimaliste (keybinds vim) ─────────────
+  # Le thème est géré automatiquement par Stylix
+  programs.zathura = {
+    enable = true;
+    options = {
+      selection-clipboard = "clipboard"; # Copier dans le clipboard système
+      adjust-open = "best-fit";
+      recolor = true;                    # Mode sombre automatique
+    };
   };
 
   # ── Espanso — Text expander ────────────────────────────────────────
