@@ -19,6 +19,7 @@
     ../../modules/nvidia.nix      # GPU NVIDIA
     ../../modules/hyprland.nix    # Desktop Hyprland + SDDM
     ../../modules/stylix.nix      # Thème Catppuccin Mocha
+    ../../modules/plymouth.nix    # Boot splash screen
     ../../modules/sops.nix        # Secrets chiffrés
   ];
 
