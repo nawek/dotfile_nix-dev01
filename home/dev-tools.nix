@@ -28,10 +28,30 @@
     difftastic
 
     # ← ADAPTER : ajouter vos outils de développement ici
-    # Exemples :
-    # postman         # Client API graphique
-    # insomnia        # Alternative à Postman
-    # dbeaver-bin     # Client base de données universel
-    # k9s             # Interface TUI pour Kubernetes
   ];
+
+  # ── Mise (ex-rtx) — Gestionnaire de runtimes polyglotte ─────────
+  # Alternative légère aux devShells Nix pour le quotidien.
+  # Gère les versions de Python, Node, Go, Ruby, etc. par projet.
+  #
+  # Usage :
+  #   mise install python@3.12      → installe Python 3.12
+  #   mise use python@3.12          → active dans le dossier courant
+  #   mise ls                       → liste les runtimes installés
+  #   mise run test                 → exécute une tâche définie dans mise.toml
+  #
+  # Mise et Nix devShells sont complémentaires :
+  # - devShells : environnements reproductibles (CI, projets partagés)
+  # - Mise : prototypage rapide, scripts, projets personnels
+  programs.mise = {
+    enable = true;
+    enableZshIntegration = true;
+    # Paramètres globaux
+    globalConfig = {
+      settings = {
+        experimental = true;    # Activer les fonctionnalités expérimentales
+        auto_install = true;    # Installer automatiquement les runtimes manquants
+      };
+    };
+  };
 }

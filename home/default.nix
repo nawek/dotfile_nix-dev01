@@ -95,6 +95,10 @@
       # Tmux — sessions sauvegardées (resurrect/continuum)
       ".local/share/tmux"
 
+      # Mise (ex-rtx) — runtimes installés et cache
+      ".local/share/mise"
+      ".config/mise"
+
       # Données utilisateur
       "Documents"
       "Projects"
