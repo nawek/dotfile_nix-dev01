@@ -93,6 +93,10 @@
       # Bitwarden — cache et session
       ".config/Bitwarden"
 
+      # Syncthing — clés, config, index
+      ".config/syncthing"
+      ".local/state/syncthing"
+
       # SSH — clés et known_hosts
       ".ssh"
 
@@ -151,6 +155,23 @@
       # Historique ZSH
       ".zsh_history"
     ];
+  };
+
+  # ── Syncthing — Synchronisation P2P entre devices ─────────────────
+  # Sync automatique de dossiers entre laptop ↔ homelab ↔ phone.
+  # Pas de cloud, pas de serveur central, chiffré de bout en bout.
+  #
+  # Interface web : http://localhost:8384
+  # Ajouter des devices : scanner le QR code ou copier l'ID
+  #
+  # Dossiers synchronisés par défaut (← ADAPTER) :
+  #   ~/Documents  → entre tous les devices
+  #   ~/Pictures   → entre tous les devices
+  #   ~/Projects   → entre laptop et homelab uniquement
+  services.syncthing = {
+    enable = true;
+    # Pas besoin de tray — l'interface web suffit
+    # L'état est persisté via .config/syncthing ci-dessous
   };
 
   # ── MPV — Lecteur vidéo/audio minimaliste ──────────────────────────
