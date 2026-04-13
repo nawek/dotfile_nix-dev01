@@ -17,6 +17,7 @@
     ./git.nix         # Git, delta, gh
     ./hyprland.nix    # Config Hyprland utilisateur (waybar, wofi, dunst, etc.)
     ./vscode.nix      # VSCode + extensions
+    ./neovim.nix      # Neovim avec LSP, Treesitter, Telescope
     ./dev-tools.nix   # Outils de développement CLI
 
     # Module impermanence côté Home Manager
@@ -85,6 +86,10 @@
 
       # Dconf — préférences des applications GTK/GNOME
       ".config/dconf"
+
+      # Neovim — état, undo persistant, shada
+      ".local/share/nvim"
+      ".local/state/nvim"
 
       # Données utilisateur
       "Documents"
