@@ -57,6 +57,20 @@
   # Autoriser les paquets non-libres (NVIDIA, VSCode, etc.)
   nixpkgs.config.allowUnfree = true;
 
+  # ── Auto-upgrade — Mise à jour automatique hebdomadaire ──────────
+  # Met à jour les inputs du flake et rebuild le système chaque semaine.
+  # La mise à jour se fait en arrière-plan et prend effet au prochain boot.
+  # Désactiver si vous préférez contrôler manuellement les mises à jour.
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:nawek/dotfile_nix-dev01"; # ← ADAPTER : URL de votre dépôt
+    flags = [ "--update-input" "nixpkgs" ];   # Met à jour nixpkgs automatiquement
+    dates = "Sun *-*-* 04:00:00";             # Chaque dimanche à 4h du matin
+    operation = "boot";                        # Appliqué au prochain boot (pas de switch brutal)
+    allowReboot = false;                       # Ne PAS redémarrer automatiquement
+    # ← ADAPTER : passer à true si vous voulez un reboot automatique la nuit
+  };
+
   # ── Système ──────────────────────────────────────────────────────
 
   # Hostname
