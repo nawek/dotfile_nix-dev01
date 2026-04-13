@@ -181,10 +181,20 @@
         "$mod ALT, k, resizeactive, 0 -20"
         "$mod ALT, l, resizeactive, 20 0"
 
-        # Captures d'écran
-        ", Print, exec, grim - | wl-copy"                                    # Tout l'écran → clipboard
-        "$mod, Print, exec, grim -g \"$(slurp)\" - | wl-copy"               # Zone → clipboard
-        "$mod SHIFT, Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png" # Zone → fichier
+        # Captures d'écran via grimblast (outil all-in-one Hyprland)
+        ", Print, exec, grimblast --notify copy screen"                      # Tout l'écran → clipboard
+        "$mod, Print, exec, grimblast --notify copy area"                    # Zone → clipboard
+        "$mod SHIFT, Print, exec, grimblast --notify save area ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png" # Zone → fichier
+        "$mod ALT, Print, exec, grimblast --notify save area - | satty --filename -" # Zone → annotation satty
+
+        # Color picker — copie le hex dans le clipboard
+        "$mod SHIFT, P, exec, hyprpicker -a"
+
+        # Emoji picker via rofimoji
+        "$mod, period, exec, rofimoji --action copy --skin-tone neutral"
+
+        # Notification center — toggle le panneau SwayNC
+        "$mod, N, exec, swaync-client -t -sw"
 
         # Presse-papier — historique via cliphist + rofi
         "$mod, C, exec, cliphist list | rofi -dmenu -p Clipboard | cliphist decode | wl-copy"
@@ -1033,6 +1043,37 @@
         noise_reduction = 77;
       };
     };
+  };
+
+  # ── Wallpaper timer — Rotation automatique toutes les 30min ───────
+  systemd.user.services.wallpaper-rotation = {
+    Unit = {
+      Description = "Rotation automatique du wallpaper via swww";
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      # ← ADAPTER : chemin vers votre dossier de wallpapers
+      ExecStart = toString (pkgs.writeShellScript "wallpaper-rotate" ''
+        WALLPAPER=$(find ~/Pictures/wallpapers/ -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.webp" \) | shuf -n 1)
+        if [ -n "$WALLPAPER" ]; then
+          ${pkgs.swww}/bin/swww img "$WALLPAPER" \
+            --transition-type random \
+            --transition-duration 2 \
+            --transition-fps 60
+        fi
+      '');
+    };
+  };
+
+  systemd.user.timers.wallpaper-rotation = {
+    Unit.Description = "Timer pour la rotation de wallpaper";
+    Timer = {
+      OnActiveSec = "30min";    # Première exécution 30min après le login
+      OnUnitActiveSec = "30min"; # Puis toutes les 30min
+      Unit = "wallpaper-rotation.service";
+    };
+    Install.WantedBy = [ "timers.target" ];
   };
 
   # ── Kitty — Terminal ─────────────────────────────────────────────
