@@ -92,11 +92,43 @@
   };
 
   # ══════════════════════════════════════════════════════════════════
+  # 5. WIREGUARD — VPN site-to-site vers le homelab
+  # ══════════════════════════════════════════════════════════════════
+  # WireGuard est intégré au noyau Linux — pas besoin de module.
+  # La config se fait via NetworkManager (GUI ou nmcli).
+  #
+  # ── Créer un tunnel WireGuard via nmcli ──────────────────────────
+  #   nmcli connection import type wireguard file ~/wg-homelab.conf
+  #   nmcli connection up wg-homelab
+  #
+  # ── Ou via fichier de config (/etc/wireguard/wg-homelab.conf) ────
+  #   networking.wg-quick.interfaces.wg-homelab = {
+  #     address = [ "10.0.0.2/24" ];        # ← ADAPTER
+  #     privateKeyFile = "/persist/system/wireguard/private-key";
+  #     peers = [{
+  #       publicKey = "XXXXXXX";             # ← ADAPTER
+  #       endpoint = "vpn.example.com:51820"; # ← ADAPTER
+  #       allowedIPs = [ "10.0.0.0/24" "192.168.1.0/24" ];
+  #       persistentKeepalive = 25;
+  #     }];
+  #   };
+  #
+  # ⚠️ La config WireGuard est commentée car elle nécessite les clés
+  #    et l'endpoint de votre homelab. Décommenter et adapter.
+
+  # Plugins VPN pour NetworkManager (GUI dans nm-applet)
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-openvpn      # Support OpenVPN dans NetworkManager
+    networkmanager-l2tp         # Support L2TP/IPsec
+  ];
+
+  # ══════════════════════════════════════════════════════════════════
   # Paquets réseau
   # ══════════════════════════════════════════════════════════════════
   environment.systemPackages = with pkgs; [
     tailscale       # CLI Tailscale
     mosh            # Shell distant résilient
+    wireguard-tools # CLI WireGuard (wg, wg-quick)
     nmap            # Scanner réseau
     dig             # Résolution DNS debug
     whois           # Lookup de domaines
