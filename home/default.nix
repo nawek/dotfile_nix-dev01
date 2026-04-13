@@ -18,6 +18,7 @@
     ./hyprland.nix    # Config Hyprland utilisateur (waybar, wofi, dunst, etc.)
     ./vscode.nix      # VSCode + extensions
     ./neovim.nix      # Neovim avec LSP, Treesitter, Telescope
+    ./tmux.nix        # Tmux multiplexeur terminal + Catppuccin
     ./dev-tools.nix   # Outils de développement CLI
 
     # Module impermanence côté Home Manager
@@ -90,6 +91,9 @@
       # Neovim — état, undo persistant, shada
       ".local/share/nvim"
       ".local/state/nvim"
+
+      # Tmux — sessions sauvegardées (resurrect/continuum)
+      ".local/share/tmux"
 
       # Données utilisateur
       "Documents"
