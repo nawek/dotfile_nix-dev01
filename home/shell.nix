@@ -199,6 +199,15 @@
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true; # Cache intelligent pour les devShells Nix
+
+    # Auto-autoriser les .envrc dans les dossiers de confiance
+    # Plus besoin de taper "direnv allow" à chaque nouveau projet
+    config.whitelist = {
+      prefix = [
+        "/home/kuro/Projects"   # ← ADAPTER : vos dossiers de projets
+        "/home/kuro/nixos-config"
+      ];
+    };
   };
 
   # ── FZF — Recherche fuzzy dans le terminal ──────────────────────

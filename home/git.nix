@@ -61,6 +61,18 @@
     enable = true;
     addKeysToAgent = "yes"; # Ajouter les clés à l'agent automatiquement
 
+    # ── Multiplexing — Réutiliser les connexions SSH ───────────────
+    # Une seule connexion TCP est ouverte par hôte, les suivantes
+    # la réutilisent → connexions quasi-instantanées après la 1ère.
+    # Le socket persiste 10 minutes après la dernière utilisation.
+    controlMaster = "auto";
+    controlPersist = "10m";
+    controlPath = "~/.ssh/sockets/%r@%h-%p"; # Socket par hôte/user/port
+
+    # Envoyer un keepalive toutes les 60s pour éviter les déconnexions
+    serverAliveInterval = 60;
+    serverAliveCountMax = 3;
+
     # ← ADAPTER : configurer vos hôtes SSH
     matchBlocks = {
       "github.com" = {
@@ -74,6 +86,8 @@
       #   hostname = "192.168.1.100";
       #   user = "admin";
       #   identityFile = "~/.ssh/id_ed25519";
+      #   # Port forwarding local :
+      #   # localForwards = [{ bind.port = 8080; host.address = "localhost"; host.port = 80; }];
       # };
     };
   };
