@@ -71,6 +71,9 @@
   # ══════════════════════════════════════════════════════════════════
   # Paquets monitoring
   # ══════════════════════════════════════════════════════════════════
+  # Résoudre le conflit earlyoom (true) vs smartd (false)
+  services.systembus-notify.enable = lib.mkForce true;
+
   environment.systemPackages = with pkgs; [
     smartmontools    # CLI S.M.A.R.T.
     lm_sensors       # Lecture des capteurs de température
