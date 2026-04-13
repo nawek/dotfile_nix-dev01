@@ -62,9 +62,7 @@
 
   # Ajouter les domaines de dev dans resolved
   # ← ADAPTER : ajouter vos domaines internes
-  services.resolved.settings.Resolve = {
-    Domains = [ "~local" "~test" ];
-  };
+  services.resolved.domains = [ "~local" "~test" ];
 
   # ══════════════════════════════════════════════════════════════════
   # 4. WIREGUARD — VPN site-to-site vers le homelab
