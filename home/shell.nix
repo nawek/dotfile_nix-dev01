@@ -38,6 +38,9 @@
       nfu = "nix flake update"; # Mettre à jour les inputs du flake
       nsg = "nix search nixpkgs"; # Rechercher un paquet
       nsh = "nix-shell -p";    # Shell temporaire avec un paquet
+      # Build avec nix-output-monitor (sortie colorée en arbre)
+      nb  = "nix build --log-format internal-json |& nom";
+      nfu-nom = "nix flake update |& nom"; # Update avec sortie colorée
 
       # ── Git ─────────────────────────────────────────────────────
       gs  = "git status";

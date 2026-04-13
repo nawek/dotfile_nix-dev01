@@ -83,6 +83,9 @@
       # SOPS — configuration locale
       ".config/sops"
 
+      # Dconf — préférences des applications GTK/GNOME
+      ".config/dconf"
+
       # Données utilisateur
       "Documents"
       "Projects"
@@ -93,6 +96,30 @@
       # Historique ZSH
       ".zsh_history"
     ];
+  };
+
+  # ── Dconf — Persistance des paramètres GTK/GNOME ──────────────────
+  # Les applications GTK stockent leurs préférences via dconf.
+  # Sans ceci, les paramètres sont perdus à chaque reboot (impermanence).
+  dconf = {
+    enable = true;
+    settings = {
+      # Thème sombre pour toutes les applications GTK
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+        gtk-theme = "adw-gtk3-dark";
+      };
+
+      # Nautilus — paramètres du gestionnaire de fichiers
+      "org/gnome/nautilus/preferences" = {
+        default-folder-viewer = "list-view";
+        show-hidden-files = true;
+      };
+
+      # ← ADAPTER : ajouter les paramètres dconf de vos applications GTK
+      # Pour découvrir les clés : dconf watch /
+      # Puis modifier le paramètre dans l'application et noter la clé
+    };
   };
 
   # ── Home Manager ─────────────────────────────────────────────────
