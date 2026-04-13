@@ -118,5 +118,25 @@
       node   = import ./devshells/node.nix { inherit pkgs; };
       rust   = import ./devshells/rust.nix { inherit pkgs; fenix = inputs.fenix; };
     };
+
+    # ── Templates — Bootstrapper un nouveau projet ─────────────────
+    # Usage : nix flake init -t /home/kuro/nixos-config#python
+    #         nix flake init -t /home/kuro/nixos-config#node
+    #         nix flake init -t /home/kuro/nixos-config#rust
+    # Crée un flake.nix + .envrc + .gitignore prêts à l'emploi
+    templates = {
+      python = {
+        description = "Projet Python 3.12 avec ruff, pyright et virtualenv";
+        path = ./templates/python;
+      };
+      node = {
+        description = "Projet Node.js 22 avec pnpm et TypeScript";
+        path = ./templates/node;
+      };
+      rust = {
+        description = "Projet Rust stable avec fenix, rust-analyzer et cargo-watch";
+        path = ./templates/rust;
+      };
+    };
   };
 }
