@@ -38,12 +38,19 @@
         "https://cache.nixos.org"
         "https://hyprland.cachix.org"
         "https://nix-community.cachix.org"
+        # ← ADAPTER : décommenter et remplacer par votre cache Cachix privé
+        # "https://kuro.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "hyprland.cachix.org-1:a7pgxzMz7+ voices5vTLqoz66srig2mvDGJR3bR454="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        # ← ADAPTER : ajouter la clé publique de votre cache Cachix
+        # "kuro.cachix.org-1:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX="
       ];
+
+      # Utilisateurs autorisés à configurer les caches et pousser vers Cachix
+      trusted-users = [ "root" "kuro" ]; # ← ADAPTER : nom d'utilisateur
     };
 
     # Nettoyage automatique du store Nix — supprime les anciennes générations
@@ -264,6 +271,8 @@
     nh                  # Helper NixOS (rebuild simplifié)
     nix-index           # Base de données des paquets
     comma               # Exécuter des programmes sans les installer (,)
+    nix-output-monitor  # Sortie de build colorée et lisible (nom)
+    cachix              # Push/pull vers des caches binaires Cachix
 
     # Docker
     docker-compose
