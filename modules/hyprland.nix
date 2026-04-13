@@ -55,9 +55,10 @@
 
     # Lanceur d'applications (Wayland-natif, ultra-customisable)
     rofi-wayland
+    rofimoji                # Emoji picker via rofi
 
-    # Notifications
-    dunst
+    # Centre de notifications (remplace Dunst — panneau, historique, DND)
+    swaynotificationcenter
 
     # Fond d'écran — swww (transitions animées, support GIF)
     swww
@@ -65,7 +66,12 @@
     # Captures d'écran
     grim                    # Capture d'écran
     slurp                   # Sélection de zone
+    grimblast               # Outil all-in-one Hyprland screenshots
+    satty                   # Annotation de screenshots (flèches, texte, blur)
     wl-clipboard            # Presse-papier Wayland
+
+    # Outils Hyprland
+    hyprpicker              # Color picker (copie hex dans clipboard)
 
     # Historique presse-papier (texte + images)
     cliphist

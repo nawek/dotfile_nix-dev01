@@ -4,7 +4,7 @@
 #
 # Ce fichier configure Hyprland côté utilisateur :
 # - Keybinds, moniteurs, workspaces, input, apparence
-# - Waybar, Rofi, Dunst, Hyprlock, Hypridle
+# - Waybar, Rofi, SwayNC, Hyprlock, Hypridle
 # - Kitty (terminal), swww (wallpaper animé)
 #
 # ⚠️ La config SYSTÈME de Hyprland est dans modules/hyprland.nix
@@ -257,7 +257,7 @@
       # ── Autostart ───────────────────────────────────────────────
       exec-once = [
         "waybar"                    # Barre de statut
-        "dunst"                     # Notifications
+        "swaync"                    # Centre de notifications
         # Fond d'écran — swww avec transition animée
         "swww-daemon"
         "sleep 1 && swww img ~/Pictures/wallpaper.jpg --transition-type grow --transition-pos center --transition-duration 1" # ← ADAPTER : chemin wallpaper
@@ -818,24 +818,113 @@
     };
   };
 
-  # ── Dunst — Notifications ───────────────────────────────────────
-  # Les couleurs et la police sont gérées par Stylix
-  services.dunst = {
+  # ── SwayNC — Centre de notifications ──────────────────────────────
+  # Remplace Dunst — panneau latéral avec historique, DND, groupement
+  # Toggle le panneau : swaync-client -t
+  # DND : swaync-client -d
+  services.swaync = {
     enable = true;
     settings = {
-      global = {
-        width = 300;
-        height = 100;
-        offset = "30x50";
-        origin = "top-right";
-        corner_radius = 10;
-        frame_width = 2;
-        # Transparence
-        transparency = 10;
-        # Temps d'affichage (en secondes)
-        timeout = 5;
+      positionX = "right";
+      positionY = "top";
+      layer = "overlay";
+      control-center-layer = "top";
+      layer-shell = true;
+      cssPriority = "application";
+      control-center-margin-top = 8;
+      control-center-margin-right = 8;
+      control-center-width = 380;
+      notification-icon-size = 48;
+      notification-window-width = 380;
+      timeout = 5;
+      timeout-low = 3;
+      timeout-critical = 0; # Les notifications critiques ne disparaissent pas
+      fit-to-screen = true;
+      widgets = [ "inhibitors" "title" "dnd" "notifications" ];
+      widget-config = {
+        title = { text = "Notifications"; clear-all-button = true; button-text = "Tout effacer"; };
+        dnd = { text = "Ne pas déranger"; };
       };
     };
+
+    # Style Catppuccin Mocha
+    style = ''
+      .notification-row {
+        outline: none;
+      }
+
+      .notification {
+        border-radius: 12px;
+        margin: 4px 8px;
+        padding: 0;
+        border: 1px solid #313244;
+        background: #1e1e2e;
+        color: #cdd6f4;
+      }
+
+      .notification-content {
+        padding: 8px 12px;
+      }
+
+      .close-button {
+        background: #313244;
+        color: #cdd6f4;
+        border-radius: 50%;
+        margin: 8px;
+        padding: 2px;
+      }
+
+      .close-button:hover {
+        background: #f38ba8;
+        color: #1e1e2e;
+      }
+
+      .control-center {
+        background: rgba(30, 30, 46, 0.95);
+        border-radius: 16px;
+        border: 1px solid #313244;
+        color: #cdd6f4;
+        padding: 8px;
+      }
+
+      .control-center .notification {
+        background: #181825;
+      }
+
+      .widget-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #89b4fa;
+        margin: 8px 12px;
+      }
+
+      .widget-title > button {
+        background: #313244;
+        color: #cdd6f4;
+        border-radius: 8px;
+        padding: 4px 12px;
+        border: none;
+      }
+
+      .widget-title > button:hover {
+        background: #f38ba8;
+        color: #1e1e2e;
+      }
+
+      .widget-dnd {
+        margin: 4px 12px;
+        color: #cdd6f4;
+      }
+
+      .widget-dnd > switch {
+        background: #313244;
+        border-radius: 12px;
+      }
+
+      .widget-dnd > switch:checked {
+        background: #89b4fa;
+      }
+    '';
   };
 
   # ── wlogout — Menu power graphique ────────────────────────────────
