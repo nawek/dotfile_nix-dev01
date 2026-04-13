@@ -14,10 +14,8 @@
   stylix = {
     enable = true;
 
-    # ── Désactiver Stylix pour les apps qu'on thème manuellement ───
-    # Rofi : notre thème RASI custom dans home/hyprland.nix
-    # Hyprlock : notre config custom (horloge, greeting, blur)
-    targets.rofi.enable = false;
+    # Note : les thèmes Rofi et Hyprlock sont gérés manuellement
+    # dans home/hyprland.nix (avec mkForce si conflit Stylix).
 
     # ── Schéma de couleurs ───────────────────────────────────────────
     # Catppuccin Mocha — palette sombre avec des accents pastel

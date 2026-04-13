@@ -903,9 +903,8 @@ in
       sorting-method = "fzf";
     };
 
-    # Thème Catppuccin Mocha intégré
-    theme = let
-      # Palette Catppuccin Mocha
+    # Thème Catppuccin Mocha intégré (mkForce pour override Stylix)
+    theme = mkForce (let
       mkLiteral = config.lib.formats.rasi.mkLiteral;
     in {
       "*" = {
@@ -975,7 +974,7 @@ in
         size = mkLiteral "24px";
         background-color = mkLiteral "transparent";
       };
-    };
+    });
   };
 
   # ── SwayNC — Centre de notifications ──────────────────────────────
