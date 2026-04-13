@@ -13,14 +13,12 @@
 
 { config, pkgs, lib, ... }:
 let
-  # Thèmes Plymouth avec de nombreuses animations
-  # ← ADAPTER : changer le thème parmi : rings, loader, spin, hexa_retro, etc.
-  plymouthTheme = "rings";
+  plymouthTheme = "rings"; # ← ADAPTER : rings, loader, spin, hexa_retro, etc.
 in
 {
   boot.plymouth = {
     enable = true;
-    theme = plymouthTheme;
+    theme = lib.mkForce plymouthTheme; # mkForce car Stylix injecte "stylix"
     themePackages = [
       # Collection de thèmes Plymouth stylisés
       (pkgs.adi1090x-plymouth-themes.override {
