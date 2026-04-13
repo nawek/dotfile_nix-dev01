@@ -84,6 +84,9 @@
     # Contrôle multimédia
     playerctl               # Lecture/pause/suivant
     light                   # Luminosité écran (nécessite programs.light)
+
+    # OSD — indicateurs visuels natifs Wayland (volume, brightness, caps lock)
+    swayosd
   ];
 
   # Permettre le contrôle de la luminosité sans sudo

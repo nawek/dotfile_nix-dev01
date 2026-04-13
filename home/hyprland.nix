@@ -206,21 +206,22 @@
 
       # Keybinds qui se répètent quand on maintient la touche
       binde = [
-        # ── Touches média ─────────────────────────────────────────
-        # Volume (wpctl — PipeWire)
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        # ── Touches média via SwayOSD ─────────────────────────────
+        # SwayOSD affiche un OSD natif Wayland à chaque action
+        # Volume
+        ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
+        ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
 
-        # Luminosité (light)
-        ", XF86MonBrightnessUp, exec, light -A 5"
-        ", XF86MonBrightnessDown, exec, light -U 5"
+        # Luminosité
+        ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
+        ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
       ];
 
       # Keybinds sans répétition
       bindl = [
-        # Mute
-        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+        # Mute via SwayOSD
+        ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
+        ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
 
         # Lecture multimédia (playerctl)
         ", XF86AudioPlay, exec, playerctl play-pause"
@@ -258,6 +259,7 @@
         "swww-daemon"
         "sleep 1 && swww img ~/Pictures/wallpaper.jpg --transition-type grow --transition-pos center --transition-duration 1" # ← ADAPTER : chemin wallpaper
         "hypridle"                  # Gestion de l'inactivité
+        "swayosd-server"            # Serveur OSD (volume, brightness, caps)
         "nm-applet --indicator"     # Applet réseau (tray)
         "blueman-applet"            # Applet Bluetooth (tray)
         # Agent polkit (pop-up mot de passe pour les actions admin)
