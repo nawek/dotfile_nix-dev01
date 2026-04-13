@@ -38,8 +38,7 @@
 
   # ── Paquets utilisateur ──────────────────────────────────────────
   home.packages = with pkgs; [
-    # ── Navigateur — Chromium dégoogleisé ─────────────────────────
-    ungoogled-chromium  # Chromium sans télémétrie Google, Wayland natif
+    # Navigateur : géré via programs.chromium ci-dessous
 
     # ── Communication ─────────────────────────────────────────────
     vesktop             # Discord client Wayland-natif (Vencord intégré)
@@ -159,6 +158,25 @@
       ".zsh_history"
     ];
   };
+
+  # ── Chromium — Bookmarks Homelab ───────────────────────────────────
+  # Pré-configure les favoris pour l'administration du homelab
+  # ← ADAPTER : remplacer les URLs par celles de votre infrastructure
+  programs.chromium = {
+    enable = true;
+    package = pkgs.ungoogled-chromium;
+    extensions = [
+      # Bitwarden — gestionnaire de mots de passe
+      { id = "nngceckbapebfimnlniiiahkandclblb"; }
+      # uBlock Origin
+      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
+      # ← ADAPTER : ajouter vos extensions
+    ];
+  };
+
+  # ── Cheatsheet Hyprland — raccourcis clavier ──────────────────────
+  # Accessible via $mod+F1
+  xdg.configFile."hypr/cheatsheet.md".source = ./cheatsheet.md;
 
   # ── Syncthing — Synchronisation P2P entre devices ─────────────────
   # Sync automatique de dossiers entre laptop ↔ homelab ↔ phone.
