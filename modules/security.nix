@@ -54,39 +54,34 @@
   services.fail2ban = {
     enable = true;
 
-    # Durée du bannissement (en secondes) — 10 minutes par défaut
+    # Durée du bannissement par défaut
     bantime = "10m";
-
-    # Fenêtre d'observation — période pendant laquelle les tentatives sont comptées
-    findtime = "10m";
-
-    # Nombre de tentatives avant bannissement
-    maxretry = 5;
 
     # Configuration des jails (services surveillés)
     jails = {
-      # SSH — protection contre les tentatives de connexion
+      # SSH — protection contre les tentatives de connexion brute-force
       sshd = {
         settings = {
           enabled = true;
           port = "ssh";
           filter = "sshd";
-          maxretry = 3;       # Plus strict pour SSH
+          maxretry = 3;       # 3 tentatives max avant ban
+          findtime = "10m";   # Fenêtre d'observation de 10 minutes
           bantime = "1h";     # Ban d'1 heure pour SSH
         };
       };
-    };
 
-    # ← ADAPTER : ajouter des jails pour d'autres services
-    # Exemple pour Nginx :
-    # jails.nginx-http-auth = {
-    #   settings = {
-    #     enabled = true;
-    #     port = "http,https";
-    #     filter = "nginx-http-auth";
-    #     maxretry = 5;
-    #   };
-    # };
+      # ← ADAPTER : ajouter des jails pour d'autres services
+      # sshd-aggressive = {
+      #   settings = {
+      #     enabled = true;
+      #     port = "ssh";
+      #     filter = "sshd[mode=aggressive]";
+      #     maxretry = 2;
+      #     bantime = "24h";
+      #   };
+      # };
+    };
 
     bantime-increment = {
       enable = true;        # Augmenter le ban à chaque récidive
@@ -123,31 +118,23 @@
   services.resolved = {
     enable = true;
 
-    # DNS principaux — Quad9 (respectueux de la vie privée, bloque le malware)
-    # ← ADAPTER : alternatives populaires :
-    #   Cloudflare : 1.1.1.1#cloudflare-dns.com  (rapide)
-    #   Mullvad :    194.242.2.2#dns.mullvad.net  (pas de logs, suédois)
-    #   AdGuard :    94.140.14.14#dns.adguard.com (bloque pubs + trackers)
-    dns = [
-      "9.9.9.9#dns.quad9.net"         # Quad9 principal
-      "149.112.112.112#dns.quad9.net"  # Quad9 secondaire
-    ];
-
-    # Forcer le DNS-over-TLS
-    dnsovertls = "true"; # "true" = obligatoire, "opportunistic" = si disponible
-
-    # Fallback DNS (non chiffré, utilisé uniquement si le DoT échoue)
-    fallbackDns = [
-      "1.1.1.1#cloudflare-dns.com"
-      "8.8.8.8#dns.google"
-    ];
-
     # DNSSEC — validation de l'authenticité des réponses DNS
     dnssec = "true";
 
-    # Domaines à résoudre localement (pas via DoT)
-    # ← ADAPTER : ajouter vos domaines internes
-    domains = [ "~." ]; # Tous les domaines via resolved
+    # Domaines à résoudre via resolved
+    domains = [ "~." ];
+
+    # Configuration DNS-over-TLS via extraConfig
+    # ← ADAPTER : remplacer par vos serveurs DNS préférés
+    #   Cloudflare : 1.1.1.1#cloudflare-dns.com  (rapide)
+    #   Mullvad :    194.242.2.2#dns.mullvad.net  (pas de logs, suédois)
+    #   AdGuard :    94.140.14.14#dns.adguard.com (bloque pubs + trackers)
+    extraConfig = ''
+      [Resolve]
+      DNS=9.9.9.9#dns.quad9.net 149.112.112.112#dns.quad9.net
+      FallbackDNS=1.1.1.1#cloudflare-dns.com 8.8.8.8#dns.google
+      DNSOverTLS=yes
+    '';
   };
 
   # Note : networking.networkmanager.dns est défini dans networking.nix
