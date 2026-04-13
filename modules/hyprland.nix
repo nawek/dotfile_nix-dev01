@@ -74,6 +74,9 @@
     hyprlock
     hypridle
 
+    # Menu power graphique (lock, logout, suspend, reboot, shutdown)
+    wlogout
+
     # Gestionnaire de fichiers
     nautilus
 

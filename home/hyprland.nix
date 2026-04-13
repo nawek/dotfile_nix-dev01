@@ -146,6 +146,7 @@
         "$mod, D, exec, rofi -show drun -show-icons" # Lanceur d'apps
         "$mod, E, exec, nautilus"                 # Gestionnaire de fichiers
         "$mod, L, exec, hyprlock"                 # Verrouiller l'écran
+        "$mod, X, exec, wlogout"                  # Menu power (logout, reboot, shutdown)
 
         # Gestion des fenêtres
         "$mod, Q, killactive,"                   # Fermer la fenêtre
@@ -248,6 +249,8 @@
         "pin, title:^(Picture-in-Picture)$"         # PiP toujours visible
         "float, class:^(xdg-desktop-portal-gtk)$"   # Portail GTK
         "float, class:^(org.gnome.Nautilus)$"       # Nautilus (optionnel)
+        "float, class:^(wlogout)$"                # wlogout flottant
+        "fullscreen, class:^(wlogout)$"           # wlogout plein écran
         # ← ADAPTER : ajouter vos règles ici
       ];
 
@@ -533,6 +536,74 @@
         timeout = 5;
       };
     };
+  };
+
+  # ── wlogout — Menu power graphique ────────────────────────────────
+  # Menu élégant pour lock, logout, suspend, reboot, shutdown
+  programs.wlogout = {
+    enable = true;
+
+    layout = [
+      { label = "lock";     text = "Verrouiller"; keybind = "l"; action = "hyprlock"; }
+      { label = "logout";   text = "Déconnexion"; keybind = "e"; action = "hyprctl dispatch exit"; }
+      { label = "suspend";  text = "Veille";      keybind = "s"; action = "systemctl suspend"; }
+      { label = "reboot";   text = "Redémarrer";  keybind = "r"; action = "systemctl reboot"; }
+      { label = "shutdown"; text = "Éteindre";    keybind = "p"; action = "systemctl poweroff"; }
+      { label = "hibernate"; text = "Hiberner";   keybind = "h"; action = "systemctl hibernate"; }
+    ];
+
+    # Style Catppuccin Mocha
+    style = ''
+      * {
+        background-image: none;
+        font-family: "JetBrainsMono Nerd Font";
+        font-size: 14px;
+      }
+
+      window {
+        background-color: rgba(30, 30, 46, 0.85);
+      }
+
+      button {
+        color: #cdd6f4;
+        background-color: #313244;
+        border: 2px solid #45475a;
+        border-radius: 16px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 25%;
+        margin: 8px;
+      }
+
+      button:hover {
+        background-color: #45475a;
+        border-color: #89b4fa;
+      }
+
+      button:focus {
+        background-color: #45475a;
+        border-color: #cba6f7;
+      }
+
+      #lock {
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/lock.png"));
+      }
+      #logout {
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/logout.png"));
+      }
+      #suspend {
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/suspend.png"));
+      }
+      #reboot {
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/reboot.png"));
+      }
+      #shutdown {
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/shutdown.png"));
+      }
+      #hibernate {
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/hibernate.png"));
+      }
+    '';
   };
 
   # ── Kitty — Terminal ─────────────────────────────────────────────
