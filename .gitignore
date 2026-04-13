@@ -1,0 +1,19 @@
+# Résultats de build Nix
+result
+result-*
+
+# Cache direnv
+.direnv/
+
+# Fichiers temporaires SOPS
+.sops/
+
+# Images de VM
+*.qcow2
+
+# Fichiers éditeur
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
