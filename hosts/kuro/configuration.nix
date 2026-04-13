@@ -20,6 +20,7 @@
     ../../modules/hyprland.nix    # Desktop Hyprland + SDDM
     ../../modules/stylix.nix      # Thème Catppuccin Mocha
     ../../modules/plymouth.nix    # Boot splash screen
+    ../../modules/security.nix    # Firewall, fail2ban, ClamAV, DNS-over-TLS, audit
     ../../modules/sops.nix        # Secrets chiffrés
   ];
 
