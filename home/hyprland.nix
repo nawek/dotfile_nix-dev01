@@ -400,18 +400,22 @@
     };
   };
 
-  # ── Waybar — Barre de statut ─────────────────────────────────────
-  # Les couleurs et la police sont gérées par Stylix
+  # ── Waybar — Barre de statut Catppuccin ────────────────────────────
   programs.waybar = {
     enable = true;
 
     settings.mainBar = {
       layer = "top";
       position = "top";
-      height = 34;
+      height = 38;
+      margin-top = 4;
+      margin-left = 8;
+      margin-right = 8;
 
       modules-left = [
         "hyprland/workspaces"
+        "hyprland/submap"        # Mode actif (resize, move, etc.)
+        "custom/media"
       ];
 
       modules-center = [
@@ -419,6 +423,7 @@
       ];
 
       modules-right = [
+        "custom/weather"
         "tray"
         "network"
         "bluetooth"
@@ -428,56 +433,67 @@
         "clock"
       ];
 
-      # ── Modules ────────────────────────────────────────────────
+      # ── Modules standard ────────────────────────────────────────
 
       "hyprland/workspaces" = {
-        format = "{name}";
+        format = "{icon}";
+        format-icons = {
+          "1" = ""; "2" = ""; "3" = ""; "4" = ""; "5" = "";
+          "6" = ""; "7" = ""; "8" = ""; "9" = "";
+          active = ""; default = "";
+        };
         on-click = "activate";
         sort-by-number = true;
+        persistent-workspaces = { "*" = 5; };
+      };
+
+      "hyprland/submap" = {
+        format = "  {}";
+        tooltip = false;
       };
 
       "hyprland/window" = {
-        max-length = 50;
+        max-length = 40;
         separate-outputs = true;
+        rewrite = { "(.*) — Mozilla Firefox" = " $1"; "(.*) - Visual Studio Code" = " $1"; };
       };
 
       clock = {
-        format = "{:%H:%M  %a %d %b}";
+        format = "  {:%H:%M}";
+        format-alt = "  {:%A %d %B %Y}";
         tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
       };
 
       battery = {
-        states = {
-          warning = 30;
-          critical = 15;
-        };
+        states = { warning = 30; critical = 15; };
         format = "{icon}  {capacity}%";
-        format-charging = "⚡ {capacity}%";
-        format-plugged = " {capacity}%";
+        format-charging = "  {capacity}%";
+        format-plugged = "  {capacity}%";
         format-icons = [ "" "" "" "" "" ];
       };
 
       network = {
         format-wifi = "  {signalStrength}%";
-        format-ethernet = " ";
-        format-disconnected = "⚠ ";
-        tooltip-format = "{ifname}: {ipaddr}/{cidr}\n{essid}";
+        format-ethernet = "  {ifname}";
+        format-disconnected = "  Déconnecté";
+        tooltip-format = "{ifname}: {ipaddr}/{cidr}\n  {essid} ({signalStrength}%)";
+        on-click = "nm-connection-editor";
       };
 
       bluetooth = {
         format = " {status}";
-        format-connected = " {device_alias}";
+        format-connected = "  {device_alias}";
         format-disabled = "";
         on-click = "blueman-manager";
+        tooltip-format = "{controller_alias}\n{num_connections} connecté(s)";
       };
 
       pulseaudio = {
         format = "{icon}  {volume}%";
-        format-muted = " ";
-        format-icons = {
-          default = [ "" "" "" ];
-        };
+        format-muted = "  Muet";
+        format-icons = { default = [ "" "" "" ]; };
         on-click = "pavucontrol";
+        scroll-step = 5;
       };
 
       backlight = {
@@ -485,10 +501,231 @@
         format-icons = [ "" "" "" "" "" "" "" "" "" ];
       };
 
-      tray = {
-        spacing = 10;
+      tray = { spacing = 8; };
+
+      # ── Modules custom ──────────────────────────────────────────
+
+      "custom/weather" = {
+        format = "{}";
+        interval = 900; # 15 minutes
+        exec = "curl -s 'wttr.in/?format=%c+%t' 2>/dev/null || echo ''";
+        tooltip = false;
+      };
+
+      "custom/media" = {
+        format = "{}";
+        interval = 3;
+        exec = ''playerctl metadata --format "{{artist}} — {{title}}" 2>/dev/null || echo ""'';
+        max-length = 30;
+        on-click = "playerctl play-pause";
+        tooltip = false;
       };
     };
+
+    # ── CSS Catppuccin Mocha complet ──────────────────────────────
+    style = ''
+      /* ═══ Palette Catppuccin Mocha ═══ */
+      @define-color base   #1e1e2e;
+      @define-color mantle #181825;
+      @define-color crust  #11111b;
+      @define-color text   #cdd6f4;
+      @define-color subtext0 #a6adc8;
+      @define-color subtext1 #bac2de;
+      @define-color surface0 #313244;
+      @define-color surface1 #45475a;
+      @define-color surface2 #585b70;
+      @define-color overlay0 #6c7086;
+      @define-color blue    #89b4fa;
+      @define-color lavender #b4befe;
+      @define-color sapphire #74c7ec;
+      @define-color sky     #89dceb;
+      @define-color teal    #94e2d5;
+      @define-color green   #a6e3a1;
+      @define-color yellow  #f9e2af;
+      @define-color peach   #fab387;
+      @define-color maroon  #eba0ac;
+      @define-color red     #f38ba8;
+      @define-color mauve   #cba6f7;
+      @define-color pink    #f5c2e7;
+      @define-color flamingo #f2cdcd;
+      @define-color rosewater #f5e0dc;
+
+      /* ═══ Barre principale ═══ */
+      * {
+        font-family: "JetBrainsMono Nerd Font";
+        font-size: 13px;
+        min-height: 0;
+      }
+
+      window#waybar {
+        background: rgba(30, 30, 46, 0.85);
+        border-radius: 12px;
+        border: 1px solid @surface0;
+        color: @text;
+      }
+
+      /* ═══ Pills (modules) ═══ */
+      #workspaces,
+      #submap,
+      #custom-media,
+      #window,
+      #custom-weather,
+      #tray,
+      #network,
+      #bluetooth,
+      #pulseaudio,
+      #backlight,
+      #battery,
+      #clock {
+        padding: 2px 10px;
+        margin: 4px 2px;
+        border-radius: 8px;
+        background: @surface0;
+        color: @text;
+        transition: all 0.3s ease;
+      }
+
+      /* ═══ Hover ═══ */
+      #workspaces button:hover,
+      #network:hover,
+      #bluetooth:hover,
+      #pulseaudio:hover,
+      #backlight:hover,
+      #battery:hover,
+      #clock:hover,
+      #tray:hover,
+      #custom-weather:hover {
+        background: @surface1;
+        color: @blue;
+      }
+
+      /* ═══ Workspaces ═══ */
+      #workspaces {
+        padding: 2px 4px;
+      }
+
+      #workspaces button {
+        color: @overlay0;
+        padding: 2px 6px;
+        margin: 0 2px;
+        border-radius: 6px;
+        background: transparent;
+        border: none;
+        transition: all 0.3s ease;
+      }
+
+      #workspaces button.active {
+        color: @blue;
+        background: @surface1;
+        font-weight: bold;
+      }
+
+      #workspaces button.urgent {
+        color: @red;
+        background: rgba(243, 139, 168, 0.15);
+      }
+
+      /* ═══ Submap (mode actif) ═══ */
+      #submap {
+        background: @mauve;
+        color: @base;
+        font-weight: bold;
+      }
+
+      /* ═══ Fenêtre active ═══ */
+      #window {
+        background: transparent;
+        color: @subtext1;
+        font-style: italic;
+      }
+
+      /* ═══ Modules droite — couleurs individuelles ═══ */
+      #clock {
+        color: @lavender;
+      }
+
+      #battery {
+        color: @green;
+      }
+
+      #battery.warning {
+        color: @yellow;
+      }
+
+      #battery.critical {
+        color: @red;
+        animation: blink 1s infinite alternate;
+      }
+
+      @keyframes blink {
+        to { color: @base; background: @red; }
+      }
+
+      #battery.charging {
+        color: @green;
+      }
+
+      #network {
+        color: @sapphire;
+      }
+
+      #network.disconnected {
+        color: @red;
+      }
+
+      #bluetooth {
+        color: @blue;
+      }
+
+      #pulseaudio {
+        color: @mauve;
+      }
+
+      #pulseaudio.muted {
+        color: @overlay0;
+      }
+
+      #backlight {
+        color: @yellow;
+      }
+
+      #custom-weather {
+        color: @sky;
+      }
+
+      #custom-media {
+        color: @pink;
+        background: transparent;
+        font-style: italic;
+      }
+
+      /* ═══ Tray ═══ */
+      #tray {
+        color: @text;
+      }
+
+      #tray > .passive {
+        -gtk-icon-effect: dim;
+      }
+
+      #tray > .needs-attention {
+        -gtk-icon-effect: highlight;
+        background: rgba(243, 139, 168, 0.15);
+      }
+
+      /* ═══ Tooltips ═══ */
+      tooltip {
+        background: @base;
+        border: 1px solid @surface1;
+        border-radius: 8px;
+        color: @text;
+      }
+
+      tooltip label {
+        color: @text;
+        padding: 4px;
+      }
+    '';
   };
 
   # ── Rofi — Lanceur d'applications ──────────────────────────────
