@@ -22,6 +22,7 @@
     ./neovim.nix      # Neovim avec LSP, Treesitter, Telescope
     ./tmux.nix        # Tmux multiplexeur terminal + Catppuccin
     ./terminals.nix   # Wezterm, Ghostty, Zellij (alternatives)
+    ./spotify.nix     # Spotify thémé via Spicetify (Catppuccin + extensions)
     ./dev-tools.nix   # Outils de développement CLI
 
     # Module impermanence côté Home Manager
@@ -92,6 +93,10 @@
 
       # Bitwarden — cache et session
       ".config/Bitwarden"
+
+      # Spotify — cache, login, préférences
+      ".config/spotify"
+      ".cache/spotify"
 
       # Syncthing — clés, config, index
       ".config/syncthing"
