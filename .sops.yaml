@@ -1,0 +1,19 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  Configuration SOPS — Règles de chiffrement                    ║
+# ╚══════════════════════════════════════════════════════════════════╝
+#
+# Ce fichier définit quelles clés age peuvent chiffrer/déchiffrer
+# les secrets du dépôt.
+#
+# ← ADAPTER : remplacer la clé publique par celle générée avec :
+#   age-keygen -o /persist/system/sops-age-keys.txt
+# La clé publique (age1...) s'affiche dans le terminal.
+
+keys:
+  - &admin age1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # ← ADAPTER : votre clé publique age
+
+creation_rules:
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *admin
