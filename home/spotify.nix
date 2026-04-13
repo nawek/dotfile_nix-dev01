@@ -15,7 +15,7 @@
 #
 # Thème : Catppuccin Mocha (cohérent avec le reste du système)
 
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
 in
@@ -26,9 +26,9 @@ in
   programs.spicetify = {
     enable = true;
 
-    # ── Thème Catppuccin Mocha ─────────────────────────────────────
-    theme = spicePkgs.themes.catppuccin;
-    colorScheme = "mocha";
+    # ── Thème Catppuccin Mocha (override Stylix qui injecte son propre thème)
+    theme = lib.mkForce spicePkgs.themes.catppuccin;
+    colorScheme = lib.mkForce "mocha";
 
     # ── Extensions ─────────────────────────────────────────────────
     enabledExtensions = with spicePkgs.extensions; [
