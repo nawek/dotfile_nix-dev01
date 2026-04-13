@@ -268,11 +268,16 @@
     # Nix tooling
     nil                 # LSP Nix
     nixfmt-rfc-style    # Formateur Nix (style RFC)
+    alejandra           # Formateur Nix alternatif (opinionated)
     nh                  # Helper NixOS (rebuild simplifié)
     nix-index           # Base de données des paquets
     comma               # Exécuter des programmes sans les installer (,)
     nix-output-monitor  # Sortie de build colorée et lisible (nom)
     cachix              # Push/pull vers des caches binaires Cachix
+    treefmt             # Formatage multi-langages (nix fmt)
+    pre-commit          # Hooks de vérification avant commit
+    shellcheck          # Linter de scripts shell
+    shfmt               # Formateur de scripts shell
 
     # Docker
     docker-compose

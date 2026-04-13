@@ -1,0 +1,49 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  Pre-commit hooks — Vérifications avant chaque commit           ║
+# ╚══════════════════════════════════════════════════════════════════╝
+#
+# Installation (une seule fois) :
+#   nix-shell -p pre-commit --run "pre-commit install"
+#
+# Exécution manuelle :
+#   pre-commit run --all-files
+#
+# Les hooks vérifient :
+# - Formatage Nix (alejandra)
+# - Syntaxe shell (shellcheck)
+# - Pas de secrets dans les commits (detect-private-key)
+# - Fichiers bien formés (trailing whitespace, EOF, merge conflicts)
+
+repos:
+  # ── Hooks de base ────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: ["--markdown-linebreak-ext=md"]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: detect-private-key    # Empêche de commiter des clés privées
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+
+  # ── Nix — Formatage avec alejandra ──────────────────────────────
+  - repo: https://github.com/kamadorueda/alejandra
+    rev: 3.1.0
+    hooks:
+      - id: alejandra-nix
+
+  # ── Shell — Linting avec shellcheck ─────────────────────────────
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+
+  # ── YAML — Linting ──────────────────────────────────────────────
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: ["-d", "{extends: relaxed, rules: {line-length: {max: 120}}}"]
