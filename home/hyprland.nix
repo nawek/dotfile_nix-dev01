@@ -146,13 +146,13 @@ in
 
       # Onglets groupés — barre de titre quand des fenêtres sont groupées
       group = {
-        "col.border_active" = "rgba(89b4faee)";
-        "col.border_inactive" = "rgba(585b70aa)";
+        "col.border_active" = mkForce "rgba(89b4faee)";
+        "col.border_inactive" = mkForce "rgba(585b70aa)";
         groupbar = {
           font_size = 11;
           gradients = false;
-          "col.active" = "rgba(89b4faee)";
-          "col.inactive" = "rgba(313244aa)";
+          "col.active" = mkForce "rgba(89b4faee)";
+          "col.inactive" = mkForce "rgba(313244aa)";
         };
       };
 
