@@ -53,8 +53,8 @@
     # Barre de statut
     waybar
 
-    # Lanceur d'applications
-    wofi
+    # Lanceur d'applications (Wayland-natif, ultra-customisable)
+    rofi-wayland
 
     # Notifications
     dunst

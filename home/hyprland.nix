@@ -143,7 +143,7 @@
       bind = [
         # Applications
         "$mod, Return, exec, kitty"              # Terminal
-        "$mod, D, exec, wofi --show drun"        # Lanceur d'apps
+        "$mod, D, exec, rofi -show drun -show-icons" # Lanceur d'apps
         "$mod, E, exec, nautilus"                 # Gestionnaire de fichiers
         "$mod, L, exec, hyprlock"                 # Verrouiller l'écran
 
@@ -184,6 +184,9 @@
         ", Print, exec, grim - | wl-copy"                                    # Tout l'écran → clipboard
         "$mod, Print, exec, grim -g \"$(slurp)\" - | wl-copy"               # Zone → clipboard
         "$mod SHIFT, Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png" # Zone → fichier
+
+        # Presse-papier — historique via cliphist + rofi
+        "$mod, C, exec, cliphist list | rofi -dmenu -p Clipboard | cliphist decode | wl-copy"
 
         # Changer de wallpaper aléatoirement (depuis ~/Pictures/wallpapers/)
         "$mod, W, exec, swww img $(find ~/Pictures/wallpapers/ -type f | shuf -n 1) --transition-type random --transition-duration 1"
@@ -417,17 +420,93 @@
     };
   };
 
-  # ── Wofi — Lanceur d'applications ───────────────────────────────
-  # Les couleurs sont gérées par Stylix
-  programs.wofi = {
+  # ── Rofi — Lanceur d'applications ──────────────────────────────
+  # Remplace Wofi — beaucoup plus customisable (thèmes RASI)
+  programs.rofi = {
     enable = true;
-    settings = {
-      show = "drun";
-      width = 600;
-      height = 400;
-      allow_images = true;
-      insensitive = true;     # Recherche insensible à la casse
-      prompt = "Rechercher...";
+    package = pkgs.rofi-wayland; # Version Wayland-native
+    terminal = "kitty";
+
+    extraConfig = {
+      show-icons = true;
+      icon-theme = "Papirus-Dark";
+      drun-display-format = "{name}";
+      disable-history = false;
+      sorting-method = "fzf";
+    };
+
+    # Thème Catppuccin Mocha intégré
+    theme = let
+      # Palette Catppuccin Mocha
+      mkLiteral = config.lib.formats.rasi.mkLiteral;
+    in {
+      "*" = {
+        bg = mkLiteral "#1e1e2e";       # base
+        bg-alt = mkLiteral "#313244";    # surface0
+        fg = mkLiteral "#cdd6f4";        # text
+        accent = mkLiteral "#89b4fa";    # blue
+        urgent = mkLiteral "#f38ba8";    # red
+      };
+
+      window = {
+        width = mkLiteral "600px";
+        border = mkLiteral "2px";
+        border-color = mkLiteral "@accent";
+        border-radius = mkLiteral "12px";
+        background-color = mkLiteral "@bg";
+      };
+
+      mainbox = {
+        background-color = mkLiteral "transparent";
+      };
+
+      inputbar = {
+        background-color = mkLiteral "@bg-alt";
+        border-radius = mkLiteral "8px";
+        padding = mkLiteral "8px 16px";
+        margin = mkLiteral "12px";
+        children = map mkLiteral [ "prompt" "entry" ];
+      };
+
+      prompt = {
+        background-color = mkLiteral "transparent";
+        text-color = mkLiteral "@accent";
+      };
+
+      entry = {
+        background-color = mkLiteral "transparent";
+        text-color = mkLiteral "@fg";
+        placeholder = "Rechercher...";
+        placeholder-color = mkLiteral "#6c7086"; # overlay0
+      };
+
+      listview = {
+        columns = 1;
+        lines = 8;
+        background-color = mkLiteral "transparent";
+        padding = mkLiteral "0 12px 12px";
+      };
+
+      element = {
+        padding = mkLiteral "8px 16px";
+        border-radius = mkLiteral "8px";
+        background-color = mkLiteral "transparent";
+      };
+
+      "element selected" = {
+        background-color = mkLiteral "@bg-alt";
+        text-color = mkLiteral "@accent";
+      };
+
+      element-text = {
+        text-color = mkLiteral "inherit";
+        background-color = mkLiteral "transparent";
+      };
+
+      element-icon = {
+        size = mkLiteral "24px";
+        background-color = mkLiteral "transparent";
+      };
     };
   };
 
