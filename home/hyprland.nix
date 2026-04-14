@@ -621,11 +621,15 @@ in
         "custom/power-draw"
         "custom/uptime-kuma"
         "custom/weather"
+        "custom/sep"
         "tray"
+        "custom/sep"
         "network"
         "bluetooth"
+        "custom/sep"
         "pulseaudio"
         "backlight"
+        "custom/sep"
         "battery"
         "clock"
       ];
@@ -729,6 +733,13 @@ in
         format = "⚡ {}";
         interval = 5;
         exec = ''cat /sys/class/power_supply/BAT0/power_now 2>/dev/null | awk '{printf "%.1fW", $1/1000000}' || echo ""'';
+        tooltip = false;
+      };
+
+      # Séparateur visuel entre les groupes de modules
+      "custom/sep" = {
+        format = "·";
+        interval = "once";
         tooltip = false;
       };
 
@@ -918,6 +929,14 @@ in
 
       #backlight {
         color: @yellow;
+      }
+
+      #custom-sep {
+        color: @overlay0;
+        background: transparent;
+        padding: 0 2px;
+        margin: 0;
+        font-size: 10px;
       }
 
       #custom-power-draw {

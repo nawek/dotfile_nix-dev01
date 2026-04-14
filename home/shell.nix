@@ -134,9 +134,15 @@
       # PATH — scripts personnels
       export PATH="$HOME/.local/bin:$PATH"
 
-      # Fortune — citation aléatoire au login (fun)
-      if command -v fortune &>/dev/null && command -v cowsay &>/dev/null; then
-        fortune -s | cowsay -f tux 2>/dev/null
+      # Starship transient prompt — réduit le prompt après exécution
+      # Affiche juste ❯ au lieu de répéter toute la ligne (scrollback propre)
+      function starship_transient_prompt_func() {
+        echo -ne "\033[1;34m❯\033[0m "
+      }
+
+      # Fastfetch au login (remplace neofetch + cowsay)
+      if command -v fastfetch &>/dev/null && [[ -o interactive ]] && [[ ! -n "$TMUX" ]]; then
+        fastfetch
       fi
     '';
   };

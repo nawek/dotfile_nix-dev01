@@ -59,7 +59,7 @@
     imv                 # Viewer d'images minimaliste (Wayland-natif)
     p7zip               # Compression/décompression 7z
     file                # Identification de type de fichier
-    neofetch            # Infos système stylisées
+    fastfetch           # Infos système stylisées (remplace neofetch)
     # ventoy-full       # USB multi-boot — décommenter si nécessaire (marqué insecure)
     # Ajouter permittedInsecurePackages dans configuration.nix si activé
     solaar              # Gestion périphériques Logitech (clavier, souris) # Optionnel : retirer si pas de Logitech
@@ -252,6 +252,9 @@
 
   # ── Direnv — Layouts custom (python, node, docker) ────────────────
   xdg.configFile."direnv/direnvrc".source = ./direnvrc;
+
+  # ── Fastfetch — Affichage système stylisé Catppuccin ──────────────
+  xdg.configFile."fastfetch/config.jsonc".source = ./fastfetch.jsonc;
 
   # ── Syncthing — Synchronisation P2P entre devices ─────────────────
   # Sync automatique de dossiers entre laptop ↔ homelab ↔ phone.
