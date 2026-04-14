@@ -205,10 +205,132 @@
   #    modules/impermanence.nix — ne PAS la déclarer ici.
 
   # ══════════════════════════════════════════════════════════════════
+  # 7. HARDENING KERNEL ANSSI (R7-R14)
+  # ══════════════════════════════════════════════════════════════════
+  # Recommandations ANSSI pour le durcissement des systèmes GNU/Linux
+  # Inspiré du projet Securix (cloud-gouv/securix, DINUM)
+  # Référence : https://www.ssi.gouv.fr/guide/recommandations-de-securite-relatives-a-un-systeme-gnulinux/
+
+  # ── R7 — IOMMU (protection DMA contre les attaques physiques) ────
+  # ── R8 — Protections mémoire au boot ─────────────────────────────
+  boot.kernelParams = lib.mkAfter [
+    "iommu=force"                        # R7 : forcer l'IOMMU (anti-DMA attack)
+    "page_poison=on"                     # R8 : empoisonner les pages mémoire libérées
+    "slab_nomerge"                       # R8 : ne pas fusionner les slabs (anti-heap spray)
+    "slub_debug=FZP"                     # R8 : debug allocateur SLUB (free/zombie/poison)
+    "pti=on"                             # R8 : Page Table Isolation (anti-Meltdown)
+    "spectre_v2=on"                      # R8 : mitigation Spectre v2
+    "spec_store_bypass_disable=seccomp"  # R8 : mitigation Spectre v4
+    "mce=0"                              # R8 : machine check exceptions strictes
+    "page_alloc.shuffle=1"               # R8 : randomiser les allocations mémoire
+    "l1tf=full,force"                    # R8 : mitigation L1 Terminal Fault
+    "mds=full,nosmt"                     # R8 : mitigation Microarchitectural Data Sampling
+  ];
+
+  # ── R9 — Restrictions kernel ─────────────────────────────────────
+  boot.kernel.sysctl = {
+    # Seul root peut lire dmesg (masque les infos kernel aux utilisateurs)
+    "kernel.dmesg_restrict" = 1;
+    # Masquer les pointeurs kernel dans /proc (anti-info leak)
+    "kernel.kptr_restrict" = 2;
+    # PID max élevé (anti-PID prediction)
+    "kernel.pid_max" = 1048576;
+    # Restreindre perf_event (anti-side channel)
+    "kernel.perf_event_paranoid" = 3;
+    # ASLR complet (randomisation des adresses mémoire)
+    "kernel.randomize_va_space" = 2;
+    # Désactiver SysRq (pas de magic keys en production)
+    "kernel.sysrq" = 0;
+    # Restreindre BPF aux utilisateurs privilégiés
+    "kernel.unprivileged_bpf_disabled" = 1;
+    # Hardening BPF JIT
+    "net.core.bpf_jit_harden" = 2;
+    # Panic immédiat sur oops kernel (plutôt que continuer en état instable)
+    "kernel.panic_on_oops" = 1;
+
+    # ── R11 — Yama LSM (restriction ptrace) ────────────────────────
+    # Un processus ne peut tracer que ses propres enfants
+    "kernel.yama.ptrace_scope" = 1;
+
+    # ── R12 — Durcissement IPv4 ────────────────────────────────────
+    # Pas de forwarding (ce n'est pas un routeur)
+    "net.ipv4.ip_forward" = 0;
+    # Ignorer les ICMP redirects (anti-MITM)
+    "net.ipv4.conf.all.accept_redirects" = 0;
+    "net.ipv4.conf.default.accept_redirects" = 0;
+    "net.ipv4.conf.all.secure_redirects" = 0;
+    "net.ipv4.conf.default.secure_redirects" = 0;
+    "net.ipv4.conf.all.send_redirects" = 0;
+    "net.ipv4.conf.default.send_redirects" = 0;
+    # Pas de source routing (anti-spoofing)
+    "net.ipv4.conf.all.accept_source_route" = 0;
+    "net.ipv4.conf.default.accept_source_route" = 0;
+    # Reverse path filtering strict (anti-spoofing)
+    "net.ipv4.conf.all.rp_filter" = 1;
+    "net.ipv4.conf.default.rp_filter" = 1;
+    # Journaliser les paquets martiens (IPs impossibles)
+    "net.ipv4.conf.all.log_martians" = 1;
+    "net.ipv4.conf.default.log_martians" = 1;
+    # Protection SYN flood
+    "net.ipv4.tcp_syncookies" = 1;
+    # RFC 1337 — protection TIME-WAIT assassination
+    "net.ipv4.tcp_rfc1337" = 1;
+    # Ne pas répondre aux broadcasts ICMP (anti-Smurf)
+    "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+    # Ignorer les faux messages ICMP error
+    "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
+    # Pas de timestamps TCP (anti-fingerprinting)
+    "net.ipv4.tcp_timestamps" = 0;
+    # ARP : répondre uniquement sur l'interface correcte
+    "net.ipv4.conf.all.arp_ignore" = 1;
+    "net.ipv4.conf.all.arp_announce" = 2;
+
+    # ── R13 — IPv6 (optionnel : décommenter pour désactiver) ──────
+    # "net.ipv6.conf.all.disable_ipv6" = 1;
+    # "net.ipv6.conf.default.disable_ipv6" = 1;
+    # Si IPv6 activé, hardening minimal :
+    "net.ipv6.conf.all.accept_redirects" = 0;
+    "net.ipv6.conf.default.accept_redirects" = 0;
+    "net.ipv6.conf.all.accept_source_route" = 0;
+    "net.ipv6.conf.default.accept_source_route" = 0;
+
+    # ── R14 — Protection filesystem ────────────────────────────────
+    # Protéger les FIFOs dans les répertoires sticky (anti-symlink attack)
+    "fs.protected_fifos" = 2;
+    "fs.protected_regular" = 2;
+    # Empêcher de suivre les symlinks/hardlinks dans les dirs sticky
+    "fs.protected_symlinks" = 1;
+    "fs.protected_hardlinks" = 1;
+    # Pas de core dump pour les binaires SUID
+    "fs.suid_dumpable" = 0;
+  };
+
+  # ══════════════════════════════════════════════════════════════════
+  # 8. YUBIKEY — Support clé de sécurité matérielle
+  # ══════════════════════════════════════════════════════════════════
+  # Smart card daemon (nécessaire pour la communication avec la YubiKey)
+  services.pcscd.enable = true;
+
+  # Support USB pour les clés de sécurité FIDO2/U2F
+  hardware.gpgSmartcards.enable = true;
+
+  # ── PAM FIDO2 — Login par clé de sécurité (optionnel) ───────────
+  # Décommenter pour activer le login par YubiKey :
+  # security.pam.u2f = {
+  #   enable = true;
+  #   cue = true;  # Affiche "Touchez votre clé de sécurité..."
+  #   control = "sufficient";  # La clé suffit (pas besoin de mot de passe)
+  # };
+
+  # ══════════════════════════════════════════════════════════════════
   # Paquets de sécurité
   # ══════════════════════════════════════════════════════════════════
   environment.systemPackages = with pkgs; [
-    usbguard       # CLI pour gérer les périphériques USB
-    lynis           # Outil d'audit de sécurité (lynis audit system)
+    usbguard              # CLI pour gérer les périphériques USB
+    lynis                  # Outil d'audit de sécurité (lynis audit system)
+    yubikey-personalization # Configuration de la YubiKey
+    yubikey-manager        # GUI/CLI pour gérer la YubiKey (ykman)
+    yubico-pam             # Module PAM pour auth YubiKey
+    age-plugin-yubikey     # Chiffrer les secrets age/sops avec la YubiKey
   ];
 }
