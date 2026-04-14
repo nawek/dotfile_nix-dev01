@@ -130,10 +130,14 @@
     #   Mullvad :    194.242.2.2#dns.mullvad.net  (pas de logs, suédois)
     #   AdGuard :    94.140.14.14#dns.adguard.com (bloque pubs + trackers)
     # DNS-over-TLS via extraConfig (compatible stable + unstable)
+    # AdGuard DNS — bloque malware + trackers + pubs au niveau DNS
+    # En plus du DNS-over-TLS (chiffrement), AdGuard filtre les domaines
+    # malveillants avant même que le navigateur les charge.
+    # Alternative : Quad9 (9.9.9.9#dns.quad9.net) — anti-malware sans blocage pubs
     extraConfig = ''
       [Resolve]
-      DNS=9.9.9.9#dns.quad9.net 149.112.112.112#dns.quad9.net
-      FallbackDNS=1.1.1.1#cloudflare-dns.com 8.8.8.8#dns.google
+      DNS=94.140.14.14#dns.adguard-dns.com 94.140.15.15#dns.adguard-dns.com
+      FallbackDNS=9.9.9.9#dns.quad9.net 1.1.1.1#cloudflare-dns.com
       DNSOverTLS=yes
     '';
   };
@@ -321,6 +325,66 @@
   #   cue = true;  # Affiche "Touchez votre clé de sécurité..."
   #   control = "sufficient";  # La clé suffit (pas besoin de mot de passe)
   # };
+
+  # ══════════════════════════════════════════════════════════════════
+  # 9. APPARMOR — Confinement kernel des applications
+  # ══════════════════════════════════════════════════════════════════
+  # Plus robuste que Firejail (niveau kernel, pas userspace).
+  # Les profils restreignent l'accès fichier/réseau par application.
+  # Statut : sudo aa-status
+  # Logs : sudo journalctl -t audit | grep apparmor
+  security.apparmor = {
+    enable = true;
+    # Paquets de profils pré-configurés pour les apps courantes
+    packages = with pkgs; [ apparmor-profiles ];
+    # Mode par défaut : enforce (bloque les accès non autorisés)
+    # Changer en "complain" pour logger sans bloquer (debug) :
+    # killUnconfinedConfinables = false;
+  };
+
+  # ══════════════════════════════════════════════════════════════════
+  # 10. SSH HARDENING AVANCÉ — Algorithmes modernes uniquement
+  # ══════════════════════════════════════════════════════════════════
+  # Restreindre aux algorithmes cryptographiques modernes et sûrs.
+  # Élimine les algos legacy (RSA-SHA1, diffie-hellman-group1, etc.)
+  services.openssh.settings = {
+    # Seuls les algorithmes d'échange de clés modernes
+    KexAlgorithms = [
+      "sshd-ed25519"
+      "curve25519-sha256"
+      "curve25519-sha256@libssh.org"
+    ];
+    # Seuls les chiffrements modernes
+    Ciphers = [
+      "chacha20-poly1305@openssh.com"
+      "aes256-gcm@openssh.com"
+      "aes128-gcm@openssh.com"
+    ];
+    # Seuls les MAC modernes
+    Macs = [
+      "hmac-sha2-512-etm@openssh.com"
+      "hmac-sha2-256-etm@openssh.com"
+    ];
+    # Clés hôtes : Ed25519 uniquement (le plus sûr et le plus rapide)
+    HostKeyAlgorithms = "ssh-ed25519";
+    # Désactiver l'agent forwarding (risque de vol de clé)
+    AllowAgentForwarding = false;
+    # Désactiver le X11 forwarding (pas de serveur X)
+    X11Forwarding = false;
+    # Timeout d'inactivité (déconnecte après 10min d'inactivité)
+    ClientAliveInterval = 600;
+    ClientAliveCountMax = 0;
+    # Nombre max de tentatives d'auth par connexion
+    MaxAuthTries = 3;
+  };
+
+  # ══════════════════════════════════════════════════════════════════
+  # 11. MAC RANDOMIZATION WiFi — Anti-tracking physique
+  # ══════════════════════════════════════════════════════════════════
+  # Randomise l'adresse MAC à chaque connexion WiFi.
+  # Empêche le tracking par les hotspots WiFi (aéroports, cafés, etc.)
+  networking.networkmanager.wifi.macAddress = "random";
+  networking.networkmanager.ethernet.macAddress = "preserve"; # Pas de random sur filaire
 
   # ══════════════════════════════════════════════════════════════════
   # Paquets de sécurité

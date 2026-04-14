@@ -504,7 +504,7 @@ in
     settings = {
       general = {
         hide_cursor = true;
-        grace = 5;               # Secondes de grâce après verrouillage
+        grace = 0;               # Pas de grâce — verrouillage immédiat (sécurité)
         no_fade_in = false;
         no_fade_out = false;
       };
