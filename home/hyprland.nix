@@ -1393,7 +1393,8 @@ in
     settings = {
       font_size = 12;
       # Transparence + blur (le blur vient de Hyprland decoration)
-      background_opacity = "0.88";
+      # mkForce car Stylix injecte 0.92 depuis stylix.opacity.terminal
+      background_opacity = lib.mkForce "0.88";
 
       window_padding_width = 8;
 
