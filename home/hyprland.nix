@@ -313,7 +313,7 @@ in
         "$mod SHIFT, Q, exec, wl-paste | qrencode -t PNG -o /tmp/qr.png && imv /tmp/qr.png"
 
         # Changer de wallpaper aléatoirement (depuis ~/Pictures/wallpapers/)
-        "$mod, W, exec, TRANSITIONS=(grow wipe fade outer); swww img $(find ~/Pictures/wallpapers/ -type f | shuf -n 1) --transition-type ''${TRANSITIONS[$RANDOM % 4]} --transition-duration 2 --transition-fps 60"
+        "$mod, W, exec, swww img $(find ~/Pictures/wallpapers/ -type f | shuf -n 1) --transition-type $(echo grow wipe fade outer | tr ' ' '\\n' | shuf -n1) --transition-duration 2 --transition-fps 60"
 
         # Scroll à travers les workspaces
         "$mod, mouse_down, workspace, e+1"
