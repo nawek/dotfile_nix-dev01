@@ -105,8 +105,8 @@ in
           enabled = true;
           range = 15;
           render_power = 2;
-          color = "rgba(89b4fa40)";           # Bleu Catppuccin semi-transparent
-          color_inactive = "rgba(11111b30)";  # Noir crust très subtil
+          color = mkForce "rgba(89b4fa40)";           # Bleu Catppuccin semi-transparent
+          color_inactive = mkForce "rgba(11111b30)";  # Noir crust très subtil
           offset = "0 0";                     # Centré = effet glow
         };
 
