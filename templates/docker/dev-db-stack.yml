@@ -1,0 +1,33 @@
+# Stack dev BDD — PostgreSQL + Redis + Adminer
+# Usage : docker compose -f dev-db-stack.yml up -d
+# Adminer : http://localhost:8081
+# PostgreSQL : localhost:5432
+# Redis : localhost:6379
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: devdb
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+
+volumes:
+  pg-data:

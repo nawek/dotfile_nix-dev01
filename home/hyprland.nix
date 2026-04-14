@@ -145,11 +145,21 @@ in
         smart_split = true;  # Split intelligent selon l'espace disponible
       };
 
-      # Smart gaps — pas de gaps/bordures quand une seule fenêtre
       misc = {
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
       };
+
+      # ── Hyprexpo — Vue d'ensemble des workspaces ────────────────
+      # Plugin hyprexpo (façon macOS Mission Control)
+      # Nécessite l'input hyprland-plugins dans flake.nix
+      # Décommenter quand le plugin sera configuré :
+      # plugin.hyprexpo = {
+      #   columns = 3;
+      #   gap_size = 5;
+      #   workspace_method = "first 1";
+      # };
+      # Keybind : "$mod, grave, hyprexpo:expo, toggle"
 
       # Onglets groupés — barre de titre quand des fenêtres sont groupées
       group = {
@@ -608,6 +618,7 @@ in
       ];
 
       modules-right = [
+        "custom/power-draw"
         "custom/uptime-kuma"
         "custom/weather"
         "tray"
@@ -713,6 +724,14 @@ in
 
       # ── Module Uptime Kuma — État des services homelab ──────────
       # ← ADAPTER : remplacer l'URL par votre instance Uptime Kuma
+      # ── Module Power Draw — Consommation watt en temps réel ─────
+      "custom/power-draw" = {
+        format = "⚡ {}";
+        interval = 5;
+        exec = ''cat /sys/class/power_supply/BAT0/power_now 2>/dev/null | awk '{printf "%.1fW", $1/1000000}' || echo ""'';
+        tooltip = false;
+      };
+
       "custom/uptime-kuma" = {
         format = "{}";
         interval = 60; # Vérifier toutes les minutes
@@ -901,6 +920,10 @@ in
         color: @yellow;
       }
 
+      #custom-power-draw {
+        color: @peach;
+      }
+
       #custom-uptime-kuma {
         color: @green;
       }
@@ -1054,6 +1077,9 @@ in
       timeout = 5;
       timeout-low = 3;
       timeout-critical = 0; # Les notifications critiques ne disparaissent pas
+      # Son pour les notifications urgentes
+      script = "pw-play /run/current-system/sw/share/sounds/freedesktop/stereo/bell.oga";
+      script-critical = "pw-play /run/current-system/sw/share/sounds/freedesktop/stereo/dialog-warning.oga";
       fit-to-screen = true;
       widgets = [ "inhibitors" "title" "dnd" "notifications" ];
       widget-config = {

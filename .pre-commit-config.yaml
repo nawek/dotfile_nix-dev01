@@ -48,9 +48,23 @@ repos:
       - id: yamllint
         args: ["-d", "{extends: relaxed, rules: {line-length: {max: 120}}}"]
 
-  # ── Nix — Vérification du flake avant commit ───────────────────
+  # ── Nix — Linting et vérification ────────────────────────────────
   - repo: local
     hooks:
+      - id: statix-check
+        name: statix (linter Nix)
+        entry: statix check
+        language: system
+        pass_filenames: true
+        files: '\.nix$'
+
+      - id: deadnix-check
+        name: deadnix (code mort Nix)
+        entry: deadnix --fail
+        language: system
+        pass_filenames: true
+        files: '\.nix$'
+
       - id: nix-flake-check
         name: nix flake check
         entry: nix flake check --no-build

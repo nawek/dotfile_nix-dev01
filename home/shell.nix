@@ -56,6 +56,12 @@
       gstp = "git stash pop";
       grb = "git rebase";
       gcp = "git cherry-pick";
+      # Worktrees — travailler sur plusieurs branches en parallèle
+      gwt  = "git worktree add";      # gwt ../feature-branch feature-branch
+      gwtl = "git worktree list";     # Lister les worktrees
+      gwtr = "git worktree remove";   # Supprimer un worktree
+      # Diff entre générations NixOS (voir ce qui a changé)
+      ndiff = "nix store diff-closures /nix/var/nix/profiles/system-\$(( \$(readlink /nix/var/nix/profiles/system | grep -o '[0-9]*')-1 ))-link /nix/var/nix/profiles/system";
       lg  = "lazygit";
 
       # ── Docker ──────────────────────────────────────────────────

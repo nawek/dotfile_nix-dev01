@@ -86,6 +86,9 @@
     # Gestionnaire de fichiers
     nautilus
 
+    # Sons système (notifications urgentes)
+    sound-theme-freedesktop
+
     # Agent d'authentification Polkit (pop-up mot de passe)
     polkit_gnome
 

@@ -346,6 +346,8 @@
     nix-output-monitor  # Sortie de build colorée et lisible (nom)
     cachix              # Push/pull vers des caches binaires Cachix
     treefmt             # Formatage multi-langages (nix fmt)
+    statix              # Linter Nix (détecte les anti-patterns)
+    deadnix             # Détecte le code Nix mort (variables inutilisées)
     pre-commit          # Hooks de vérification avant commit
     shellcheck          # Linter de scripts shell
     shfmt               # Formateur de scripts shell

@@ -250,6 +250,9 @@
   # Accessible via $mod+F1
   xdg.configFile."hypr/cheatsheet.md".source = ./cheatsheet.md;
 
+  # ── Direnv — Layouts custom (python, node, docker) ────────────────
+  xdg.configFile."direnv/direnvrc".source = ./direnvrc;
+
   # ── Syncthing — Synchronisation P2P entre devices ─────────────────
   # Sync automatique de dossiers entre laptop ↔ homelab ↔ phone.
   # Pas de cloud, pas de serveur central, chiffré de bout en bout.

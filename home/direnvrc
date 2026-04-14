@@ -1,0 +1,42 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  Direnv layouts custom — Chargement auto d'environnements       ║
+# ╚══════════════════════════════════════════════════════════════════╝
+#
+# Utilisation dans .envrc :
+#   layout python       → crée un venv Python
+#   layout node         → utilise la version node locale
+#   layout docker       → expose les variables docker-compose
+#   use flake           → charge le devShell Nix du flake
+
+# ── Layout Python — virtualenv automatique ─────────────────────────
+layout_python() {
+  local python=${1:-python3}
+  if [ ! -d ".venv" ]; then
+    log_status "Création du virtualenv .venv..."
+    $python -m venv .venv
+  fi
+  source .venv/bin/activate
+  if [ -f "requirements.txt" ]; then
+    pip install -q -r requirements.txt
+  fi
+}
+
+# ── Layout Node — détecte le package manager ───────────────────────
+layout_node() {
+  PATH_add node_modules/.bin
+  if [ -f "pnpm-lock.yaml" ]; then
+    log_status "Projet pnpm détecté"
+  elif [ -f "yarn.lock" ]; then
+    log_status "Projet yarn détecté"
+  elif [ -f "package-lock.json" ]; then
+    log_status "Projet npm détecté"
+  fi
+}
+
+# ── Layout Docker — variables docker-compose ───────────────────────
+layout_docker() {
+  export COMPOSE_PROJECT_NAME=$(basename "$PWD")
+  if [ -f "docker-compose.yml" ] || [ -f "compose.yml" ]; then
+    log_status "Docker Compose détecté ($COMPOSE_PROJECT_NAME)"
+  fi
+}
