@@ -29,6 +29,13 @@ in
 
   # ── Boot silencieux ──────────────────────────────────────────────
   # Masquer les messages de log pendant le démarrage pour un boot propre
+  # Message affiché sous l'animation Plymouth
+  boot.plymouth.extraConfig = ''
+    DeviceScale=1
+    ShowDelay=0
+    Title=C I T A D E L
+  '';
+
   boot.consoleLogLevel = 0;
   boot.initrd.verbose = false;
   boot.kernelParams = [

@@ -98,6 +98,7 @@
       trad-en = "trans -brief :en";   # Traduction vers anglais
       qr = "qrencode -t UTF8";        # Générer un QR code dans le terminal
       ocr = "tesseract stdin stdout";  # OCR (pipe une image)
+      theme-preview = "echo '# Catppuccin Mocha Preview\nlet x = 42;\nconst name = \"Kuro\";\n// TODO: deploy\nif (x > 0) { console.log(name); }' | bat --language=js --style=full";
       boot-time = "systemd-analyze && systemd-analyze blame | head -10";
       # Impermanence debug — lister les fichiers non-persistés dans /
       impermanence-diff = "sudo find / -xdev -not -path '/nix/*' -not -path '/persist/*' -not -path '/proc/*' -not -path '/sys/*' -not -path '/dev/*' -not -path '/run/*' -not -path '/tmp/*' -not -path '/boot/*' -newer /etc/machine-id -type f 2>/dev/null | head -50";
@@ -179,6 +180,11 @@
 
       git_status = {
         format = "[$all_status$ahead_behind]($style) ";
+        ahead = "⇡$count ";
+        behind = "⇣$count ";
+        diverged = "⇡$ahead_count⇣$behind_count ";
+        stashed = "📦$count ";
+        conflicted = "=$count ";
       };
 
       nix_shell = {

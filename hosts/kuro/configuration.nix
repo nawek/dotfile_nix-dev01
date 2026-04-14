@@ -112,8 +112,29 @@
     };
   };
 
-  # Clavier français (console TTY)
-  console.keyMap = "fr";
+  # Clavier français + couleurs Catppuccin Mocha en console TTY
+  console = {
+    keyMap = "fr";
+    # Palette Catppuccin Mocha pour la console TTY (si tu drop en TTY, c'est joli)
+    colors = [
+      "1e1e2e" # 0 black (base)
+      "f38ba8" # 1 red
+      "a6e3a1" # 2 green
+      "f9e2af" # 3 yellow
+      "89b4fa" # 4 blue
+      "cba6f7" # 5 magenta (mauve)
+      "94e2d5" # 6 cyan (teal)
+      "bac2de" # 7 white (subtext1)
+      "585b70" # 8 bright black (surface2)
+      "f38ba8" # 9 bright red
+      "a6e3a1" # 10 bright green
+      "f9e2af" # 11 bright yellow
+      "89b4fa" # 12 bright blue
+      "cba6f7" # 13 bright magenta
+      "94e2d5" # 14 bright cyan
+      "a6adc8" # 15 bright white (subtext0)
+    ];
+  };
 
   # Version NixOS — NE PAS MODIFIER après l'installation initiale
   system.stateVersion = "25.05";

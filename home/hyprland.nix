@@ -87,21 +87,44 @@ in
       };
 
       decoration = {
-        rounding = 8; # Coins arrondis des fenêtres
+        rounding = 8; # Coins arrondis (0 en fullscreen via windowrule)
 
+        # ── Blur — Flou gaussien derrière les fenêtres transparentes ──
         blur = {
           enabled = true;
-          size = 5;
-          passes = 2;
+          size = 6;
+          passes = 3;
           new_optimizations = true;
+          xray = false;
+          # Blur aussi sur les layers (waybar, rofi, notifications)
+          popups = true;
         };
 
-        # Ombres
+        # ── Ombres colorées — halo bleu Catppuccin sur la fenêtre active ──
         shadow = {
           enabled = true;
-          range = 10;
-          render_power = 3;
+          range = 15;
+          render_power = 2;
+          color = "rgba(89b4fa40)";           # Bleu Catppuccin semi-transparent
+          color_inactive = "rgba(11111b30)";  # Noir crust très subtil
+          offset = "0 0";                     # Centré = effet glow
         };
+
+        # ── Dim inactive — Fenêtres non-focusées légèrement assombries ──
+        dim_inactive = true;
+        dim_strength = 0.15; # Subtil (0.0 = off, 1.0 = noir complet)
+
+        # ── Blur sur les layers (waybar, rofi, notifications) ──
+        layerrule = [
+          "blur, waybar"
+          "blur, rofi"
+          "blur, swaync-control-center"
+          "blur, swaync-notification-window"
+          "ignorezero, waybar"
+          "ignorezero, rofi"
+          "ignorezero, swaync-control-center"
+          "ignorezero, swaync-notification-window"
+        ];
       };
 
       animations = {
@@ -115,24 +138,26 @@ in
         ];
 
         animation = [
-          # Fenêtres — effet popin (zoom depuis le centre)
-          "windows, 1, 5, overshot, popin 80%"
-          "windowsOut, 1, 5, smoothOut, popin 80%"
+          # Fenêtres — popin prononcé avec bounce
+          "windows, 1, 4, overshot, popin 90%"
+          "windowsOut, 1, 4, smoothOut, popin 90%"
+          "windowsMove, 1, 4, overshot"  # Resize/move animé
 
-          # Bordures — transition lente et douce
-          "border, 1, 10, default"
+          # Bordures — respiration lente (gradient qui tourne)
+          "border, 1, 15, default"
+          "borderangle, 1, 30, default, loop" # Rotation continue du gradient
 
-          # Fondu — apparition/disparition progressive
-          "fade, 1, 5, smoothIn"
-          "fadeDim, 1, 5, smoothIn"
+          # Fondu — subtil et rapide
+          "fade, 1, 3, smoothIn"
+          "fadeDim, 1, 3, smoothIn" # Transition dim inactive très douce
 
           # Layers (waybar, rofi, notifications) — fondu
           "layers, 1, 5, smoothIn, fade"
           "layersIn, 1, 5, smoothIn, fade"
           "layersOut, 1, 5, smoothOut, fade"
 
-          # Workspaces — slide avec léger dépassement
-          "workspaces, 1, 5, overshot, slide"
+          # Workspaces — slide rapide et snappy
+          "workspaces, 1, 3, overshot, slide"
 
           # Workspace spécial (scratchpad) — fondu
           "specialWorkspace, 1, 5, smoothIn, fade"
@@ -148,6 +173,13 @@ in
       misc = {
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
+        # Masquer le curseur après 5s d'inactivité clavier
+        cursor_zoom_factor = 1;
+      };
+
+      cursor = {
+        inactive_timeout = 5;  # Masquer après 5s
+        no_hardware_cursors = true; # Nécessaire pour NVIDIA
       };
 
       # ── Hyprexpo — Vue d'ensemble des workspaces ────────────────
@@ -281,7 +313,7 @@ in
         "$mod SHIFT, Q, exec, wl-paste | qrencode -t PNG -o /tmp/qr.png && imv /tmp/qr.png"
 
         # Changer de wallpaper aléatoirement (depuis ~/Pictures/wallpapers/)
-        "$mod, W, exec, swww img $(find ~/Pictures/wallpapers/ -type f | shuf -n 1) --transition-type random --transition-duration 1"
+        "$mod, W, exec, TRANSITIONS=(grow wipe fade outer); swww img $(find ~/Pictures/wallpapers/ -type f | shuf -n 1) --transition-type ''${TRANSITIONS[$RANDOM % 4]} --transition-duration 2 --transition-fps 60"
 
         # Scroll à travers les workspaces
         "$mod, mouse_down, workspace, e+1"
@@ -381,9 +413,12 @@ in
         # XWayland — légère transparence pour identifier les apps X11
         "opacity 0.95, xwayland:1"
 
-        # Opacity par application (Kitty géré par Stylix, les autres ici)
+        # Opacity par app (Kitty 0.88 via Stylix, le reste ici)
         "opacity 1.0 override, class:^(chromium-browser)$"
         "opacity 1.0 override, class:^(code|Code)$"
+
+        # Rounding adaptatif — coins droits en fullscreen
+        "rounding 0, fullscreen:1"
 
         # Auto-float les petites fenêtres (dialogues, popups)
         "float, maxsize 500 400"
@@ -534,14 +569,15 @@ in
         {
           monitor = "";
           text = "$TIME";        # Heure dynamique (HH:MM)
-          font_size = 120;
+          font_size = 150;
           font_family = "JetBrainsMono Nerd Font";
           color = "rgba(205, 214, 244, 1.0)"; # Catppuccin text
           position = "0, 200";
           halign = "center";
           valign = "center";
-          shadow_passes = 2;
-          shadow_size = 3;
+          shadow_passes = 3;
+          shadow_size = 5;
+          shadow_color = "rgba(0, 0, 0, 0.5)";
         }
 
         # ── Date — sous l'horloge ──────────────────────────────────
@@ -559,7 +595,7 @@ in
         # ── Message d'accueil ──────────────────────────────────────
         {
           monitor = "";
-          text = "Bienvenue, Kuro"; # ← ADAPTER : votre nom
+          text = "Bienvenue, Kuro";
           font_size = 16;
           font_family = "Inter";
           color = "rgba(137, 180, 250, 0.9)"; # Catppuccin blue
@@ -573,8 +609,8 @@ in
         monitor = "";
         size = "300, 55";
         outline_thickness = 2;
-        dots_size = 0.25;
-        dots_spacing = 0.2;
+        dots_size = 0.35;
+        dots_spacing = 0.3;
         dots_center = true;
         dots_rounding = -1;      # Cercles parfaits
         outer_color = "rgba(137, 180, 250, 0.7)";  # Catppuccin blue
@@ -661,7 +697,7 @@ in
 
       clock = {
         format = "  {:%H:%M}";
-        format-alt = "  {:%A %d %B %Y}";
+        format-alt = "  {:%H:%M:%S  %A %d %B %Y}"; # Clic = secondes + date
         tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
       };
 
@@ -676,7 +712,7 @@ in
       };
 
       network = {
-        format-wifi = "  {signalStrength}%";
+        format-wifi = "  {signalStrength}% ({bandwidthDownBits})";
         format-ethernet = "  {ifname}";
         format-disconnected = "  Déconnecté";
         tooltip-format = "{ifname}: {ipaddr}/{cidr}\n  {essid} ({signalStrength}%)";
@@ -795,7 +831,7 @@ in
       /* ═══ Barre principale ═══ */
       * {
         font-family: "JetBrainsMono Nerd Font";
-        font-size: 13px;
+        font-size: 14px;
         min-height: 0;
       }
 
@@ -827,7 +863,7 @@ in
         transition: all 0.3s ease;
       }
 
-      /* ═══ Hover ═══ */
+      /* ═══ Hover — glow bleu subtil ═══ */
       #workspaces button:hover,
       #network:hover,
       #bluetooth:hover,
@@ -839,6 +875,7 @@ in
       #custom-weather:hover {
         background: @surface1;
         color: @blue;
+        box-shadow: 0 0 8px rgba(137, 180, 250, 0.3);
       }
 
       /* ═══ Workspaces ═══ */
@@ -860,6 +897,16 @@ in
         color: @blue;
         background: @surface1;
         font-weight: bold;
+        animation: pulse 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulse {
+        from { box-shadow: 0 0 4px rgba(137, 180, 250, 0.2); }
+        to { box-shadow: 0 0 8px rgba(137, 180, 250, 0.5); }
+      }
+
+      #workspaces button.empty {
+        color: @surface2;
       }
 
       #workspaces button.urgent {
@@ -1069,8 +1116,9 @@ in
       };
 
       element-icon = {
-        size = mkLiteral "24px";
+        size = mkLiteral "32px";
         background-color = mkLiteral "transparent";
+        margin = mkLiteral "0 8px 0 0";
       };
     });
   };
@@ -1091,8 +1139,9 @@ in
       control-center-margin-top = 8;
       control-center-margin-right = 8;
       control-center-width = 380;
-      notification-icon-size = 48;
+      notification-icon-size = 56;       # Icônes d'app plus grosses
       notification-window-width = 380;
+      notification-visibility = 3;       # Max 3 visibles (reste dans le panneau)
       timeout = 5;
       timeout-low = 3;
       timeout-critical = 0; # Les notifications critiques ne disparaissent pas
@@ -1120,6 +1169,17 @@ in
         border: 1px solid #313244;
         background: #1e1e2e;
         color: #cdd6f4;
+      }
+
+      .notification.low {
+        background: #181825;
+        border-color: #313244;
+      }
+
+      .notification.critical {
+        background: rgba(243, 139, 168, 0.1);
+        border-color: #f38ba8;
+        border-width: 2px;
       }
 
       .notification-content {
@@ -1331,11 +1391,20 @@ in
   programs.kitty = {
     enable = true;
     settings = {
-      # Police — la famille est gérée par Stylix, on ajuste la taille
       font_size = 12;
+      # Transparence + blur (le blur vient de Hyprland decoration)
+      background_opacity = "0.88";
 
-      # Apparence
       window_padding_width = 8;
+
+      # Curseur adaptatif vim-like
+      cursor_shape = "beam";           # Beam en mode normal
+      cursor_beam_thickness = "1.5";
+      shell_integration = "enabled";
+
+      # Bell visuel (flash) au lieu de son
+      visual_bell_duration = "0.2";
+      visual_bell_color = "#313244";
       confirm_os_window_close = 0; # Pas de confirmation à la fermeture
 
       # Performance
@@ -1347,8 +1416,9 @@ in
       copy_on_select = "clipboard"; # Copier automatiquement la sélection
       scrollback_lines = 10000;
 
-      # Onglets — barre de style powerline
+      # Onglets — barre powerline avec titre auto
       tab_bar_style = "powerline";
+      tab_title_template = "{fmt.fg.tab}{index}: {title}";
       tab_powerline_style = "round";
       active_tab_font_style = "bold";
 
