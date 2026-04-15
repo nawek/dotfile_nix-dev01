@@ -185,7 +185,7 @@
           "editor.quickSuggestions" = { "other" = true; "comments" = false; "strings" = false; };
           "editor.tabSize" = 2;
         };
-        "markdown.preview.fontSize" = 14;
+        "markdown.preview.fontSize" = lib.mkForce 14;
         "markdownlint.config" = {
           "MD033" = false;   # Autoriser le HTML inline
           "MD013" = false;   # Pas de limite de longueur de ligne
