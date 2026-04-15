@@ -446,8 +446,11 @@ in
     echo "=== Test : pas de collision d'aliases ==="
     ERRORS=0
 
-    # Extraire tous les noms d'aliases (pattern: nom = "...")
-    ALIASES=$(grep -oP '^\s+\K[a-zA-Z0-9_-]+(?=\s*=\s*")' "${src}/home/shell.nix" 2>/dev/null | sort)
+    # Extraire les aliases uniquement du bloc shellAliases (pattern: nom = "...")
+    # On filtre pour ne garder que les lignes dans la section shellAliases
+    ALIASES=$(sed -n '/shellAliases/,/};/p' "${src}/home/shell.nix" \
+      | grep -oP '^\s+\K[a-zA-Z0-9_-]+(?=\s*=\s*")' 2>/dev/null \
+      | sort)
     DUPLICATES=$(echo "$ALIASES" | uniq -d)
 
     if [ -n "$DUPLICATES" ]; then
