@@ -313,9 +313,6 @@
     # Kexec disable — empêcher le chargement d'un nouveau kernel à chaud
     "kernel.kexec_load_disabled" = 1;
 
-    # TCP ISN randomization (déjà par défaut, mais on force)
-    "net.ipv4.tcp_timestamps" = 0;
-
     # Hidepid — cacher les processus des autres utilisateurs dans /proc
     # (chaque user ne voit que ses propres processus)
     # Note : activé via boot.specialFileSystems ci-dessous
