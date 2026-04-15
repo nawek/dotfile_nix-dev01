@@ -500,7 +500,7 @@
     yubikey-manager        # GUI/CLI pour gérer la YubiKey (ykman)
     yubico-pam             # Module PAM pour auth YubiKey
     age-plugin-yubikey     # Chiffrer les secrets age/sops avec la YubiKey
-    rkhunter               # Détection de rootkits
+    # rkhunter             # Détection de rootkits — pas dans nixpkgs 25.05, installer via nix-shell -p rkhunter
     aide                   # File integrity monitoring
     rage                   # Chiffrement age en Rust (rapide, fichiers ad-hoc)
     tomb                   # Volumes chiffrés montables à la demande
