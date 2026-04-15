@@ -123,6 +123,18 @@
       cert = "f() { echo | openssl s_client -connect \"$1\":443 2>/dev/null | openssl x509 -noout -subject -dates -issuer; }; f";
       ports = "sudo ss -tulnp | column -t";
       myip = "curl -s ipinfo.io | jq '{ip, city, region, country, org}'";
+      # Tor on-demand
+      tor-start = "sudo systemctl start tor && echo 'Tor démarré — proxy SOCKS5 localhost:9050'";
+      tor-stop = "sudo systemctl stop tor && echo 'Tor arrêté'";
+      tor-ip = "curl -s --socks5 localhost:9050 https://check.torproject.org/api/ip";
+      # Audit sécurité
+      lynis-check = "sudo lynis audit system --quick";
+      rk-check = "sudo rkhunter --check --skip-keypress";
+      aide-check = "sudo aide --check";
+      aide-init = "sudo aide --init && sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db && echo 'AIDE base initialisée'";
+      # Chiffrement fichiers
+      encrypt = "rage -e -r"; # encrypt <clé-publique> < fichier > fichier.age
+      decrypt = "rage -d -i"; # decrypt <clé-privée> < fichier.age > fichier
 
       # ── Wallpaper ───────────────────────────────────────────────
       wp-url = "f() { curl -sL \"$1\" -o /tmp/wp-download.jpg && swww img /tmp/wp-download.jpg --transition-type fade --transition-duration 1; }; f";

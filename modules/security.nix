@@ -384,7 +384,111 @@
   # Randomise l'adresse MAC à chaque connexion WiFi.
   # Empêche le tracking par les hotspots WiFi (aéroports, cafés, etc.)
   networking.networkmanager.wifi.macAddress = "random";
-  networking.networkmanager.ethernet.macAddress = "preserve"; # Pas de random sur filaire
+  networking.networkmanager.ethernet.macAddress = "preserve";
+
+  # ══════════════════════════════════════════════════════════════════
+  # 12. RKHUNTER — Détection de rootkits (scan hebdomadaire)
+  # ══════════════════════════════════════════════════════════════════
+  # Scan léger (~30s) qui vérifie les binaires système, les modules
+  # kernel chargés, et les fichiers suspects.
+  # Manuel : sudo rkhunter --check --skip-keypress
+  # Logs : /var/log/rkhunter.log
+
+  # ══════════════════════════════════════════════════════════════════
+  # 13. AIDE — Intégrité des fichiers système
+  # ══════════════════════════════════════════════════════════════════
+  # Base de données de hashes des fichiers critiques.
+  # Alerte si un fichier est modifié sans rebuild NixOS.
+  # Init : sudo aide --init && sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+  # Check : sudo aide --check
+
+  # ══════════════════════════════════════════════════════════════════
+  # 14. TOR — Navigation anonyme on-demand
+  # ══════════════════════════════════════════════════════════════════
+  # Tor n'est PAS activé par défaut. C'est un proxy SOCKS on-demand.
+  # Usage : tor-start → lance le proxy, tor-stop → arrête
+  #         Configurer le navigateur en proxy SOCKS5 localhost:9050
+  services.tor = {
+    enable = true;
+    client.enable = true;
+    # Ne pas démarrer automatiquement
+    settings = {
+      SocksPort = [ { port = 9050; } ];
+    };
+  };
+
+  # ══════════════════════════════════════════════════════════════════
+  # 15. GPG AGENT — Signature de commits avec YubiKey (commenté)
+  # ══════════════════════════════════════════════════════════════════
+  # Décommenter quand tu utiliseras la YubiKey pour signer les commits :
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true; # L'agent GPG remplace l'agent SSH
+  #   pinentryPackage = pkgs.pinentry-curses;
+  # };
+
+  # ══════════════════════════════════════════════════════════════════
+  # 16. LYNIS SCHEDULED — Audit hebdomadaire dans Obsidian
+  # ══════════════════════════════════════════════════════════════════
+  systemd.services.lynis-audit = {
+    description = "Audit de sécurité Lynis hebdomadaire";
+    serviceConfig.Type = "oneshot";
+    path = [ pkgs.lynis pkgs.coreutils pkgs.gnused ];
+    script = ''
+      REPORT="/var/log/lynis-$(date +%Y%m%d).log"
+      lynis audit system --no-colors --quiet > "$REPORT" 2>&1
+      # Extraire le score
+      SCORE=$(grep "Hardening index" "$REPORT" | grep -oP '\d+')
+      echo "Lynis score: $SCORE/100 — $(date)" >> /var/log/lynis-scores.log
+      # Copier le rapport dans Obsidian si le vault existe
+      VAULT="/home/kuro/Documents/Obsidian"
+      if [ -d "$VAULT" ]; then
+        mkdir -p "$VAULT/Resources/Audits"
+        cp "$REPORT" "$VAULT/Resources/Audits/"
+      fi
+    '';
+  };
+  systemd.timers.lynis-audit = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = { OnCalendar = "Sun *-*-* 02:00:00"; Persistent = true; };
+  };
+
+  # ══════════════════════════════════════════════════════════════════
+  # 17. NIX DRIFT DETECTION — Comparer l'état réel vs déclaratif
+  # ══════════════════════════════════════════════════════════════════
+  # Script qui détecte les fichiers modifiés en dehors de NixOS
+  # (fichiers dans / qui ne viennent pas du nix store ni de /persist)
+  systemd.services.nix-drift-check = {
+    description = "Détecter les drifts entre l'état réel et NixOS";
+    serviceConfig.Type = "oneshot";
+    script = ''
+      DRIFTS=$(find / -xdev \
+        -not -path '/nix/*' \
+        -not -path '/persist/*' \
+        -not -path '/home/*' \
+        -not -path '/proc/*' \
+        -not -path '/sys/*' \
+        -not -path '/dev/*' \
+        -not -path '/run/*' \
+        -not -path '/tmp/*' \
+        -not -path '/boot/*' \
+        -not -path '/var/log/*' \
+        -not -path '/var/cache/*' \
+        -type f \
+        -newer /run/current-system \
+        2>/dev/null | head -20)
+
+      if [ -n "$DRIFTS" ]; then
+        echo "=== Nix Drift $(date) ===" >> /var/log/nix-drift.log
+        echo "$DRIFTS" >> /var/log/nix-drift.log
+        echo "---" >> /var/log/nix-drift.log
+      fi
+    '';
+  };
+  systemd.timers.nix-drift-check = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = { OnCalendar = "daily"; Persistent = true; };
+  };
 
   # ══════════════════════════════════════════════════════════════════
   # Paquets de sécurité
@@ -396,5 +500,11 @@
     yubikey-manager        # GUI/CLI pour gérer la YubiKey (ykman)
     yubico-pam             # Module PAM pour auth YubiKey
     age-plugin-yubikey     # Chiffrer les secrets age/sops avec la YubiKey
+    rkhunter               # Détection de rootkits
+    aide                   # File integrity monitoring
+    rage                   # Chiffrement age en Rust (rapide, fichiers ad-hoc)
+    tomb                   # Volumes chiffrés montables à la demande
+    tor                    # Proxy anonyme on-demand
+    privoxy                # Proxy HTTP filtrant (peut chaîner avec Tor)
   ];
 }
