@@ -182,6 +182,17 @@ in
         no_hardware_cursors = true; # Nécessaire pour NVIDIA
       };
 
+      # ── Hyprland plugins (nécessitent l'input hyprland-plugins) ──
+      # Décommenter quand les plugins seront configurés dans flake.nix :
+      #
+      # plugin.hyprtrails = {        # Traînée arc-en-ciel derrière les fenêtres
+      #   color = "rgba(89b4fa80)";
+      # };
+      #
+      # plugin.split-monitor-workspaces = {  # Workspaces indépendants par moniteur
+      #   count = 9;
+      # };
+
       # ── Hyprexpo — Vue d'ensemble des workspaces ────────────────
       # Plugin hyprexpo (façon macOS Mission Control)
       # Nécessite l'input hyprland-plugins dans flake.nix
@@ -288,6 +299,28 @@ in
 
         # Rofi calculator
         "$mod SHIFT, C, exec, rofi -show calc -modi calc -no-show-match -no-sort"
+
+        # Pin window — visible sur tous les workspaces (PiP, notes)
+        "$mod SHIFT, P, exec, hyprctl dispatch pin"
+
+        # Master layout toggle
+        "$mod SHIFT, L, exec, hyprctl keyword general:layout master && notify-send Layout Master || hyprctl keyword general:layout dwindle && notify-send Layout Dwindle"
+
+        # Resize grid snap (1/2, 1/3, 2/3 de l'écran)
+        "$mod CTRL, 1, resizeactive, exact 50% 100%"  # Moitié gauche
+        "$mod CTRL, 2, resizeactive, exact 33% 100%"  # Tiers
+        "$mod CTRL, 3, resizeactive, exact 66% 100%"  # Deux tiers
+
+        # Screen zoom ($mod + scroll = zoom in/out, utile pour présentations)
+        "$mod, equal, exec, hyprctl keyword misc:cursor_zoom_factor 2"
+        "$mod, minus, exec, hyprctl keyword misc:cursor_zoom_factor 1"
+
+        # Night mode toggle (gammastep)
+        "$mod SHIFT, G, exec, pkill gammastep || gammastep &"
+
+        # Font scaling Kitty
+        "$mod, KP_Add, exec, kitten @ set-font-size -- +1"
+        "$mod, KP_Subtract, exec, kitten @ set-font-size -- -1"
 
         # ── Zen mode — Focus coding ──────────────────────────────
         # Toggle : masque waybar, augmente les gaps, désactive les notifs
@@ -427,6 +460,7 @@ in
         "workspace 1, class:^(chromium-browser)$"
         "workspace 3, class:^(code|Code)$"
         "workspace 9, class:^(vesktop|discord)$"
+        "workspace 9, class:^(org.telegram.desktop)$"
         # Optionnel : ajouter vos règles ici
       ];
 
@@ -658,6 +692,7 @@ in
         "custom/uptime-kuma"
         "custom/weather"
         "custom/sep"
+        "custom/vpn"
         "tray"
         "custom/sep"
         "network"
@@ -773,6 +808,23 @@ in
       };
 
       # Séparateur visuel entre les groupes de modules
+      # ── Module VPN status ───────────────────────────────────────
+      "custom/vpn" = {
+        format = "{}";
+        interval = 10;
+        exec = ''tailscale status --json 2>/dev/null | jq -r 'if .Self.Online then "󰒄 TS" else "󰒅" end' 2>/dev/null || echo ""'';
+        tooltip-format = "Tailscale VPN";
+        on-click = "sudo tailscale up";
+      };
+
+      # ── Module CPU temperature ─────────────────────────────────
+      "temperature" = {
+        format = "{icon} {temperatureC}°C";
+        format-icons = [ "" "" "" "" "" ];
+        critical-threshold = 80;
+        interval = 5;
+      };
+
       "custom/sep" = {
         format = "·";
         interval = "once";

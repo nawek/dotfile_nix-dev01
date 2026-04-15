@@ -63,6 +63,17 @@
       # Diff entre générations NixOS (voir ce qui a changé)
       ndiff = "nix store diff-closures /nix/var/nix/profiles/system-\$(( \$(readlink /nix/var/nix/profiles/system | grep -o '[0-9]*')-1 ))-link /nix/var/nix/profiles/system";
       lg  = "lazygit";
+      # Git conventional commits
+      gc-feat = "git commit -m 'feat: '";
+      gc-fix  = "git commit -m 'fix: '";
+      gc-docs = "git commit -m 'docs: '";
+      gc-ref  = "git commit -m 'refactor: '";
+      # Git branch cleanup (branches mergées locales)
+      gb-clean = "git branch --merged main | grep -v main | xargs -r git branch -d";
+      # Git stash preview via fzf
+      gsp = "git stash list | fzf --preview 'echo {} | cut -d: -f1 | xargs git stash show -p' | cut -d: -f1 | xargs git stash pop";
+      # Git worktree navigator via fzf
+      gwn = "git worktree list | fzf | awk '{print $1}' | xargs -I{} zsh -c 'cd {}'";
 
       # ── Docker ──────────────────────────────────────────────────
       dc  = "docker compose";
@@ -71,6 +82,11 @@
       dcl = "docker compose logs -f";
       dps = "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'";
       ld  = "lazydocker";
+      # Docker avancé
+      dstats = "docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}'";
+      dsh = "docker exec -it";  # dsh <container> sh
+      dnet = "docker network ls && echo '---' && docker network inspect bridge --format '{{range .Containers}}{{.Name}} {{end}}'";
+      dvol-backup = "f() { docker run --rm -v \"$1\":/data -v ~/Backups:/backup alpine tar czf \"/backup/$1-$(date +%Y%m%d).tar.gz\" /data; }; f";
 
       # ── Réseau / Tailscale ──────────────────────────────────────
       ts   = "tailscale status";           # État du VPN mesh
@@ -100,9 +116,47 @@
       ocr = "tesseract stdin stdout";  # OCR (pipe une image)
       theme-preview = "echo '# Catppuccin Mocha Preview\nlet x = 42;\nconst name = \"Kuro\";\n// TODO: deploy\nif (x > 0) { console.log(name); }' | bat --language=js --style=full";
       boot-time = "systemd-analyze && systemd-analyze blame | head -10";
+
+      # ── Sécurité ────────────────────────────────────────────────
+      pwgen = "head -c 32 /dev/urandom | base64 | tr -d '/+=' | head -c 32; echo";
+      hash = "f() { echo \"SHA256: $(sha256sum \"$1\")\"; echo \"MD5: $(md5sum \"$1\")\"; }; f";
+      cert = "f() { echo | openssl s_client -connect \"$1\":443 2>/dev/null | openssl x509 -noout -subject -dates -issuer; }; f";
+      ports = "sudo ss -tulnp | column -t";
+      myip = "curl -s ipinfo.io | jq '{ip, city, region, country, org}'";
+
+      # ── Wallpaper ───────────────────────────────────────────────
+      wp-url = "f() { curl -sL \"$1\" -o /tmp/wp-download.jpg && swww img /tmp/wp-download.jpg --transition-type fade --transition-duration 1; }; f";
+      wp-info = "swww query 2>/dev/null || echo 'swww non lancé'";
+      wp-next = "swww img $(find ~/Pictures/wallpapers/ -type f | shuf -n 1) --transition-type fade --transition-duration 1";
+
+      # ── Nix tooling ─────────────────────────────────────────────
+      nix-templates = "nix flake show templates --json 2>/dev/null | jq -r 'to_entries[] | \"\\(.key): \\(.value.description)\"' || echo 'Pas de templates dans ce flake'";
+      bench = "hyperfine";
+
+      # ── Fun / Easter eggs ───────────────────────────────────────
+      matrix = "cmatrix -b -C blue";
+      ascii = "f() { figlet -f slant \"$@\" | lolcat; }; f";
+      pipes = "pipes.sh";
+      bonsai = "cbonsai -l";
+      clock = "tty-clock -c -C 4 -t";
+      flex = "tmux new-session -d -s flex 'fastfetch && read' \\; split-window -h 'cava' \\; split-window -v 'pipes.sh' \\; attach";
       # Impermanence debug — lister les fichiers non-persistés dans /
       impermanence-diff = "sudo find / -xdev -not -path '/nix/*' -not -path '/persist/*' -not -path '/proc/*' -not -path '/sys/*' -not -path '/dev/*' -not -path '/run/*' -not -path '/tmp/*' -not -path '/boot/*' -newer /etc/machine-id -type f 2>/dev/null | head -50";
       rss = "newsboat";               # Lecteur RSS
+
+      # ── Productivité ──────────────────────────────────────────
+      icat = "kitten icat";             # Afficher images dans Kitty
+      speak = "espeak -v fr";           # Text-to-speech français
+      journal = "nvim ~/Documents/Obsidian/Journal/$(date +%Y-%m-%d).md";
+      proj = "cd $(find ~/Projects -maxdepth 1 -type d | fzf) && code .";
+      todo = "cat ~/Documents/todo.txt 2>/dev/null || echo 'Pas de todo.txt'";
+      todo-add = "f() { echo \"- [ ] $*\" >> ~/Documents/todo.txt; }; f";
+
+      # ── Monitoring moderne ──────────────────────────────────────
+      duf = "duf";           # df moderne
+      dust = "dust";         # du moderne
+      procs = "procs";       # ps moderne
+      bw = "bandwhich";      # bande passante par processus
 
       # ── Safety net ─────────────────────────────────────────────
       rm  = "rm -i";                  # Confirmation avant suppression
@@ -134,6 +188,12 @@
 
       # PATH — scripts personnels
       export PATH="$HOME/.local/bin:$PATH"
+
+      # Tmux auto-attach — rattacher à la dernière session si elle existe
+      # (sauf si déjà dans tmux ou dans un IDE)
+      if command -v tmux &>/dev/null && [[ -z "$TMUX" ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
+        tmux attach-session -t default 2>/dev/null || true
+      fi
 
       # Starship transient prompt — réduit le prompt après exécution
       # Affiche juste ❯ au lieu de répéter toute la ligne (scrollback propre)

@@ -38,6 +38,31 @@
     # Client HTTP TUI — décommenter quand disponible dans nixpkgs
     # posting
 
+    # ── Nix tooling avancé ─────────────────────────────────────────
+    nix-tree          # Visualiser les dépendances d'un paquet en arbre
+    nix-du            # Analyser l'espace disque du nix store
+    nix-init          # Bootstrapper un package.nix depuis GitHub
+    nix-melt          # Inspecter le contenu d'un .drv lisiblement
+    nixpkgs-review    # Tester les PRs nixpkgs en local
+
+    # ── Monitoring CLI moderne ────────────────────────────────────
+    duf               # df moderne (barres colorées)
+    du-dust           # du moderne (arbre des plus gros dossiers)
+    procs             # ps moderne (filtres, tri, couleurs)
+    dog               # dig moderne (requêtes DNS colorées)
+    glances           # Dashboard système web (http://localhost:61208)
+    gitui             # Git TUI léger (alternative à lazygit)
+    git-absorb        # Fixup auto des commits staged dans le bon historique
+
+    # ── Fun / Easter eggs ─────────────────────────────────────────
+    cmatrix           # Matrix rain dans le terminal
+    pipes-rs          # Pipes screensaver terminal
+    cbonsai           # Bonsai ASCII qui pousse
+    tty-clock         # Horloge ASCII géante
+    figlet            # Texte ASCII géant
+    lolcat            # Arc-en-ciel sur la sortie terminal
+    espeak            # Text-to-speech
+
     # ── Homelab / IaC ───────────────────────────────────────────────
     ansible           # Gestion de config serveurs non-NixOS
     ansible-lint      # Linter pour les playbooks Ansible

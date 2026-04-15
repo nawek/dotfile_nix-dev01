@@ -42,6 +42,7 @@
 
     # ── Communication ─────────────────────────────────────────────
     vesktop             # Discord client Wayland-natif (Vencord intégré)
+    telegram-desktop    # Messagerie Telegram
 
     # ── Email ─────────────────────────────────────────────────────
     thunderbird         # Client email complet (IMAP, calendrier, contacts)
@@ -57,6 +58,9 @@
 
     # ── Utilitaires ───────────────────────────────────────────────
     imv                 # Viewer d'images minimaliste (Wayland-natif)
+    gnome-calculator    # Calculatrice graphique
+    baobab              # Visualiseur utilisation disque (treemap)
+    flameshot           # Annotations screenshots (alternative satty)
     p7zip               # Compression/décompression 7z
     file                # Identification de type de fichier
     fastfetch           # Infos système stylisées (remplace neofetch)
@@ -94,6 +98,9 @@
 
       # Bitwarden — cache et session
       ".config/Bitwarden"
+
+      # Telegram — messages, session
+      ".local/share/TelegramDesktop"
 
       # Spotify — cache, login, préférences
       ".config/spotify"
@@ -169,6 +176,16 @@
       # Historique ZSH
       ".zsh_history"
     ];
+  };
+
+  # ── Btop — Thème Catppuccin ──────────────────────────────────────
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "catppuccin_mocha";
+      theme_background = false; # Transparent (utilise le bg terminal)
+      vim_keys = true;
+    };
   };
 
   # ── XDG — Dossiers utilisateur standard ───────────────────────────
