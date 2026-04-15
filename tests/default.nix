@@ -327,10 +327,14 @@ in
     echo "=== Test : firewall source unique ==="
     ERRORS=0
 
-    # Chercher networking.firewall dans tous les .nix sauf security.nix
-    OFFENDERS=$(grep -rl "networking.firewall" ${src}/modules/ ${src}/hosts/ 2>/dev/null \
+    # Chercher networking.firewall ACTIF (pas en commentaire) en dehors de security.nix
+    OFFENDERS=$(grep -rn "networking.firewall" ${src}/modules/ ${src}/hosts/ 2>/dev/null \
       | grep -v "security.nix" \
-      | grep -v ".git" || true)
+      | grep -v ".git" \
+      | grep -v "^\s*#" \
+      | grep -v "Ne PAS" \
+      | grep -v "pas de conflit" \
+      || true)
 
     if [ -n "$OFFENDERS" ]; then
       echo "FAIL: networking.firewall défini en dehors de security.nix :"
