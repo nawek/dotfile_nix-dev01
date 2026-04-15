@@ -229,6 +229,9 @@
     "page_alloc.shuffle=1"               # R8 : randomiser les allocations mémoire
     "l1tf=full,force"                    # R8 : mitigation L1 Terminal Fault
     "mds=full,nosmt"                     # R8 : mitigation Microarchitectural Data Sampling
+    # Hardening avancé (au-delà de l'ANSSI)
+    "module.sig_enforce=1"               # Refuser les modules kernel non signés
+    "lockdown=integrity"                 # Kernel lockdown mode
   ];
 
   # ── R9 — Restrictions kernel ─────────────────────────────────────
@@ -336,13 +339,6 @@
   systemd.coredump.enable = false;
   security.pam.loginLimits = [
     { domain = "*"; type = "hard"; item = "core"; value = "0"; }
-  ];
-
-  # ── Kernel module signing + lockdown boot params ─────────────────
-  # (complète les params ANSSI R7-R8 définis plus haut)
-  boot.kernelParams = lib.mkAfter [
-    "module.sig_enforce=1"             # Refuser les modules kernel non signés
-    "lockdown=integrity"               # Kernel lockdown mode
   ];
 
   # ── Blacklist kernel modules inutiles — Réduire la surface d'attaque
