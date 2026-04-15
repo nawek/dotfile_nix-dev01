@@ -414,6 +414,8 @@ in
       "Meeting.md"
       "Bug Report.md"
       "Cheatsheet.md"
+      "Post-mortem.md"
+      "Weekly Review.md"
     )
 
     for tmpl in "''${TEMPLATES[@]}"; do
@@ -436,7 +438,7 @@ in
       exit 1
     fi
 
-    echo "✓ Vault Obsidian complet (PARA + 7 templates + 2 MOCs)"
+    echo "✓ Vault Obsidian complet (PARA + 9 templates + 2 MOCs)"
     mkdir -p $out
     echo "passed" > $out/result
   '';
