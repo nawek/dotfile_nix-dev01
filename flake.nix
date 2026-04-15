@@ -94,7 +94,7 @@
 
     # ── Helper pour créer une nixosConfiguration ─────────────────
     # Réutilisable pour ajouter d'autres machines (vm-dev, serveur, etc.)
-    mkHost = { hostName, userName ? username, hostPath ? ./hosts/${hostName} }: nixpkgs.lib.nixosSystem {
+    mkHost = { hostName, userName ? username, extraModules ? [] }: nixpkgs.lib.nixosSystem {
       inherit system;
 
       specialArgs = { inherit inputs; username = userName; hostname = hostName; };
@@ -120,8 +120,8 @@
         }
 
         # Configuration hôte
-        "${hostPath}/configuration.nix"
-      ];
+        ./hosts/kuro/configuration.nix
+      ] ++ extraModules;
     };
   in
   {
