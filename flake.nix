@@ -139,7 +139,7 @@
     #   inputs.citadel.url = "github:nawek/dotfile_nix-dev01";
     #   modules = [ inputs.citadel.nixosModules.security ];
     nixosModules = {
-      security     = import ./modules/security.nix;
+      security     = import ./modules/security;  # Dossier avec default.nix
       networking   = import ./modules/networking.nix;
       monitoring   = import ./modules/monitoring.nix;
       impermanence = import ./modules/impermanence.nix;

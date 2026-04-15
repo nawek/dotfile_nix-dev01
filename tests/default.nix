@@ -38,7 +38,7 @@ in
       "${src}/modules/hyprland.nix"
       "${src}/modules/stylix.nix"
       "${src}/modules/plymouth.nix"
-      "${src}/modules/security.nix"
+      "${src}/modules/security/default.nix"
       "${src}/modules/networking.nix"
       "${src}/modules/monitoring.nix"
       "${src}/modules/sops.nix"
@@ -329,7 +329,7 @@ in
 
     # Chercher networking.firewall ACTIF (pas en commentaire) en dehors de security.nix
     OFFENDERS=$(grep -rn "networking.firewall" ${src}/modules/ ${src}/hosts/ 2>/dev/null \
-      | grep -v "security.nix" \
+      | grep -v "security" \
       | grep -v ".git" \
       | grep -v "^\s*#" \
       | grep -v "Ne PAS" \
