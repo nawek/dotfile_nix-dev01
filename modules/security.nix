@@ -325,11 +325,8 @@
   # 7b. HARDENING KERNEL AVANCÉ
   # ══════════════════════════════════════════════════════════════════
 
-  # ── Kernel lockdown — Restreindre l'accès au kernel depuis userspace
-  # "integrity" : bloque la modification du kernel en cours d'exécution
-  # "confidentiality" : en plus, bloque la lecture de la mémoire kernel
-  # ⚠️ "confidentiality" peut casser certains outils de debug (perf, bpftrace)
-  security.lockdown = "integrity";
+  # ── Kernel lockdown — Activé via boot.kernelParams "lockdown=integrity"
+  # Bloque la modification du kernel en cours d'exécution depuis userspace
 
   # ── Hidepid — Cacher les processus des autres utilisateurs ──────
   # Chaque utilisateur ne voit que ses propres processus dans /proc
