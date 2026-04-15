@@ -307,6 +307,68 @@
     "fs.protected_hardlinks" = 1;
     # Pas de core dump pour les binaires SUID
     "fs.suid_dumpable" = 0;
+
+    # ── HARDENING AVANCÉ — Au-delà de l'ANSSI ─────────────────────
+
+    # Kexec disable — empêcher le chargement d'un nouveau kernel à chaud
+    "kernel.kexec_load_disabled" = 1;
+
+    # TCP ISN randomization (déjà par défaut, mais on force)
+    "net.ipv4.tcp_timestamps" = 0;
+
+    # Hidepid — cacher les processus des autres utilisateurs dans /proc
+    # (chaque user ne voit que ses propres processus)
+    # Note : activé via boot.specialFileSystems ci-dessous
+  };
+
+  # ══════════════════════════════════════════════════════════════════
+  # 7b. HARDENING KERNEL AVANCÉ
+  # ══════════════════════════════════════════════════════════════════
+
+  # ── Kernel lockdown — Restreindre l'accès au kernel depuis userspace
+  # "integrity" : bloque la modification du kernel en cours d'exécution
+  # "confidentiality" : en plus, bloque la lecture de la mémoire kernel
+  # ⚠️ "confidentiality" peut casser certains outils de debug (perf, bpftrace)
+  security.lockdown = "integrity";
+
+  # ── Hidepid — Cacher les processus des autres utilisateurs ──────
+  # Chaque utilisateur ne voit que ses propres processus dans /proc
+  boot.specialFileSystems."/proc".options = [ "hidepid=2" "gid=0" ];
+
+  # ── Coredump disable — Pas de core dumps (fuite de secrets mémoire)
+  systemd.coredump.enable = false;
+  security.pam.loginLimits = [
+    { domain = "*"; type = "hard"; item = "core"; value = "0"; }
+  ];
+
+  # ── Kernel module signing + lockdown boot params ─────────────────
+  # (complète les params ANSSI R7-R8 définis plus haut)
+  boot.kernelParams = lib.mkAfter [
+    "module.sig_enforce=1"             # Refuser les modules kernel non signés
+    "lockdown=integrity"               # Kernel lockdown mode
+  ];
+
+  # ── Blacklist kernel modules inutiles — Réduire la surface d'attaque
+  boot.blacklistedKernelModules = [
+    # FireWire — vecteur d'attaque DMA (sauf si tu as des périphériques FireWire)
+    "firewire-core" "firewire-ohci" "firewire-sbp2"
+    # Thunderbolt — vecteur d'attaque DMA (décommenter si tu utilises Thunderbolt)
+    # "thunderbolt"
+    # Protocoles réseau rarement utilisés
+    "dccp" "sctp" "rds" "tipc"
+    # Systèmes de fichiers rarement utilisés (réduire la surface d'attaque)
+    "cramfs" "freevxfs" "hfs" "hfsplus" "jffs2" "squashfs" "udf"
+    # Bluetooth HID (si tu n'utilises pas de clavier/souris BT, décommenter)
+    # "btusb" "bluetooth"
+  ];
+
+  # ── Mount hardening — nodev, nosuid, noexec ──────────────────────
+  # Note : /tmp est un tmpfs par défaut sur NixOS, ces options
+  # sont ajoutées via boot.tmp
+  boot.tmp = {
+    useTmpfs = true;
+    tmpfsSize = "50%";
+    cleanOnBoot = true;
   };
 
   # ══════════════════════════════════════════════════════════════════
