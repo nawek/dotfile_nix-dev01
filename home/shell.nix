@@ -152,6 +152,7 @@
       bonsai = "cbonsai -l";
       clock = "tty-clock -c -C 4 -t";
       flex = "tmux new-session -d -s flex 'fastfetch && read' \\; split-window -h 'cava' \\; split-window -v 'pipes.sh' \\; attach";
+      yolo = "git add -A && git commit -m \"$(curl -s whatthecommit.com/index.txt)\" && git push";
       # Impermanence debug — lister les fichiers non-persistés dans /
       impermanence-diff = "sudo find / -xdev -not -path '/nix/*' -not -path '/persist/*' -not -path '/proc/*' -not -path '/sys/*' -not -path '/dev/*' -not -path '/run/*' -not -path '/tmp/*' -not -path '/boot/*' -newer /etc/machine-id -type f 2>/dev/null | head -50";
       rss = "newsboat";               # Lecteur RSS
