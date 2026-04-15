@@ -127,9 +127,10 @@
   {
     # ── Configurations NixOS ──────────────────────────────────────
     # Ajouter d'autres machines ici :
-    #   nixosConfigurations.vm-dev = mkHost { hostName = "vm-dev"; };
-    #   nixosConfigurations.serveur = mkHost { hostName = "serveur"; userName = "admin"; };
     nixosConfigurations.${hostname} = mkHost { hostName = hostname; userName = username; };
+    nixosConfigurations.vm-test = mkHost { hostName = "vm-test"; userName = username; };
+    # Ajouter d'autres machines :
+    # nixosConfigurations.serveur = mkHost { hostName = "serveur"; userName = "admin"; };
 
     # ── Checks — Tests automatisés ───────────────────────────────
     checks.${system} = import ./tests { inherit pkgs lib; };
