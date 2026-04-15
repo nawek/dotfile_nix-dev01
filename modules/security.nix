@@ -413,7 +413,7 @@
     client.enable = true;
     # Ne pas démarrer automatiquement
     settings = {
-      SocksPort = [ { port = 9050; } ];
+      SocksPort = [ "9050" ];
     };
   };
 
