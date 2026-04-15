@@ -70,6 +70,8 @@
       "/etc/NetworkManager/system-connections"
 
       # Logs système (important pour le debug)
+      # Inclut aussi les logs custom : lynis, boot-times, btrfs-report,
+      # uptime-report, nix-drift (tous écrits dans /var/log/)
       "/var/log"
 
       # Bluetooth — appairages sauvegardés

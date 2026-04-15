@@ -66,7 +66,7 @@
   # ── Paramètres noyau ─────────────────────────────────────────────
   # nvidia-drm.modeset=1 : active le modesetting DRM (obligatoire Wayland)
   # nvidia-drm.fbdev=1   : framebuffer NVIDIA pour la console TTY
-  boot.kernelParams = [
+  boot.kernelParams = lib.mkAfter [
     "nvidia-drm.modeset=1"
     "nvidia-drm.fbdev=1"
   ];

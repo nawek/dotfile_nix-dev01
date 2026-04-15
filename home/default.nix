@@ -21,7 +21,7 @@
     ./helix.nix       # Helix éditeur modal (alternative à Neovim)
     ./neovim.nix      # Neovim avec LSP, Treesitter, Telescope
     ./tmux.nix        # Tmux multiplexeur terminal + Catppuccin
-    # ./terminals.nix # Décommenté : Wezterm, Zellij (alternatives à Kitty+Tmux)
+    # ./terminals.nix # Commenté : Wezterm, Zellij (alternatives, décommenter si voulu)
     ./spotify.nix     # Spotify thémé via Spicetify (Catppuccin + extensions)
     ./dev-tools.nix   # Outils de développement CLI
 

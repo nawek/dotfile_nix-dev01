@@ -301,7 +301,7 @@ in
         "$mod SHIFT, C, exec, rofi -show calc -modi calc -no-show-match -no-sort"
 
         # Pin window — visible sur tous les workspaces (PiP, notes)
-        "$mod SHIFT, P, exec, hyprctl dispatch pin"
+        "$mod ALT, P, exec, hyprctl dispatch pin"   # Pin window (ALT pour éviter conflit avec hyprpicker)
 
         # Master layout toggle
         "$mod SHIFT, L, exec, hyprctl keyword general:layout master && notify-send Layout Master || hyprctl keyword general:layout dwindle && notify-send Layout Dwindle"

@@ -137,17 +137,11 @@
   };
 
   # ══════════════════════════════════════════════════════════════════
-  # 6. SSH LOGIN NOTIFICATION — Alerte à chaque connexion SSH
+  # 6. SSH LOGIN NOTIFICATION — Log à chaque connexion SSH
   # ══════════════════════════════════════════════════════════════════
-  # Envoie une notification quand quelqu'un se connecte en SSH
-  programs.ssh.extraConfig = ''
-    # Log des connexions SSH
-  '';
-
-  # Notification via PAM à chaque login SSH
-  security.pam.services.sshd.text = lib.mkDefault ''
-    session optional ${pkgs.libnotify}/lib/security/pam_exec.so /run/current-system/sw/bin/notify-send "Connexion SSH" "Nouvelle connexion SSH détectée"
-  '';
+  # Les connexions SSH sont loggées via journald (auditd + sshd)
+  # Consulter : journalctl -u sshd --since today
+  # Note : notify-send ne fonctionne pas via PAM (pas de display Wayland)
 
   # ══════════════════════════════════════════════════════════════════
   # 7. BOOT TIME TRACKER — Log le temps de boot

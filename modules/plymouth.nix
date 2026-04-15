@@ -38,7 +38,7 @@ in
 
   boot.consoleLogLevel = 0;
   boot.initrd.verbose = false;
-  boot.kernelParams = [
+  boot.kernelParams = lib.mkAfter [
     "quiet"
     "splash"
     "boot.shell_on_fail"       # Shell de secours en cas d'échec (utile pour le debug)

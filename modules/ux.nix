@@ -91,7 +91,7 @@
     translate-shell     # Traduction en CLI (trad "texte")
     qrencode            # Générateur de QR codes
     wakeonlan           # Wake-on-LAN pour le homelab
-    newsboat            # Lecteur RSS TUI
+    # newsboat est géré par programs.newsboat dans home/default.nix
     cowsay              # Message du jour fun
     fortune             # Citations aléatoires
   ];
