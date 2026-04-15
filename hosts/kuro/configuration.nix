@@ -20,7 +20,7 @@
     ../../modules/hyprland.nix    # Desktop Hyprland + SDDM
     ../../modules/stylix.nix      # Thème Catppuccin Mocha
     ../../modules/plymouth.nix    # Boot splash screen
-    ../../modules/security.nix    # Firewall, fail2ban, ClamAV, DNS-over-TLS, audit
+    ../../modules/security         # Firewall, fail2ban, ClamAV, DNS-over-TLS, audit, hardening
     ../../modules/networking.nix  # Tailscale, Mosh, dnsmasq
     ../../modules/monitoring.nix  # S.M.A.R.T., thermald, earlyoom
     ../../modules/ux.nix          # UX confort (USB, CUPS, Flatpak, Wine, fwupd)
