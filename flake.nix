@@ -134,6 +134,26 @@
     # ── Checks — Tests automatisés ───────────────────────────────
     checks.${system} = import ./tests { inherit pkgs lib; };
 
+    # ── NixOS Modules — Réutilisables depuis d'autres flakes ─────
+    # Usage depuis un autre flake :
+    #   inputs.citadel.url = "github:nawek/dotfile_nix-dev01";
+    #   modules = [ inputs.citadel.nixosModules.security ];
+    nixosModules = {
+      security     = import ./modules/security.nix;
+      networking   = import ./modules/networking.nix;
+      monitoring   = import ./modules/monitoring.nix;
+      impermanence = import ./modules/impermanence.nix;
+      automations  = import ./modules/automations.nix;
+      ux           = import ./modules/ux.nix;
+      hyprland     = import ./modules/hyprland.nix;
+      nvidia       = import ./modules/nvidia.nix;
+      stylix       = import ./modules/stylix.nix;
+      plymouth     = import ./modules/plymouth.nix;
+      disko        = import ./modules/disko.nix;
+      lanzaboote   = import ./modules/lanzaboote.nix;
+      sops         = import ./modules/sops.nix;
+    };
+
     # ── Dev Shells — environnements de développement isolés ──────
     # Usage : nix develop (shell par défaut) | nix develop .#python | etc.
     devShells.${system} = {
