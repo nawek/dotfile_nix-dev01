@@ -148,6 +148,7 @@
       icat = "kitten icat";             # Afficher images dans Kitty
       speak = "espeak -v fr";           # Text-to-speech français
       journal = "nvim ~/Documents/Obsidian/Journal/$(date +%Y-%m-%d).md";
+      note = "f() { nvim ~/Documents/Obsidian/Inbox/\"$(date +%Y%m%d-%H%M)-$*.md\"; }; f"; # note titre de la note
       proj = "cd $(find ~/Projects -maxdepth 1 -type d | fzf) && code .";
       todo = "cat ~/Documents/todo.txt 2>/dev/null || echo 'Pas de todo.txt'";
       todo-add = "f() { echo \"- [ ] $*\" >> ~/Documents/todo.txt; }; f";

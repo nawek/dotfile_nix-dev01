@@ -286,6 +286,25 @@
   # ── Fastfetch — Affichage système stylisé Catppuccin ──────────────
   xdg.configFile."fastfetch/config.jsonc".source = ./fastfetch.jsonc;
 
+  # ── Obsidian vault — Structure initiale PARA ────────────────────
+  # Copie la structure de dossiers et les templates au premier boot.
+  # Les fichiers ne sont copiés que s'ils n'existent pas déjà
+  # (le vault réel vit dans ~/Documents/Obsidian, persisté).
+  home.activation.obsidian-vault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    VAULT="$HOME/Documents/Obsidian"
+    if [ ! -d "$VAULT/Templates" ]; then
+      echo "Initialisation du vault Obsidian..."
+      mkdir -p "$VAULT"
+      cp -rn ${./obsidian-vault}/* "$VAULT/" 2>/dev/null || true
+      # Initialiser le repo git pour l'auto-commit
+      if [ ! -d "$VAULT/.git" ]; then
+        ${pkgs.git}/bin/git -C "$VAULT" init
+        ${pkgs.git}/bin/git -C "$VAULT" add -A
+        ${pkgs.git}/bin/git -C "$VAULT" commit -m "init: vault Obsidian CITADEL"
+      fi
+    fi
+  '';
+
   # ── Syncthing — Synchronisation P2P entre devices ─────────────────
   # Sync automatique de dossiers entre laptop ↔ homelab ↔ phone.
   # Pas de cloud, pas de serveur central, chiffré de bout en bout.
@@ -402,16 +421,45 @@
   # Commit et push le vault Obsidian toutes les heures
   # ← ADAPTER : chemin vers votre vault Obsidian
   systemd.user.services.obsidian-sync = {
-    Unit.Description = "Auto-commit du vault Obsidian";
+    Unit.Description = "Auto-commit du vault Obsidian + création daily note";
     Service = {
       Type = "oneshot";
       ExecStart = toString (pkgs.writeShellScript "obsidian-sync" ''
         VAULT="$HOME/Documents/Obsidian"
+        TODAY=$(date '+%Y-%m-%d')
+        DAY=$(date '+%A' | sed 's/Monday/Lundi/;s/Tuesday/Mardi/;s/Wednesday/Mercredi/;s/Thursday/Jeudi/;s/Friday/Vendredi/;s/Saturday/Samedi/;s/Sunday/Dimanche/')
+
+        # Créer la daily note si elle n'existe pas
+        DAILY="$VAULT/Journal/$TODAY.md"
+        if [ ! -f "$DAILY" ]; then
+          mkdir -p "$VAULT/Journal"
+          cat > "$DAILY" << DAILY_EOF
+        # $TODAY — $DAY
+
+        ## Focus du jour
+        - [ ]
+
+        ## Notes
+        -
+
+        ## Apprentissages
+        -
+
+        ## Demain
+        - [ ]
+
+        ---
+        Tags: #journal
+        DAILY_EOF
+          echo "Daily note créée : $DAILY"
+        fi
+
+        # Auto-commit
         if [ -d "$VAULT/.git" ]; then
           cd "$VAULT"
           ${pkgs.git}/bin/git add -A
           ${pkgs.git}/bin/git diff --cached --quiet || \
-            ${pkgs.git}/bin/git commit -m "auto: $(date '+%Y-%m-%d %H:%M')"
+            ${pkgs.git}/bin/git commit -m "auto: $TODAY $(date '+%H:%M')"
           ${pkgs.git}/bin/git push 2>/dev/null || true
         fi
       '');
