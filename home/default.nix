@@ -43,6 +43,7 @@
     # ── Communication ─────────────────────────────────────────────
     vesktop             # Discord client Wayland-natif (Vencord intégré)
     telegram-desktop    # Messagerie Telegram
+    signal-desktop      # Messagerie chiffrée E2E
 
     # ── Email ─────────────────────────────────────────────────────
     thunderbird         # Client email complet (IMAP, calendrier, contacts)
@@ -55,6 +56,8 @@
 
     # ── Multimédia ────────────────────────────────────────────────
     bitwarden-desktop   # Gestionnaire de mots de passe (client Vaultwarden)
+    firefox             # Navigateur backup (quand Chromium ne suffit pas)
+    qbittorrent         # Client torrent (ISOs, distributions)
 
     # ── Utilitaires ───────────────────────────────────────────────
     imv                 # Viewer d'images minimaliste (Wayland-natif)
@@ -101,6 +104,16 @@
 
       # Telegram — messages, session
       ".local/share/TelegramDesktop"
+
+      # Signal — messages, clés, session
+      ".config/Signal"
+
+      # Firefox — profils, marque-pages (navigateur backup)
+      ".mozilla/firefox"
+
+      # qBittorrent — config, torrents en cours
+      ".config/qBittorrent"
+      ".local/share/qBittorrent"
 
       # Spotify — cache, login, préférences
       ".config/spotify"
