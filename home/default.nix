@@ -9,7 +9,7 @@
 # ⚠️ La persistance SYSTÈME est dans modules/impermanence.nix
 #    Ce fichier ne gère que la persistance UTILISATEUR.
 
-{ config, pkgs, inputs, lib, ... }: {
+{ config, pkgs, inputs, lib, username ? "kuro", ... }: {
 
   # ── Imports des sous-modules ─────────────────────────────────────
   imports = [
@@ -31,8 +31,8 @@
 
   # ── Identité utilisateur ─────────────────────────────────────────
   home = {
-    username = "kuro";            # ← ADAPTER
-    homeDirectory = "/home/kuro"; # ← ADAPTER
+    username = username;
+    homeDirectory = "/home/${username}";
     stateVersion = "25.05";
   };
 

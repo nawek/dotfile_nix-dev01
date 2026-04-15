@@ -1,25 +1,23 @@
 # ╔══════════════════════════════════════════════════════════════════╗
-# ║  NixOS Configuration — Kuro (PC de développement)              ║
-# ║  Flake principal : définit tous les inputs et outputs          ║
+# ║  CITADEL — Configuration NixOS (PC de développement)            ║
+# ║  Flake principal : inputs, outputs, devShells, templates        ║
 # ╚══════════════════════════════════════════════════════════════════╝
 #
 # Ce fichier est le point d'entrée de toute la configuration.
-# Il déclare les dépendances (inputs), la configuration système
-# (nixosConfigurations) et les environnements de dev (devShells).
+# Le nom d'utilisateur et le hostname sont passés via des variables
+# pour faciliter la réutilisation sur d'autres machines.
 
 {
-  description = "Configuration NixOS de Kuro — PC de développement";
+  description = "CITADEL — Configuration NixOS modulaire et reproductible";
 
   # ──────────────────────────────────────────────────────────────────
   # INPUTS — Toutes les dépendances externes
   # ──────────────────────────────────────────────────────────────────
   inputs = {
     # Nixpkgs — branche stable pour la fiabilité
-    # Optionnel : passer à nixos-unstable si vous voulez les derniers paquets
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     # Home Manager — gestion déclarative de l'environnement utilisateur
-    # Doit suivre la même branche que nixpkgs
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,7 +30,6 @@
     };
 
     # Impermanence — persistence sélective avec effacement root au boot
-    # Note : pas d'input nixpkgs à suivre pour ce flake
     impermanence.url = "github:nix-community/impermanence";
 
     # Lanzaboote — Secure Boot pour NixOS
@@ -48,7 +45,10 @@
     };
 
     # Hyprland — compositeur Wayland (flake officiel)
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs"; # Évite une deuxième copie de nixpkgs
+    };
 
     # Stylix — thème global cohérent (GTK, QT, terminal, waybar, etc.)
     stylix = {
@@ -85,19 +85,24 @@
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
     lib = nixpkgs.lib;
-  in
-  {
-    # ── Configuration NixOS principale ──────────────────────────────
-    nixosConfigurations.kuro = nixpkgs.lib.nixosSystem {
+
+    # ── Variables centralisées ────────────────────────────────────
+    # Modifier ici pour changer le nom d'utilisateur ou l'hostname
+    # sans chercher/remplacer dans tous les fichiers.
+    username = "kuro";       # ← ADAPTER : nom d'utilisateur
+    hostname = "kuro";       # ← ADAPTER : hostname de la machine
+
+    # ── Helper pour créer une nixosConfiguration ─────────────────
+    # Réutilisable pour ajouter d'autres machines (vm-dev, serveur, etc.)
+    mkHost = { hostName, userName ? username, hostPath ? ./hosts/${hostName} }: nixpkgs.lib.nixosSystem {
       inherit system;
 
-      # specialArgs rend `inputs` accessible dans TOUS les modules
-      specialArgs = { inherit inputs; };
+      specialArgs = { inherit inputs; username = userName; hostname = hostName; };
 
       modules = [
         # Modules externes (flakes)
         disko.nixosModules.disko
-        impermanence.nixosModules.default    # ⚠️ .default, PAS .impermanence
+        impermanence.nixosModules.default
         lanzaboote.nixosModules.lanzaboote
         sops-nix.nixosModules.sops
         stylix.nixosModules.stylix
@@ -107,57 +112,47 @@
         home-manager.nixosModules.home-manager
         {
           home-manager = {
-            useGlobalPkgs = true;       # Utilise le nixpkgs du système
-            useUserPackages = true;     # Installe les paquets dans /etc/profiles
-            extraSpecialArgs = { inherit inputs; }; # inputs dispo dans les modules home
-            users.kuro = import ./home/default.nix; # ← ADAPTER : nom d'utilisateur
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = { inherit inputs; username = userName; };
+            users.${userName} = import ./home/default.nix;
           };
         }
 
         # Configuration hôte
-        ./hosts/kuro/configuration.nix
+        "${hostPath}/configuration.nix"
       ];
     };
+  in
+  {
+    # ── Configurations NixOS ──────────────────────────────────────
+    # Ajouter d'autres machines ici :
+    #   nixosConfigurations.vm-dev = mkHost { hostName = "vm-dev"; };
+    #   nixosConfigurations.serveur = mkHost { hostName = "serveur"; userName = "admin"; };
+    nixosConfigurations.${hostname} = mkHost { hostName = hostname; userName = username; };
 
-    # ── Checks — Tests automatisés ───────────────────────────────────
-    # Exécutés par : nix flake check
+    # ── Checks — Tests automatisés ───────────────────────────────
     checks.${system} = import ./tests { inherit pkgs lib; };
 
-    # ── Dev Shells — environnements de développement isolés ────────
-    # Usage : nix develop .#python | .#node | .#rust | .#go | .#cc
+    # ── Dev Shells — environnements de développement isolés ──────
+    # Usage : nix develop (shell par défaut) | nix develop .#python | etc.
     devShells.${system} = {
-      python = import ./devshells/python.nix { inherit pkgs; };
-      node   = import ./devshells/node.nix { inherit pkgs; };
-      rust   = import ./devshells/rust.nix { inherit pkgs; fenix = inputs.fenix; };
-      go     = import ./devshells/go.nix { inherit pkgs; };
-      cc     = import ./devshells/cc.nix { inherit pkgs; };
-      infra  = import ./devshells/infra.nix { inherit pkgs; };
+      default = import ./devshells/python.nix { inherit pkgs; }; # Shell par défaut
+      python  = import ./devshells/python.nix { inherit pkgs; };
+      node    = import ./devshells/node.nix { inherit pkgs; };
+      rust    = import ./devshells/rust.nix { inherit pkgs; fenix = inputs.fenix; };
+      go      = import ./devshells/go.nix { inherit pkgs; };
+      cc      = import ./devshells/cc.nix { inherit pkgs; };
+      infra   = import ./devshells/infra.nix { inherit pkgs; };
     };
 
-    # ── Templates — Bootstrapper un nouveau projet ─────────────────
-    # Usage : nix flake init -t /home/kuro/nixos-config#<lang>
-    # Crée un flake.nix + .envrc + .gitignore prêts à l'emploi
+    # ── Templates — Bootstrapper un nouveau projet ───────────────
     templates = {
-      python = {
-        description = "Projet Python 3.12 avec ruff, pyright et virtualenv";
-        path = ./templates/python;
-      };
-      node = {
-        description = "Projet Node.js 22 avec pnpm et TypeScript";
-        path = ./templates/node;
-      };
-      rust = {
-        description = "Projet Rust stable avec fenix, rust-analyzer et cargo-watch";
-        path = ./templates/rust;
-      };
-      go = {
-        description = "Projet Go avec gopls, delve et golangci-lint";
-        path = ./templates/go;
-      };
-      cc = {
-        description = "Projet C/C++ avec GCC, Clang, CMake, GDB et Valgrind";
-        path = ./templates/cc;
-      };
+      python = { description = "Python 3.12 + ruff + pyright"; path = ./templates/python; };
+      node   = { description = "Node.js 22 + pnpm + TypeScript"; path = ./templates/node; };
+      rust   = { description = "Rust stable + fenix + rust-analyzer"; path = ./templates/rust; };
+      go     = { description = "Go + gopls + delve"; path = ./templates/go; };
+      cc     = { description = "C/C++ + GCC + Clang + CMake"; path = ./templates/cc; };
     };
   };
 }

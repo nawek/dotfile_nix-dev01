@@ -8,7 +8,7 @@
 # Rebuild : sudo nixos-rebuild switch --flake .#kuro
 # Ou via nh : nh os switch
 
-{ config, pkgs, inputs, lib, ... }: {
+{ config, pkgs, inputs, lib, username ? "kuro", hostname ? "kuro", ... }: {
 
   # ── Imports ──────────────────────────────────────────────────────
   imports = [
@@ -58,7 +58,7 @@
       ];
 
       # Utilisateurs autorisés à configurer les caches et pousser vers Cachix
-      trusted-users = [ "root" "kuro" ]; # ← ADAPTER : nom d'utilisateur
+      trusted-users = [ "root" username ];
     };
 
     # Nettoyage automatique du store Nix — supprime les anciennes générations
@@ -89,7 +89,7 @@
   # ── Système ──────────────────────────────────────────────────────
 
   # Hostname
-  networking.hostName = "kuro"; # ← ADAPTER
+  networking.hostName = hostname;
 
   # Fuseau horaire
   time.timeZone = "Europe/Paris"; # ← ADAPTER
@@ -140,9 +140,9 @@
   system.stateVersion = "25.05";
 
   # ── Utilisateur ──────────────────────────────────────────────────
-  users.users.kuro = { # ← ADAPTER : nom d'utilisateur
+  users.users.${username} = {
     isNormalUser = true;
-    description = "Kuro"; # ← ADAPTER
+    description = username;
     extraGroups = [
       "wheel"          # Accès sudo
       "docker"         # Docker sans sudo

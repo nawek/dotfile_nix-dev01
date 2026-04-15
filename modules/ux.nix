@@ -49,7 +49,7 @@
   # le retaper sur SDDM. Hyprlock verrouille quand on s'absente.
   services.displayManager.autoLogin = {
     enable = true;
-    user = "kuro"; # ← ADAPTER
+    user = "kuro"; # Géré par install.sh — sera adapté automatiquement
   };
 
   # ══════════════════════════════════════════════════════════════════
