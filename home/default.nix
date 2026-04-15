@@ -182,7 +182,7 @@
   programs.btop = {
     enable = true;
     settings = {
-      color_theme = "catppuccin_mocha";
+      # color_theme géré par Stylix — ne pas définir ici
       theme_background = false; # Transparent (utilise le bg terminal)
       vim_keys = true;
     };
