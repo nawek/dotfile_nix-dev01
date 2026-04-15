@@ -339,8 +339,7 @@
 
   # ── Variable d'environnement pour nh ─────────────────────────────
   # nh utilise $FLAKE pour savoir où trouver la config
-  # ← ADAPTER : doit correspondre au chemin réel de ce dépôt sur votre machine
-  environment.variables.FLAKE = "/home/kuro/dotfile_nix-dev01";
+  environment.variables.FLAKE = "/home/${username}/dotfile_nix-dev01";
 
   # ── Paquets système ──────────────────────────────────────────────
   environment.systemPackages = with pkgs; [

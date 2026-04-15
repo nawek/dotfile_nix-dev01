@@ -64,7 +64,20 @@ citadel/
 │   ├── hyprland.nix                   # Compositeur Wayland + SDDM + paquets WM
 │   ├── stylix.nix                     # Catppuccin Mocha global
 │   ├── plymouth.nix                   # Boot splash CITADEL
-│   ├── security.nix                   # Firewall, fail2ban, ClamAV, ANSSI, AppArmor, SSH hardening, Tor, AIDE, YubiKey
+│   ├── security/                      # Sécurité (12 sous-modules)
+│   │   ├── default.nix                # Point d'entrée
+│   │   ├── firewall.nix               # Firewall + MAC randomization
+│   │   ├── fail2ban.nix               # Protection brute-force SSH
+│   │   ├── clamav.nix                 # Antivirus à la demande
+│   │   ├── dns.nix                    # DNS-over-TLS AdGuard
+│   │   ├── audit.nix                  # auditd + USBGuard
+│   │   ├── hardening.nix              # ANSSI R7-R14 + kernel avancé
+│   │   ├── ssh.nix                    # SSH Ed25519-only
+│   │   ├── apparmor.nix               # Confinement kernel
+│   │   ├── yubikey.nix                # Clé de sécurité
+│   │   ├── tor.nix                    # Anonymat on-demand
+│   │   ├── scanning.nix              # Lynis auto + drift detection
+│   │   └── packages.nix              # Paquets sécurité
 │   ├── networking.nix                 # Tailscale, Mosh, WireGuard, dnsmasq
 │   ├── monitoring.nix                 # S.M.A.R.T., thermald, earlyoom
 │   ├── sops.nix                       # Secrets chiffrés (age)

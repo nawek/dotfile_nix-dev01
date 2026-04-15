@@ -119,8 +119,8 @@
           };
         }
 
-        # Configuration hôte
-        ./hosts/kuro/configuration.nix
+        # Configuration hôte (résolu dynamiquement par hostName)
+        (./hosts + "/${hostName}/configuration.nix")
       ] ++ extraModules;
     };
   in
