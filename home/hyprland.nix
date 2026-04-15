@@ -486,6 +486,12 @@ in
         "blueman-applet"            # Applet Bluetooth (tray)
         # Agent polkit (pop-up mot de passe pour les actions admin)
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
+
+        # ── Routines au login ────────────────────────────────────
+        # Sync Obsidian (git pull au démarrage)
+        "sh -c 'cd ~/Documents/Obsidian && git pull 2>/dev/null || true'"
+        # Check services homelab (ping + notification)
+        "sh -c 'sleep 10 && for h in proxmox nas docker01; do ping -c1 -W2 $h &>/dev/null || notify-send -u critical \"Homelab\" \"$h est DOWN !\"; done'"
       ];
     };
   };

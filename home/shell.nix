@@ -159,6 +159,20 @@
       procs = "procs";       # ps moderne
       bw = "bandwhich";      # bande passante par processus
 
+      # ── Routines ─────────────────────────────────────────────────
+      # Morning routine : pull notes, daily note, check homelab
+      morning = "cd ~/Documents/Obsidian && git pull 2>/dev/null; nvim Journal/$(date +%Y-%m-%d).md";
+      # End of day : commit notes, résumé du jour, lock
+      eod = "cd ~/Documents/Obsidian && git add -A && git commit -m 'eod: $(date +%Y-%m-%d)' && git push 2>/dev/null; echo '--- Commits du jour ---' && git log --oneline --since='6am' 2>/dev/null; hyprlock";
+      # Deploy NixOS : check, update, rebuild, diff
+      deploy = "nix flake check && nix flake update && nh os switch && echo 'Deploy OK' || echo 'Deploy FAILED'";
+      # Homelab check : ping serveurs + containers
+      hcheck = "echo '=== Homelab ===' && for h in proxmox nas docker01; do printf '%-12s' \"$h\"; ping -c1 -W2 \"$h\" &>/dev/null && echo '✓ UP' || echo '✗ DOWN'; done";
+      # Backup routine
+      backup = "sudo btrbk snapshot && echo 'Snapshots OK' && sudo btrbk list | tail -10";
+      # Cleanup routine
+      cleanup = "nh clean all && docker system prune -af && find ~/Downloads -maxdepth 1 -type f -mtime +30 -delete 2>/dev/null && echo 'Cleanup terminé'";
+
       # ── Safety net ─────────────────────────────────────────────
       rm  = "rm -i";                  # Confirmation avant suppression
       mv  = "mv -i";                  # Confirmation avant écrasement
