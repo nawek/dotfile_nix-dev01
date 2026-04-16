@@ -23,6 +23,9 @@ jobs:
           name: nix-community
           skipPush: true
 
+      - name: "nix flake lock (generate if missing)"
+        run: nix flake lock
+
       - name: "nix flake check"
         run: nix flake check --no-build
 
