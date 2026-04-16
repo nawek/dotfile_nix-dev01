@@ -80,7 +80,7 @@
   # ──────────────────────────────────────────────────────────────────
   outputs = { self, nixpkgs, home-manager, disko, impermanence,
               lanzaboote, sops-nix, hyprland, stylix, fenix,
-              nix-index-database, ... } @ inputs:
+              nix-index-database, spicetify-nix, ... } @ inputs:
   let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
@@ -124,6 +124,8 @@
       ] ++ extraModules;
     };
     # ── Helper pour créer une nixosConfiguration minimale (test/VM) ──
+    # Exclut : Home Manager, Stylix, SOPS, impermanence, Lanzaboote, NVIDIA
+    # Inclut : juste NixOS de base + le hardware du host
     mkMinimalHost = { hostName, userName ? username }: nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit inputs; username = userName; hostname = hostName; };
@@ -161,7 +163,12 @@
     # ── Dev Shells — environnements de développement isolés ──────
     # Usage : nix develop (shell par défaut) | nix develop .#python | etc.
     devShells.${system} = {
-      default = import ./devshells/python.nix { inherit pkgs; }; # Shell par défaut
+      # Shell par défaut : outils transversaux (pas un langage spécifique)
+      default = pkgs.mkShell {
+        name = "citadel-dev";
+        packages = with pkgs; [ git nixfmt-rfc-style nil statix deadnix just ];
+        shellHook = ''echo "CITADEL dev shell — git, nixfmt, nil, statix, deadnix, just"'';
+      };
       python  = import ./devshells/python.nix { inherit pkgs; };
       node    = import ./devshells/node.nix { inherit pkgs; };
       rust    = import ./devshells/rust.nix { inherit pkgs; fenix = inputs.fenix; };
