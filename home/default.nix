@@ -15,7 +15,7 @@
   imports = [
     ./shell.nix       # ZSH, starship, atuin, direnv, fzf, zoxide
     ./git.nix         # Git, delta, gh
-    ./hyprland.nix    # Config Hyprland utilisateur (waybar, wofi, dunst, etc.)
+    ./hyprland          # Config Hyprland utilisateur (dossier avec default.nix)
     ./vscode.nix      # VSCode + extensions
     ./yazi.nix        # Yazi file manager TUI
     ./helix.nix       # Helix éditeur modal (alternative à Neovim)

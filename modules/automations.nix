@@ -71,9 +71,10 @@
   # ══════════════════════════════════════════════════════════════════
   # 3. TMPFILES — Nettoyage automatique /tmp et ~/Downloads
   # ══════════════════════════════════════════════════════════════════
+  # Nettoyage /tmp (7 jours)
+  # ~/Downloads est nettoyé par le timer user dans home/default.nix
   systemd.tmpfiles.rules = [
-    "d /tmp 1777 root root 7d"          # Nettoyer /tmp après 7 jours
-    # ~/Downloads nettoyé par le timer user dans home/default.nix
+    "d /tmp 1777 root root 7d"
   ];
 
   # ══════════════════════════════════════════════════════════════════
@@ -164,7 +165,7 @@
     description = "Rappel weekly review Obsidian";
     serviceConfig.Type = "oneshot";
     script = ''
-      ${pkgs.libnotify}/bin/notify-send -u normal "📋 Weekly Review" "C'est l'heure ! Nettoie l'Inbox Obsidian, archive les projets terminés."
+      echo "C'est l'heure ! Nettoie l'Inbox Obsidian, archive les projets terminés." | ${pkgs.systemd}/bin/systemd-cat -t citadel -p warning && echo "C'est l'heure ! Nettoie l'Inbox Obsidian, archive les projets terminés." | wall
     '';
   };
   systemd.timers.weekly-review = {
@@ -179,7 +180,7 @@
     description = "Rappel vérification backups";
     serviceConfig.Type = "oneshot";
     script = ''
-      ${pkgs.libnotify}/bin/notify-send -u normal "💾 Backup Check" "Vérifier les backups : btrbk list, restic snapshots"
+      echo "Vérifier les backups : btrbk list, restic snapshots" | ${pkgs.systemd}/bin/systemd-cat -t citadel -p warning && echo "Vérifier les backups : btrbk list, restic snapshots" | wall
     '';
   };
   systemd.timers.backup-reminder = {
@@ -194,12 +195,12 @@
     description = "Vérifier l'âge des clés SSH";
     serviceConfig.Type = "oneshot";
     script = ''
-      for key in /home/kuro/.ssh/id_*; do
+      for key in /home/*/.ssh/id_*; do
         [ -f "$key" ] || continue
         [[ "$key" == *.pub ]] && continue
         AGE_DAYS=$(( ($(date +%s) - $(stat -c %Y "$key")) / 86400 ))
         if [ "$AGE_DAYS" -gt 365 ]; then
-          ${pkgs.libnotify}/bin/notify-send -u critical "🔑 Clé SSH ancienne" "$key a $AGE_DAYS jours. Penser à la renouveler."
+          echo "$key a $AGE_DAYS jours. Penser à la renouveler." | ${pkgs.systemd}/bin/systemd-cat -t citadel -p warning && echo "$key a $AGE_DAYS jours. Penser à la renouveler." | wall
         fi
       done
     '';
@@ -219,7 +220,7 @@
       SIZE=$(${pkgs.coreutils}/bin/du -sh /nix/store 2>/dev/null | cut -f1)
       SIZE_GB=$(${pkgs.coreutils}/bin/du -sb /nix/store 2>/dev/null | awk '{printf "%.0f", $1/1073741824}')
       if [ "$SIZE_GB" -gt 50 ]; then
-        ${pkgs.libnotify}/bin/notify-send -u normal "📦 Nix Store" "Le store fait $SIZE. Lancer ngc (nh clean all) pour nettoyer."
+        echo "Le store fait $SIZE. Lancer ngc (nh clean all) pour nettoyer." | ${pkgs.systemd}/bin/systemd-cat -t citadel -p warning && echo "Le store fait $SIZE. Lancer ngc (nh clean all) pour nettoyer." | wall
       fi
     '';
   };
@@ -242,7 +243,7 @@
         ${pkgs.docker}/bin/docker pull "$img" 2>/dev/null | grep -q "Downloaded newer" && UPDATES=$((UPDATES+1))
       done
       if [ "$UPDATES" -gt 0 ]; then
-        ${pkgs.libnotify}/bin/notify-send -u normal "🐳 Docker Updates" "$UPDATES images ont des mises à jour. Redéployer les containers."
+        echo "$UPDATES images ont des mises à jour. Redéployer les containers." | ${pkgs.systemd}/bin/systemd-cat -t citadel -p warning && echo "$UPDATES images ont des mises à jour. Redéployer les containers." | wall
       fi
     '';
   };
@@ -297,10 +298,10 @@
       STATUS=$(cat "$BAT/status")
       if [ "$STATUS" = "Discharging" ]; then
         if [ "$LEVEL" -le 10 ]; then
-          ${pkgs.libnotify}/bin/notify-send -u critical "🔋 Batterie critique" "$LEVEL% — Brancher immédiatement !"
+          echo "$LEVEL% — Brancher immédiatement !" | ${pkgs.systemd}/bin/systemd-cat -t citadel -p warning && echo "$LEVEL% — Brancher immédiatement !" | wall
           ${pkgs.brightnessctl}/bin/brightnessctl -s set 30% 2>/dev/null || true
         elif [ "$LEVEL" -le 20 ]; then
-          ${pkgs.libnotify}/bin/notify-send -u normal "🔋 Batterie faible" "$LEVEL% — Penser à brancher."
+          echo "$LEVEL% — Penser à brancher." | ${pkgs.systemd}/bin/systemd-cat -t citadel -p warning && echo "$LEVEL% — Penser à brancher." | wall
         fi
       fi
     '';
@@ -317,7 +318,7 @@
     description = "Rappel audit mots de passe";
     serviceConfig.Type = "oneshot";
     script = ''
-      ${pkgs.libnotify}/bin/notify-send -u normal "🔐 Password Audit" "Vérifier les mots de passe compromis dans Bitwarden (Data Breach Report)."
+      echo "Vérifier les mots de passe compromis dans Bitwarden (Data Breach Report)." | ${pkgs.systemd}/bin/systemd-cat -t citadel -p warning && echo "Vérifier les mots de passe compromis dans Bitwarden (Data Breach Report)." | wall
     '';
   };
   systemd.timers.password-audit = {
