@@ -28,9 +28,8 @@
     # ⚠️ Pour fetchurl, le hash sera à recalculer :
     #    nix-prefetch-url <url>
     image = pkgs.fetchurl {
-      url = "https://raw.githubusercontent.com/catppuccin/wallpapers/main/landscapes/evening-sky.png";
-      # ← ADAPTER : recalculer avec nix-prefetch-url si l'URL change
-      sha256 = "0h40gbzzkrpms2fr9bllr9psmkydi7zfa4jzsyaxjcgfkap95jr2";
+      url = "https://raw.githubusercontent.com/catppuccin/wallpapers/main/landscapes/Cloudsnight.jpg";
+      sha256 = "sha256-LbKqMxjpTkmPHdQMlPfQKSfJH0r/xxoh+gRjJ/XXhVE=";
     };
 
     # ── Curseur ──────────────────────────────────────────────────────
