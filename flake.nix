@@ -138,7 +138,10 @@
     nixosConfigurations.vm-test = mkMinimalHost { hostName = "vm-test"; };
 
     # ── Checks — Tests automatisés ───────────────────────────────
-    checks.${system} = import ./tests { inherit pkgs lib; };
+    checks.${system} = (import ./tests { inherit pkgs lib; }) // {
+      # Build complet de la config NixOS (vérifie que tout s'évalue)
+      citadel-build = self.nixosConfigurations.${hostname}.config.system.build.toplevel;
+    };
 
     # ── NixOS Modules — Réutilisables depuis d'autres flakes ─────
     # Usage depuis un autre flake :
@@ -167,7 +170,9 @@
       default = pkgs.mkShell {
         name = "citadel-dev";
         packages = with pkgs; [ git nixfmt-rfc-style nil statix deadnix just ];
-        shellHook = ''echo "CITADEL dev shell — git, nixfmt, nil, statix, deadnix, just"'';
+        shellHook = ''
+          echo "CITADEL dev shell — git, nixfmt, nil, statix, deadnix, just"
+        '';
       };
       python  = import ./devshells/python.nix { inherit pkgs; };
       node    = import ./devshells/node.nix { inherit pkgs; };
