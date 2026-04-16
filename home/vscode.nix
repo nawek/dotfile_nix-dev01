@@ -82,7 +82,7 @@
           name = "claude-dev";
           publisher = "saoudrizwan";
           version = "3.9.2";
-          sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # ← ADAPTER : nix-prefetch-url
+          sha256 = "sha256-InlftUHtOHEszgtjPl7H6V0PkyHUEZ6MqyZTbFtjA+k=";
         }
         # ── IA — Continue.dev (IA locale/API) ──────────────────
         # {
