@@ -27,7 +27,7 @@ jobs:
         run: nix flake lock
 
       - name: "nix flake check"
-        run: nix flake check --no-build
+        run: nix flake check
 
       - name: "nix flake show"
         run: nix flake show
