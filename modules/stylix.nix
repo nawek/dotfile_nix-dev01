@@ -23,14 +23,19 @@
     polarity = "dark";
 
     # ── Fond d'écran ─────────────────────────────────────────────────
-    # ← ADAPTER : remplacer par le chemin vers votre image locale
-    # Exemple avec image locale : image = /persist/home/kuro/Pictures/wallpaper.jpg;
-    # ⚠️ Pour fetchurl, le hash sera à recalculer :
-    #    nix-prefetch-url <url>
-    image = pkgs.fetchurl {
-      url = "https://raw.githubusercontent.com/catppuccin/wallpapers/main/landscapes/Cloudsnight.jpg";
-      sha256 = "sha256-LbKqMxjpTkmPHdQMlPfQKSfJH0r/xxoh+gRjJ/XXhVE=";
-    };
+    # ← ADAPTER : remplacer par votre propre wallpaper
+    # Exemple : image = /persist/home/kuro/Pictures/wallpaper.jpg;
+    # Par défaut : image générée aux couleurs Catppuccin Mocha (pas de dépendance externe)
+    image = pkgs.runCommand "catppuccin-mocha-wallpaper.png" {
+      nativeBuildInputs = [ pkgs.imagemagick ];
+    } ''
+      magick -size 3840x2160 \
+        xc:"#1e1e2e" \
+        -fill "#313244" -draw "rectangle 0,1800 3840,2160" \
+        -fill "#45475a" -draw "circle 3200,400 3200,550" \
+        -fill "#585b70" -draw "circle 600,1400 600,1500" \
+        $out
+    '';
 
     # ── Curseur ──────────────────────────────────────────────────────
     cursor = {
