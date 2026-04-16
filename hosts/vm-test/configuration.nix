@@ -12,9 +12,7 @@
 
   imports = [
     ./hardware-configuration.nix
-    ../../modules/hyprland.nix
-    ../../modules/stylix.nix
-    # Pas de sops.nix en VM (pas de clé age)
+    # Config minimale : pas de modules CITADEL (pas de Stylix, SOPS, NVIDIA, etc.)
   ];
 
   # ── Nix ──────────────────────────────────────────────────────────
