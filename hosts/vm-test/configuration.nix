@@ -14,7 +14,7 @@
     ./hardware-configuration.nix
     ../../modules/hyprland.nix
     ../../modules/stylix.nix
-    ../../modules/sops.nix
+    # Pas de sops.nix en VM (pas de clé age)
   ];
 
   # ── Nix ──────────────────────────────────────────────────────────
