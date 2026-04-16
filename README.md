@@ -42,7 +42,74 @@ Le script guide interactivement : WiFi → profil → secrets → partitionnemen
 | **Automatisations** | 30+ timers systemd, routines morning/eod/deploy/cleanup/backup, Obsidian auto-commit |
 | **Notes** | Vault Obsidian PARA (7 templates, 2 MOCs, daily note auto, git sync) |
 
-## Architecture
+## Architecture — Vue d'ensemble
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                      flake.nix                          │
+│  inputs (12) · nixosConfigurations · devShells · tests  │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+         ┌─────────────┴──────────────┐
+         │                            │
+    ┌────▼────┐                 ┌─────▼─────┐
+    │  kuro   │                 │  vm-test   │
+    │ (full)  │                 │ (minimal)  │
+    └────┬────┘                 └────────────┘
+         │
+    ┌────▼────────────────────────────────────┐
+    │         hosts/kuro/configuration.nix     │
+    │  user · réseau · audio · docker · btrbk  │
+    └────┬────────────────────────────────────┘
+         │
+    ┌────▼────────────────────────────────────┐
+    │           modules/ (13 modules)          │
+    │                                          │
+    │  disko         → LUKS + BTRFS            │
+    │  impermanence  → root éphémère + persist │
+    │  security/     → 12 sous-modules         │
+    │  networking    → Tailscale, Mosh, WG      │
+    │  monitoring    → SMART, earlyoom          │
+    │  hyprland      → WM + SDDM + paquets     │
+    │  stylix        → Catppuccin Mocha global  │
+    │  nvidia        → GPU propriétaire         │
+    │  lanzaboote    → Secure Boot              │
+    │  plymouth      → Boot splash CITADEL      │
+    │  sops          → Secrets chiffrés age      │
+    │  ux            → USB, CUPS, fwupd, Wine   │
+    │  automations   → Timers systemd (30+)     │
+    └────┬────────────────────────────────────┘
+         │
+    ┌────▼────────────────────────────────────┐
+    │      home/ (12 modules Home Manager)     │
+    │                                          │
+    │  default.nix  → packages, persistence,   │
+    │                  GTK, XDG, Obsidian       │
+    │  hyprland/    → WM user, Waybar CSS,     │
+    │                  Rofi, SwayNC, Hyprlock   │
+    │  shell.nix    → ZSH, 60+ aliases,        │
+    │                  Starship, Atuin          │
+    │  vscode.nix   → 25+ extensions, remote   │
+    │  neovim.nix   → LSP, Treesitter, 15+     │
+    │  spotify.nix  → Spicetify Catppuccin     │
+    │  ...                                      │
+    └────┬────────────────────────────────────┘
+         │
+    ┌────▼────────────────────────────────────┐
+    │        /persist (impermanence)            │
+    │                                          │
+    │  /persist/system/                        │
+    │    ├── sops-age-keys.txt                 │
+    │    ├── /etc/nixos, /var/lib/docker, ...  │
+    │                                          │
+    │  /persist/home/kuro/                     │
+    │    ├── .ssh, .gnupg, .config/chromium    │
+    │    ├── Documents, Projects, Pictures     │
+    │    └── .mozilla, .thunderbird, ...       │
+    └─────────────────────────────────────────┘
+```
+
+## Architecture — Fichiers
 
 ```
 citadel/

@@ -68,7 +68,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Spicetify — Spotify thémé et enrichi (extensions, adblock, Catppuccin)
+    # Spicetify — Spotify thémé (Home Manager only, importé dans home/spotify.nix)
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -123,18 +123,17 @@
         (./hosts + "/${hostName}/configuration.nix")
       ] ++ extraModules;
     };
+    # ── Helper pour créer une nixosConfiguration minimale (test/VM) ──
+    mkMinimalHost = { hostName, userName ? username }: nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit inputs; username = userName; hostname = hostName; };
+      modules = [ (./hosts + "/${hostName}/configuration.nix") ];
+    };
   in
   {
     # ── Configurations NixOS ──────────────────────────────────────
-    # Ajouter d'autres machines ici :
     nixosConfigurations.${hostname} = mkHost { hostName = hostname; userName = username; };
-
-    # vm-test — config minimale sans modules lourds
-    nixosConfigurations.vm-test = nixpkgs.lib.nixosSystem {
-      inherit system;
-      specialArgs = { inherit inputs; username = username; hostname = "vm-test"; };
-      modules = [ ./hosts/vm-test/configuration.nix ];
-    };
+    nixosConfigurations.vm-test = mkMinimalHost { hostName = "vm-test"; };
 
     # ── Checks — Tests automatisés ───────────────────────────────
     checks.${system} = import ./tests { inherit pkgs lib; };
