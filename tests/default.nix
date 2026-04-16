@@ -48,7 +48,7 @@ in
       "${src}/home/default.nix"
       "${src}/home/shell.nix"
       "${src}/home/git.nix"
-      "${src}/home/hyprland.nix"
+      "${src}/home/hyprland/default.nix"
       "${src}/home/vscode.nix"
       "${src}/home/neovim.nix"
       "${src}/home/helix.nix"
