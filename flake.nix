@@ -128,9 +128,16 @@
     # ── Configurations NixOS ──────────────────────────────────────
     # Ajouter d'autres machines ici :
     nixosConfigurations.${hostname} = mkHost { hostName = hostname; userName = username; };
-    nixosConfigurations.vm-test = mkHost { hostName = "vm-test"; userName = username; };
-    # Ajouter d'autres machines :
-    # nixosConfigurations.serveur = mkHost { hostName = "serveur"; userName = "admin"; };
+
+    # vm-test — config minimale sans Home Manager complet
+    nixosConfigurations.vm-test = nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit inputs; username = username; hostname = "vm-test"; };
+      modules = [
+        stylix.nixosModules.stylix
+        ./hosts/vm-test/configuration.nix
+      ];
+    };
 
     # ── Checks — Tests automatisés ───────────────────────────────
     checks.${system} = import ./tests { inherit pkgs lib; };
