@@ -1,0 +1,28 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  Normalisation des fins de ligne                                ║
+# ╚══════════════════════════════════════════════════════════════════╝
+#
+# Nix, bash et la plupart des outils Unix échouent sur les CRLF.
+# Ce fichier force LF sur Windows, même avec core.autocrlf=true.
+
+* text=auto eol=lf
+
+# Nix ecosystem — toujours LF, jamais de CRLF en stage ou working tree
+*.nix         text eol=lf
+*.sh          text eol=lf
+flake.lock    text eol=lf
+*.yaml        text eol=lf
+*.yml         text eol=lf
+*.json        text eol=lf
+*.md          text eol=lf
+*.toml        text eol=lf
+*.conf        text eol=lf
+
+# Binaires — ne jamais toucher
+*.png         binary
+*.jpg         binary
+*.jpeg        binary
+*.gif         binary
+*.webp        binary
+*.ico         binary
+*.pdf         binary
