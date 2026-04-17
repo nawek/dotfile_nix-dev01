@@ -235,6 +235,22 @@ in
       ERRORS=$((ERRORS + 1))
     fi
 
+    # .sops.yaml ne doit PAS contenir la clé placeholder age1xxx...
+    # (sentinelle copiée depuis le template mais jamais remplacée)
+    if grep -qE 'age1x{4,}' "${src}/.sops.yaml" 2>/dev/null; then
+      echo "FAIL: .sops.yaml contient la clé placeholder 'age1xxx...'"
+      echo "      Générez votre clé avec : age-keygen -o /persist/system/sops-age-keys.txt"
+      echo "      Puis remplacez la ligne &admin dans .sops.yaml par la clé publique."
+      ERRORS=$((ERRORS + 1))
+    fi
+
+    # .sops.yaml doit contenir au moins une clé age valide (recipient de 62 chars)
+    # Format age1 + 58 chars bech32 = 62 chars total
+    if ! grep -qE 'age1[0-9a-z]{58}' "${src}/.sops.yaml" 2>/dev/null; then
+      echo "FAIL: .sops.yaml n'a aucune clé age valide (format attendu : age1 + 58 chars)"
+      ERRORS=$((ERRORS + 1))
+    fi
+
     # Vérifier que les secrets déclarés dans sops.nix existent dans secrets.yaml
     # (au moins user-password et wifi-password)
     for secret in "user-password" "wifi-password"; do

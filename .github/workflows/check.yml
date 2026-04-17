@@ -7,7 +7,11 @@ on:
     branches: [ "main" ]
 
 jobs:
-  check:
+  # ──────────────────────────────────────────────────────────────────
+  # Lint Nix : statix (anti-patterns) + deadnix (code mort) + alejandra (format)
+  # ──────────────────────────────────────────────────────────────────
+  lint:
+    name: "Lint Nix"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,4 +20,56 @@ jobs:
 
       - uses: DeterminateSystems/magic-nix-cache-action@v8
 
-      - run: nix flake check
+      - name: "statix — détection d'anti-patterns Nix"
+        run: nix run nixpkgs#statix -- check .
+
+      - name: "deadnix — code Nix inutilisé"
+        run: nix run nixpkgs#deadnix -- --fail .
+
+      - name: "alejandra — format check"
+        run: nix run nixpkgs#alejandra -- --check .
+
+  # ──────────────────────────────────────────────────────────────────
+  # Lint shell : shellcheck sur tous les scripts
+  # ──────────────────────────────────────────────────────────────────
+  shellcheck:
+    name: "Lint shell"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ludeeus/action-shellcheck@master
+        env:
+          SHELLCHECK_OPTS: -e SC1091 -e SC2034
+
+  # ──────────────────────────────────────────────────────────────────
+  # Commitlint : conventional commits sur les PR
+  # ──────────────────────────────────────────────────────────────────
+  commitlint:
+    name: "Conventional commits"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.json
+
+  # ──────────────────────────────────────────────────────────────────
+  # Flake check : run les 11 checks + citadel-build (toplevel NixOS)
+  # Stylix fait de l'IFD → on garde le build complet
+  # ──────────────────────────────────────────────────────────────────
+  flake-check:
+    name: "Flake check + build"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v14
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - run: nix flake check --print-build-logs
